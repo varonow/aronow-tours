@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<meta name="theme-color" content="#2C4A3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Joyce 40">
+
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Joyce — Just a Wee Bit 40 | Scotland 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<link rel="stylesheet" href="css/nav.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2C4A3E">
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tartan"></div>
+  <div class="hero-content">
+
+    <div class="hero-logo">
+      <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="width: 60%; max-width: 300px; height: auto;">
+    </div>
+
+    <p class="hero-eyebrow">A birthday to remember &nbsp;·&nbsp; Scotland 2026</p>
+    <h1 class="hero-title">Joyce <em>is</em> 40</h1>
+    <p class="hero-subtitle">Five days in the Highlands with her favourite girls</p>
+    <div class="hero-divider"></div>
+    <p class="hero-dates">June 1 – 5, 2026 &nbsp;·&nbsp; Edinburgh & Loch Lomond</p>
+
+    <!-- COUNTDOWN TIMER -->
+    <div class="countdown" id="countdown">
+      <div class="countdown-item">
+        <span class="countdown-number" id="days">00</span>
+        <span class="countdown-label">Days</span>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="hours">00</span>
+        <span class="countdown-label">Hours</span>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="minutes">00</span>
+        <span class="countdown-label">Minutes</span>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="seconds">00</span>
+        <span class="countdown-label">Seconds</span>
+      </div>
+    </div>
+    <p class="countdown-until">until we land in Edinburgh!</p>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</div>
+
+<!-- FLIGHTS -->
+<section id="flights">
+  <p class="section-label">Travel details</p>
+  <h2 class="section-title">Getting There & Home</h2>
+  <div class="gold-rule"></div>
+
+  <div class="flight-card">
+    <div class="flight-route">
+      <span class="flight-city">New York</span>
+      <span class="flight-arrow">— ✈ —</span>
+      <span class="flight-city">Edinburgh</span>
+    </div>
+    <div class="flight-meta">
+      <div class="flight-meta-item">
+        <span class="flight-meta-label">Flight</span>
+        <a href="https://flightaware.com/live/flight/DAL208" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.4);">DL 208</a>
+      </div>
+      <div class="flight-meta-item">
+        <span class="flight-meta-label">Departs JFK</span>May 31 · 9:15 PM
+      </div>
+      <div class="flight-meta-item">
+        <span class="flight-meta-label">Arrives Edinburgh</span>June 1 · 9:20 AM
+      </div>
+    </div>
+  </div>
+
+  <div class="flight-card return">
+    <div class="flight-route">
+      <span class="flight-city">Glasgow</span>
+      <span class="flight-arrow">— ✈ —</span>
+      <span class="flight-city">Newark</span>
+    </div>
+    <div class="flight-meta">
+      <div class="flight-meta-item">
+        <span class="flight-meta-label">Flight</span>
+        <a href="https://flightaware.com/live/flight/UAL231" target="_blank" rel="noopener" style="color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.4);">UA 231</a>
+      </div>
+      <div class="flight-meta-item">
+        <span class="flight-meta-label">Departs Glasgow</span>June 5 · 2:00 PM
+      </div>
+      <div class="flight-meta-item">
+        <span class="flight-meta-label">Arrives Newark</span>June 5 · 4:35 PM
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOTELS -->
+<section id="hotels">
+  <p class="section-label">Where we stay</p>
+  <h2 class="section-title">Our Hotels</h2>
+  <div class="gold-rule"></div>
+  <div class="hotel-grid">
+    <div class="hotel-card">
+      <div class="hotel-banner">
+        <img src="images/balmoral.jpg" alt="The Balmoral Hotel, Edinburgh">
+      </div>
+      <div class="hotel-body">
+        <p class="hotel-location">Edinburgh · June 1–3</p>
+        <h3 class="hotel-name"><a href="https://www.roccofortehotels.com/hotels-and-resorts/the-balmoral-hotel/" target="_blank" rel="noopener">The Balmoral Hotel</a></h3>
+        <p class="hotel-desc">An Edinburgh landmark at the foot of the Royal Mile, with views of the castle and the city skyline.</p>
+      </div>
+    </div>
+    <div class="hotel-card">
+      <div class="hotel-banner">
+        <img src="images/cameron.jpg" alt="Cameron House, Loch Lomond">
+      </div>
+      <div class="hotel-body">
+        <p class="hotel-location">Loch Lomond · June 3–5</p>
+        <h3 class="hotel-name"><a href="https://www.cameronhouse.co.uk/" target="_blank" rel="noopener">Cameron House</a></h3>
+        <p class="hotel-desc">A grand baronial mansion on the bonnie banks of Loch Lomond — luxury, whisky, and breathtaking Highland views.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ITINERARY -->
+<section id="itinerary">
+  <p class="section-label">Day by day</p>
+  <h2 class="section-title">The Itinerary</h2>
+  <div class="gold-rule"></div>
+
+  <!-- DAY 1 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-number">Day 1</span>
+      <span class="day-title">Arrival in Edinburgh</span>
+      <span class="day-date">June 1, 2026</span>
+    </div>
+    <ul class="event-list">
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">9:20AM</span>
+        <div class="event-content">
+          <p class="event-name">Arrive Edinburgh Airport</p>
+          <p class="event-address">Meet VIP Greeter & Driver · Transfer to The Balmoral Hotel</p>
+          <p class="event-desc">After an overnight flight, you'll be greeted like royalty. Your private VIP agent and porter will whisk you through arrivals and into a waiting car, delivering you straight to the iconic Balmoral Hotel on Princes Street — Edinburgh's most celebrated address.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">12:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Lunch — Duck & Waffle</p>
+          <p class="event-address">400–402 St James Cres, Edinburgh EH1 3AE</p>
+          <p class="event-desc">Your first Edinburgh meal is at the buzzy Duck & Waffle in the St James Quarter — famous for its signature dish of crispy duck leg confit, fried duck egg and mustard maple syrup on a buttermilk waffle. Cocktails, a theatrical walk-around bar, and chef counter views make this a proper arrival celebration.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">2:00–3:30PM</span>
+        <div class="event-content">
+          <p class="event-name">Bag Making</p>
+          <p class="event-address">Islander · 6 Sibbald Walk, Edinburgh EH8 8FT</p>
+          <p class="event-desc">A hands-on Scottish craft experience — you'll create your own beautiful bag to take home as a one-of-a-kind souvenir. The perfect mix of creative fun and a keepsake from the trip.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">4:20–6:00PM</span>
+        <div class="event-content">
+          <p class="event-name">The Real Mary King's Close</p>
+          <p class="event-address">2 Warriston's Close, Edinburgh EH1 1PG</p>
+          <p class="event-desc">Descend beneath the Royal Mile into one of Edinburgh's most extraordinary secrets — a warren of 17th-century streets buried beneath the city for over 250 years. Led by a costumed character guide, you'll hear tales of plague, ghosts and Edinburgh's dark past, including the famous Annie's Room where visitors still leave dolls for a little girl's spirit.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">7:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Dinner — The Voodoo Rooms</p>
+          <p class="event-address">19a W Register St, Edinburgh EH2 2AA</p>
+          <p class="event-desc">Housed in a gorgeous opulent Victorian building just off Princes Street, The Voodoo Rooms is Edinburgh's most theatrical bar and restaurant. Award-winning cocktails from categories like "Season of the Witch" and "Cult of Voodoo", live music, and a buzzing atmosphere across five dramatic rooms make this the perfect first night out.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">10:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Department of Magic</p>
+          <p class="event-address">9 Blair St, Edinburgh EH1 1QR</p>
+          <p class="event-desc">Edinburgh's #1 rated nightlife experience on TripAdvisor — a Harry Potter-inspired underground tavern where you brew your own smoking, bubbling potion cocktails. Don your robes, wave your wand and concoct magical drinks in the Potions Tavern. The perfect end to day one in the most enchanting city in the world.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-number">Day 2</span>
+      <span class="day-title">Kilts, Norse & Ceilidh</span>
+      <span class="day-date">June 2, 2026</span>
+    </div>
+    <ul class="event-list">
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">9:00AM</span>
+        <div class="event-content">
+          <p class="event-name">Breakfast — Brasserie Prince</p>
+          <p class="event-address">The Balmoral Hotel · 1 Princes Street</p>
+          <p class="event-desc">Wake up to breakfast at Brasserie Prince — the chic all-day restaurant inside The Balmoral, where classic French cuisine meets the finest Scottish produce. Think Balmoral smoked Shetland salmon, cultured Edinburgh butter, and the most beautiful fresh fruit spread. A luxurious way to start the day.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">11:00–1:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Kiltmaking</p>
+          <p class="event-address">French Institute of Scotland · West Parliament Square, Edinburgh EH1 1RN · Enter via George IV Bridge</p>
+          <p class="event-desc">One of Scotland's most iconic crafts — you'll learn the art of kiltmaking from a master craftsman, discovering the history of tartans and the intricate technique behind this beloved national garment. A uniquely Scottish experience that connects you to centuries of Highland tradition. The workshop takes place at the French Institute of Scotland — access is via the George IV Bridge entrance.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">1:00–3:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Explore Edinburgh</p>
+          <p class="event-address">Walk, shop & soak it all in</p>
+          <p class="event-desc">Free time to wander Edinburgh's spectacular Old Town. Stroll the Royal Mile, browse the independent boutiques on Victoria Street (the real-life inspiration for Diagon Alley), visit the famous Greyfriars Kirkyard, or simply soak up the medieval atmosphere of one of Europe's most beautiful cities.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">3:30–5:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Sköll & Hati Norse Bar Experience</p>
+          <p class="event-address">3A Merchant Street, Edinburgh EH1 2QD</p>
+          <p class="event-desc">Brand new and already one of Edinburgh's most talked-about bars — Sköll & Hati is a Norse mythology-themed basement tavern with exposed stone walls hidden beneath the Old Town. Created by The Cocktail Geeks, the menu tells the story of Norse mythology and Ragnarök through 18 stunning cocktails, Scandinavian whiskies, ales, mead and charcuterie boards. A truly unique experience.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">6:00–8:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Dinner — Divino Enoteca</p>
+          <p class="event-address">5 Merchant Street, Edinburgh EH1 2QD</p>
+          <p class="event-desc">A hidden gem in Edinburgh's Old Town — Divino Enoteca is a beloved Italian family-run restaurant set in a gorgeous stone-walled cellar. Award-winning for best Italian restaurant in Scotland, with over 200 wines and live smooth jazz every night. The perfect setting for a celebratory dinner.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">8:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Edinburgh Ceilidh Club</p>
+          <p class="event-address">1 Summerhall Square, Edinburgh EH9 1PL</p>
+          <p class="event-desc">The highlight of Edinburgh — a proper Scottish ceilidh! Pronounced "kay-lee," this is Scotland's most beloved tradition: live fiddles, accordions and bagpipes, with a caller who teaches everyone the dances as you go. No experience needed — just energy and enthusiasm. Expect Strip the Willow, the Gay Gordons, and the Dashing White Sergeant. You'll leave with flushed cheeks, sore feet and the biggest smile of the trip.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-number">Day 3</span>
+      <span class="day-title">Loch Lomond & Glasgow</span>
+      <span class="day-date">June 3, 2026</span>
+    </div>
+    <ul class="event-list">
+
+      <!-- FIRST HALF PLACEHOLDER -->
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">8:45AM</span>
+        <div class="event-content">
+          <p class="event-name">Depart The Balmoral Hotel</p>
+          <p class="event-address">1 Princes Street, Edinburgh EH2 2EQ</p>
+          <p class="event-desc">Your private coach collects the group from The Balmoral at 8:45 AM sharp. Have your bags ready in the lobby — luggage will be transferred directly to Cameron House so you travel hands-free for the day.</p>
+        </div>
+      </li>     
+
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">10:00-11:30AM</span>
+        <div class="event-content">
+          <p class="event-name">Stirling Castle</p>
+          <p class="event-address">Castle Wynd, Stirling FK8 1EJ</p>
+          <p class="event-desc">One of Scotland's grandest and most storied castles, Stirling sits atop a volcanic rock with sweeping views across the Highlands. Home to Mary Queen of Scots and the Stuart monarchs, the castle is a masterpiece of Renaissance architecture. Explore the Royal Palace, the Great Hall, and the famous Stirling Heads — and don't miss the views of the Wallace Monument and the battlefield of Bannockburn in the distance. A truly unmissable piece of Scottish history.</p>
+        </div>
+      </li>
+
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">12:30-2:15PM</span>
+        <div class="event-content">
+          <p class="event-name">Lunch — The Garden Restaurant</p>
+          <p class="event-address">MacDonald Forest Hills Hotel & Spa · Kinlochard, Aberfoyle FK8 3TL</p>
+          <p class="event-desc">Nestled in the heart of the Trossachs on the shores of Loch Ard, the Garden Restaurant at MacDonald Forest Hills offers stunning loch views and a menu celebrating the very best of Scottish produce. A beautiful and peaceful stop between Edinburgh and Loch Lomond — the perfect way to ease into the second chapter of the trip.</p>
+        </div>
+      </li>
+
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">3:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Check In — Cameron House</p>
+          <p class="event-address">Cameron House Resort · Loch Lomond, G83 8QZ</p>
+          <p class="event-desc">Welcome to your home on the loch. Cameron House is one of Scotland's most iconic five-star resorts, set on the southern shores of Loch Lomond with Ben Lomond rising dramatically behind it. Check into your rooms, take in those views, and get ready for an evening in Glasgow.</p>
+        </div>
+      </li>
+
+      <!-- GLASGOW EVENING -->
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">5:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Depart Cameron House</p>
+          <p class="event-address">Private transport · ~30 min drive to Glasgow via A82</p>
+          <p class="event-desc">Your private vehicle picks up the group from Cameron House for the short scenic drive down into Glasgow city centre — one of Scotland's most vibrant and under-rated cities.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">5:45-6:05PM</span>
+        <div class="event-content">
+          <p class="event-name">Pollok Country Park — Highland Coos</p>
+          <p class="event-address">Pollok Country Park, Glasgow G43 1AT · Free entry</p>
+          <p class="event-desc">Glasgow's only country park is home to the famous Pollok Fold — a herd of around 50 pedigree Highland cattle that have grazed the estate for nearly 200 years. June is calving season, which means adorable fluffy calves alongside the famous shaggy-haired adults. Just 10 minutes from the city centre but it feels like you've wandered straight into the Highlands. Free to visit, no booking required — your driver waits while you explore.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">6:30PM</span>
+        <div class="event-content">
+          <p class="event-name">Buchanan Street & Princes Square</p>
+          <p class="event-address">Buchanan Street, Glasgow G1 · Princes Square, 48 Buchanan St</p>
+          <p class="event-desc">Glasgow's elegant pedestrianised main street is one of the finest shopping boulevards in the UK — wide, beautiful and lined with everything from boutiques to beautiful architecture. Duck inside Princes Square, a stunning Victorian atrium shopping centre with a gorgeous domed roof, wrought iron balconies and stylish boutiques. The perfect hour to stroll, browse and soak in the city before dinner.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">7:15PM</span>
+        <div class="event-content">
+          <p class="event-name">Dinner — Amarone</p>
+          <p class="event-address">2 Nelson Mandela Place, Glasgow G2 1BT · 0141 333 1122</p>
+          <p class="event-desc">Named Glasgow's Best Overall Restaurant of the Year, Amarone is a beloved Italian institution right off Buchanan Street. Step down into the semi-basement to find an open pizza kitchen, an impressive wine cellar and a warm, buzzing atmosphere. The menu is built around beautiful fresh pasta, wood-fired pizza and outstanding fish and seafood — perfect for the group's tastes. The fish dishes (sea bream, linguine) and pasta are exceptional.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">9:45PM</span>
+        <div class="event-content">
+          <p class="event-name">Blue Dog Piano Bar</p>
+          <p class="event-address">151 West George Street, Glasgow G2 2JJ · bluedogglasgow.co.uk</p>
+          <p class="event-desc">Glasgow's legendary New York-style piano and cocktail bar — a sleek baby grand piano at its heart, with live music every night until 3am. The pianist plays an irresistible mix of jazz, blues and crowd-pleasing classics, and the whole room sings along. Award-winning cocktails, table service, and an atmosphere that reviewers consistently describe as electric.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">11:30PM</span>
+        <div class="event-content">
+          <p class="event-name">Return to Cameron House</p>
+          <p class="event-address">Private transport · Phone 01389 721020 · ~35 min back along the A82</p>
+          <p class="event-desc">Your driver collects the group and whisks you back along the A82 to Cameron House, arriving just after midnight. Loch Lomond at night is something else entirely.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- DAY 4 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-number">Day 4</span>
+      <span class="day-title">Born to be on the Loch</span>
+      <span class="day-date">June 4, 2026</span>
+    </div>
+    <ul class="event-list">
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">9:30AM</span>
+        <div class="event-content">
+          <p class="event-name">Breakfast at the Cameron Grill</p>
+          <p class="event-address">Cameron House Resort · Loch Lomond, G83 8QZ</p>
+          <p class="event-desc">Start the morning in style at Cameron House's signature restaurant, overlooking the shimmering waters of Loch Lomond. Elegant and welcoming, the Cameron Grill is renowned for its exceptional service and a sumptuous breakfast spread — from a full Scottish with East Lothian haggis and Campbells black pudding, to fresh fruit, pastries and specialty coffees. Plush booths, sophisticated décor with baronial touches, and those breathtaking loch views make this the most beautiful breakfast backdrop in Scotland.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">12:00-1:30PM</span>
+        <div class="event-content">
+          <p class="event-name">Champagne Cruise on Loch Lomond</p>
+          <p class="event-address">Cameron House Marina · Celtic Warrior · Loch Lomond</p>
+          <p class="event-desc">Climb aboard the Celtic Warrior — Cameron House's magnificent 46ft luxury cruiser — for an unforgettable one-hour cruise across the bonnie banks of Loch Lomond. Departing from the Cameron House Marina, your skipper will glide past the loch's iconic islands including Inchmurrin and discover hidden coves only visible by boat, all while sharing fascinating tales of the loch's rich history. Sip champagne from the open upper deck as Ben Lomond towers above and the water sparkles below. A birthday moment that simply doesn't get more Scottish or more magical. 🥂🏴󠁧󠁢󠁳󠁣󠁴󠁿</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">3:00-4:30PM</span>
+        <div class="event-content">
+          <p class="event-name">Dress Up Photoshoot</p>
+          <p class="event-address">Cameron House Entrance</p>
+          <p class="event-desc">This afternoon serves as the grand centerpiece of our Scottish journey, dedicated to celebrating Joyce’s milestone 40th birthday in spectacular fashion. To honor her long-held fantasy, wearing the provided costumes our group of ten will step back in time, transforming the historic grounds of Loch Lomond into a living Renaissance masterpiece.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">7:40PM</span>
+        <div class="event-content">
+          <p class="event-name">Rosslea Hall Hotel</p>
+          <p class="event-address">Private transport · Rosslea Hall Hotel · Ferry Road, Rhu, G84 8NF</p>
+          <p class="event-desc">A private car sweeps the group away from the loch for a short scenic drive along the waterfront to Rosslea Hall — a gorgeous Victorian country house hotel perched above the Gareloch, with the kind of views that make you put your phone down and just stare. Inside, candlelight, gorgeous surroundings and a table set just for you. This is Joyce's 40th birthday dinner — the one she'll be talking about for the next 40 years. Raise a glass (or four), embarrass her thoroughly, and make every single moment count. 🎂🥂🏴󠁧󠁢󠁳󠁣󠁴󠁿</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">11:15PM</span>
+        <div class="event-content">
+          <p class="event-name">Return to Cameron House</p>
+          <p class="event-address">Private transport · ~15 min back along the Gareloch</p>
+          <p class="event-desc">The birthday girl is returned safely to her loch — full of good food, great wine, and the love of her favourite people. The water is still. The stars are out. Scotland has done its job.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- DAY 5 -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-number">Day 5</span>
+      <span class="day-title">Farewell Scotland</span>
+      <span class="day-date">June 5, 2026</span>
+    </div>
+    <ul class="event-list">
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">11:00AM</span>
+        <div class="event-content">
+          <p class="event-name">Depart The Cameron House Hotel</p>
+          <p class="event-address">Cameron House Resort · Loch Lomond, G83 8QZ</p>
+          <p class="event-desc">Cars have been arranged to transfer you to the airport.</p>
+        </div>
+      </li>
+      <li class="event-item" onclick="toggleDesc(this)">
+        <span class="event-time">2:00PM</span>
+        <div class="event-content">
+          <p class="event-name">Depart Glasgow Airport</p>
+          <p class="event-address">UA 231 · Glasgow → Newark · Arrives 4:35 PM</p>
+          <p class="event-desc">All good things must come to an end — but what an end it was. Board UA 231 for home, carrying kilts, memories, and stories that will last a lifetime. Scotland will miss you.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="images/joyce-logo.png" alt="Joyce Just a Wee Bit 40" style="height: 120px; width: auto; opacity: 0.8;">
+  </div>
+  <p class="footer-text">Joyce Saad · 40th Birthday · June 1–5, 2026</p>
+</footer>
+
+<script>
+  requireAuth();
+
+  function toggleDesc(item) {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.event-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Countdown to June 1, 2026 9:20 AM Edinburgh time (BST = UTC+1)
+  const TARGET = new Date('2026-06-01T08:20:00Z'); // 9:20 AM BST = 8:20 AM UTC
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = TARGET - now;
+
+    if (diff <= 0) {
+      document.getElementById('days').textContent = '00';
+      document.getElementById('hours').textContent = '00';
+      document.getElementById('minutes').textContent = '00';
+      document.getElementById('seconds').textContent = '00';
+      document.querySelector('.countdown-until').textContent = "We're in Scotland!";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('days').textContent = String(days).padStart(2, '0');
+    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+</script>
+</body>
+</html>

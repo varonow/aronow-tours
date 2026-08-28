@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<meta name="theme-color" content="#2C4A3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Joyce 40">
+
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Edinburgh Guide | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/nav.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  header {
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
+  }
+
+  .header-content { position: relative; z-index: 2; }
+
+  .back-link {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--gold); }
+
+  .header-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-title em { font-style: italic; color: var(--gold); }
+
+  .header-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.2rem;
+  }
+
+  /* CATEGORY TABS */
+  .category-tabs {
+    background: white;
+    border-bottom: 1px solid var(--mist);
+    padding: 0 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-tab {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 1.25rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: var(--stone);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .category-tab:hover { color: var(--forest); }
+  .category-tab.active { color: var(--forest); border-bottom-color: var(--gold); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 3rem 2rem; }
+
+  /* CATEGORY SECTION */
+  .category-section { display: none; overflow: hidden; }
+  .category-section.active { display: block; }
+
+  .section-header { margin-bottom: 2.5rem; }
+
+  .section-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--heather);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.25rem;
+  }
+
+  .section-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--stone);
+    font-size: 1.1rem;
+  }
+
+  .gold-rule { width: 40px; height: 2px; background: var(--gold); margin: 1.5rem 0 2.5rem; }
+
+  /* PLACE CARDS */
+  .places-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .place-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--mist);
+    padding: 1.75rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .place-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    transform: translateY(-2px);
+  }
+
+  .place-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .place-emoji { font-size: 1.8rem; flex-shrink: 0; }
+
+  .place-title-group { flex: 1; }
+
+  .place-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--forest);
+    margin-bottom: 0.2rem;
+  }
+
+  .place-name a {
+    color: var(--forest);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,168,76,0.5);
+    transition: color 0.2s;
+  }
+
+  .place-name a:hover { color: var(--heather); }
+
+  .place-tag {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--mist);
+    color: var(--stone);
+    padding: 3px 10px;
+    border-radius: 10px;
+    display: inline-block;
+  }
+
+  .place-tag.gold { background: #fdf8ee; color: var(--gold); }
+
+  .place-address {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    margin-bottom: 0.75rem;
+  }
+
+  .place-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    color: var(--dark);
+    line-height: 1.7;
+  }
+
+  .place-tip {
+    margin-top: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: #fdf8ee;
+    border-left: 2px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--stone);
+  }
+
+  .place-tip strong { color: var(--gold); }
+
+  .map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--heather);
+    text-decoration: none;
+    margin-top: 0.75rem;
+    transition: color 0.2s;
+  }
+
+  .map-link:hover { color: var(--forest); }
+
+  footer {
+    background: var(--forest);
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-top: 4rem;
+  }
+
+  @media (max-width: 600px) {
+    main { padding: 2rem 1.25rem; }
+    .category-tab { padding: 1rem 1rem; font-size: 10px; }
+  }
+</style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2C4A3E">
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <p class="header-eyebrow">Scotland 2026 · Edinburgh</p>
+    <h1 class="header-title">The <em>Local</em> Guide</h1>
+    <p class="header-subtitle">Our curated picks for Edinburgh's best</p>
+  </div>
+</header>
+
+<!-- CATEGORY TABS -->
+<div class="category-tabs">
+  <button class="category-tab active" onclick="showCategory('map')">🗺️ Map</button>
+  <button class="category-tab" onclick="showCategory('cocktails')">🍸 Cocktails</button>
+  <button class="category-tab" onclick="showCategory('whisky')">🥃 Whisky</button>
+  <button class="category-tab" onclick="showCategory('coffee')">☕ Coffee</button>
+  <button class="category-tab" onclick="showCategory('snacks')">🍦 Snacks</button>
+  <button class="category-tab" onclick="showCategory('shopping')">🛍️ Shopping</button>
+  <button class="category-tab" onclick="showCategory('sights')">🏰 Sights</button>
+  <button class="category-tab" onclick="showCategory('glasgow')">🏙️ Glasgow</button>
+  <button class="category-tab" onclick="showCategory('lomond')">🚣 Loch Lomond</button>
+</div>
+
+<main>
+
+  <!-- MAP TAB -->
+  <div class="category-section active" id="cat-map">
+    <div class="section-header">
+      <p class="section-eyebrow">Edinburgh · All Our Picks</p>
+      <h2 class="section-title">The Map</h2>
+      <p class="section-desc">All 34 recommended spots — tap any pin to open in Google Maps</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--mist);">
+      <iframe src="https://www.google.com/maps/d/embed?mid=1Ex_U7Ylm4X7amKyEVFuimXdpk8ChdaE&ehbc=2E312F&noprof=1" width="100%" height="520" style="border:0; display:block;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; color: var(--stone); margin-top: 1rem; text-align: center;">Browse the tabs above to read about each spot 👆</p>
+  </div>
+
+  <!-- COCKTAILS -->
+  <div class="category-section" id="cat-cocktails">
+    <div class="section-header">
+      <p class="section-eyebrow">Beyond the Scheduled Stops</p>
+      <h2 class="section-title">Cocktail Bars</h2>
+      <p class="section-desc">Edinburgh has one of the best cocktail scenes in the UK — these are the ones worth seeking out</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🐼</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.pandaandsons.com" target="_blank" rel="noopener">Panda & Sons</a></p>
+            <span class="place-tag gold">World's Best Bar 2025</span>
+          </div>
+        </div>
+        <p class="place-address">79 Queen Street, Edinburgh EH2 4NF</p>
+        <a href="https://maps.google.com/?q=Panda+%26+Sons+79+Queen+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most iconic speakeasy — hidden behind a bookshelf in what appears to be an old barbershop. Named World's Best Bar in 2025, this is a rite of passage for any serious Edinburgh visitor. Ring the bell, find the bookcase, and prepare to be blown away.</p>
+        <div class="place-tip"><strong>Tip:</strong> Ring the doorbell of the "barbershop" and push the bookshelf to enter. Book ahead — it fills up fast.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🌿</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.bramblebar.co.uk" target="_blank" rel="noopener">Bramble Bar</a></p>
+            <span class="place-tag">Underground Speakeasy</span>
+          </div>
+        </div>
+        <p class="place-address">16A Queen Street, Edinburgh EH2 1JE</p>
+        <a href="https://maps.google.com/?q=Bramble+Bar+16A+Queen+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">The original Edinburgh speakeasy that started it all. Hidden in a New Town basement with tea lights, alcoves, and exposed brick, Bramble has been one of the city's most beloved cocktail bars since 2006. Classic, unpretentious, and absolutely brilliant.</p>
+        <div class="place-tip"><strong>Tip:</strong> No sign outside — look for the steps down on Queen Street, just doors from Panda & Sons. Do both in one evening!</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍋</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.heypalu.com" target="_blank" rel="noopener">Hey Palu</a></p>
+            <span class="place-tag">UK Top 50 · #17</span>
+          </div>
+        </div>
+        <p class="place-address">49 Bread Street, Edinburgh EH3 9AH</p>
+        <a href="https://maps.google.com/?q=Hey+Palu+49+Bread+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A love letter to Italian aperitivo culture — ranked #17 in the UK Top 50 cocktail bars. Famous for its extraordinary amaro collection, frozen Martinis straight from the freezer, and Italian-inspired nibbles. Chic, intimate, and utterly delicious.</p>
+        <div class="place-tip"><strong>Tip:</strong> Try an amaro flight if you've never explored Italian bitters — the bar team are passionate guides.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🧙</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://thealchemist.uk.com/venues/edinburgh-st-james-quarter/" target="_blank" rel="noopener">The Alchemist</a></p>
+            <span class="place-tag">Theatrical Cocktails</span>
+          </div>
+        </div>
+        <p class="place-address">St James Quarter & George Street, Edinburgh</p>
+        <a href="https://maps.google.com/?q=The+Alchemist+St+James+Quarter+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most theatrical cocktail experience — think dry ice, flames, smoking drinks and novelty props. Every drink is a performance. Not the most nuanced cocktail bar in the city, but wildly fun and extremely Instagrammable.</p>
+        <div class="place-tip"><strong>Tip:</strong> The St James Quarter location is steps from Duck & Waffle — perfect for a pre or post-lunch drink on Day 1.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🚪</span>
+          <div class="place-title-group">
+            <p class="place-name">Never Really Here</p>
+            <span class="place-tag">No-Menu Speakeasy</span>
+          </div>
+        </div>
+        <p class="place-address">Rose Street North Lane, Edinburgh EH2</p>
+        <a href="https://maps.google.com/?q=Never+Really+Here+Rose+Street+North+Lane+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most secretive bar — no menu, no sign, no fanfare. Just an unmarked door on Rose Street North Lane. Tell the bartender what you're feeling and they'll craft something bespoke just for you. One of the most special bar experiences in Scotland.</p>
+        <div class="place-tip"><strong>Tip:</strong> Small capacity — arrive early or you may not get in. Strict policy on group sizes.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎸</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://stramashedinburgh.com" target="_blank" rel="noopener">Stramash</a></p>
+            <span class="place-tag gold">Free Live Music Nightly</span>
+          </div>
+        </div>
+        <p class="place-address">207 Cowgate, Edinburgh EH1 1JQ</p>
+        <a href="https://maps.google.com/?q=Stramash+207+Cowgate+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's greatest live music bar — a massive 900-capacity converted church on the Cowgate with live bands playing every single night until 3am, completely free. Two floors, a huge stage, mezzanine bar, and a bouncing dancefloor. Wednesday nights feature a traditional ceilidh. If you want to dance until 3am after the Voodoo Rooms or Department of Magic, this is where you end up.</p>
+        <div class="place-tip"><strong>Tip:</strong> Free entry every night — just show up. Wednesday ceilidh is brilliant for a first-timer, even better after a few drams.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎵</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.sneakypetes.co.uk" target="_blank" rel="noopener">Sneaky Pete's</a></p>
+            <span class="place-tag">Edinburgh Institution</span>
+          </div>
+        </div>
+        <p class="place-address">73 Cowgate, Edinburgh EH1 1JW</p>
+        <a href="https://maps.google.com/?q=Sneaky+Petes+73+Cowgate+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most legendary grassroots music club — a tiny 100-capacity basement on the Cowgate where Lewis Capaldi and Mumford & Sons played their early gigs. Named by DJ Magazine as one of the most important clubs in the world. Dark, brick-lined, loud, and absolutely electric. Gigs from 7pm nightly, club nights until 3am.</p>
+        <div class="place-tip"><strong>Tip:</strong> Check their website for the weekly lineup — the gig programme is exceptional. Right next door to Stramash for a double hit of live music.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎭</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.encoreedinburgh.com" target="_blank" rel="noopener">Encore Speakeasy</a></p>
+            <span class="place-tag gold">Most Glamorous</span>
+          </div>
+        </div>
+        <p class="place-address">4 Hope Street, Edinburgh EH2 4DB</p>
+        <a href="https://maps.google.com/?q=Encore+Speakeasy+4+Hope+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most glamorous secret bar — a Moulin Rouge-inspired underground speakeasy hidden below the West End Brasserie. Enter through a picture frame door into red velvet sofas, gold trim booths, a "Press for Cocktails" button, and theatrical Parisian-inspired cocktails. Live DJs playing disco, funk, soul and R&B on weekends. Pure opulence.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book ahead — fills up fast on weekends. Dress up, sportswear not allowed. The art deco photo booth is a must!</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="category-section" id="cat-whisky">
+    <div class="section-header">
+      <p class="section-eyebrow">Scotland's Liquid Gold</p>
+      <h2 class="section-title">Whisky Experiences</h2>
+      <p class="section-desc">You're in Scotland — you have to drink whisky. Here's where to do it properly</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏰</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.johnniewalker.com/en-gb/visit-us/princes-street/" target="_blank" rel="noopener">Johnnie Walker Princes Street</a></p>
+            <span class="place-tag gold">Must Do</span>
+          </div>
+        </div>
+        <p class="place-address">145 Princes Street, Edinburgh EH2 4BL</p>
+        <a href="https://maps.google.com/?q=Johnnie+Walker+145+Princes+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A stunning five-floor whisky experience in the heart of Edinburgh with the best castle views in the city from the rooftop 1820 bar. Take an immersive whisky tour and sample three whisky cocktails, then head to the rooftop terrace for sunset views of Edinburgh Castle. One of the best experiences in the city.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book the tour in advance — and anyone can visit the 1820 rooftop bar without a tour. Go at sunset!</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🥃</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.scotchwhiskyexperience.co.uk" target="_blank" rel="noopener">The Scotch Whisky Experience</a></p>
+            <span class="place-tag">Royal Mile</span>
+          </div>
+        </div>
+        <p class="place-address">354 Castlehill, Royal Mile, Edinburgh EH1 2NE</p>
+        <p class="place-desc">Right at the top of the Royal Mile next to Edinburgh Castle, this world-class visitor centre takes you on a barrel ride through the history of Scotch whisky. Choose from a range of tasting experiences — from a quick introduction to a deep dive into Scotland's four whisky regions.</p>
+        <div class="place-tip"><strong>Tip:</strong> The Silver Tour includes four regional whisky tastings and takes about 75 minutes — perfect for a half-afternoon.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍾</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.royalmilewhiskies.com" target="_blank" rel="noopener">Royal Mile Whiskies</a></p>
+            <span class="place-tag">Shopping</span>
+          </div>
+        </div>
+        <p class="place-address">379 High Street, Royal Mile, Edinburgh EH1 1PW</p>
+        <a href="https://maps.google.com/?q=Royal+Mile+Whiskies+379+High+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's finest whisky shop — stocking hundreds of expressions from rare single malts to blended Scotch. Perfect for picking up a bottle to bring home or finding something truly special. The knowledgeable staff will help you find exactly the right dram.</p>
+        <div class="place-tip"><strong>Tip:</strong> Look for limited edition releases and exclusive bottlings you won't find at home.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COFFEE -->
+  <div class="category-section" id="cat-coffee">
+    <div class="section-header">
+      <p class="section-eyebrow">Pit Stops & Pick-Me-Ups</p>
+      <h2 class="section-title">Coffee & Cafés</h2>
+      <p class="section-desc">Edinburgh's café scene is exceptional — these are the ones worth ducking into</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🥛</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.themilkman.coffee" target="_blank" rel="noopener">The Milkman</a></p>
+            <span class="place-tag gold">Most Instagrammable</span>
+          </div>
+        </div>
+        <p class="place-address">52 Cockburn Street, Edinburgh EH1 1PB</p>
+        <a href="https://maps.google.com/?q=The+Milkman+52+Cockburn+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most charming café — tucked in a beautifully restored old sweet shop on Cockburn Street with curved windows made famous on Instagram. The coffee is excellent and the morning buns are legendary. A perfect rest stop right near the Royal Mile.</p>
+        <div class="place-tip"><strong>Tip:</strong> Grab a window seat to watch the world go by on one of Edinburgh's most photogenic streets. Go early to beat the queues.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🥐</span>
+          <div class="place-title-group">
+            <p class="place-name">La Barantine</p>
+            <span class="place-tag">French Patisserie</span>
+          </div>
+        </div>
+        <p class="place-address">Old Town, Edinburgh</p>
+        <p class="place-desc">An authentic French artisan bakery in the heart of the Old Town, run by French pâtissiers. Everything is handmade — croissants, pain au chocolat, Paris-Brest, lemon tarts, and éclairs. The most genuine French café experience outside of Paris, right in Edinburgh's cobbled streets.</p>
+        <div class="place-tip"><strong>Tip:</strong> Go in the morning for the freshest pastries — they sell out fast.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍂</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://soderberg.uk" target="_blank" rel="noopener">Söderberg</a></p>
+            <span class="place-tag">Swedish Café</span>
+          </div>
+        </div>
+        <p class="place-address">Multiple locations, Edinburgh</p>
+        <a href="https://maps.google.com/?q=Twelve+Triangles+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's beloved Swedish café — utterly beautiful Scandi-inspired interiors with fluffy cardamom buns filled with almond paste and whipped cream alongside silky flat whites. Warm, unhurried, and the perfect spot to rest tired feet between sightseeing.</p>
+        <div class="place-tip"><strong>Tip:</strong> The Grassmarket location is the most atmospheric — perfect after a browse of Victoria Street.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🧪</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://brewlabcoffee.co.uk" target="_blank" rel="noopener">Brew Lab Coffee</a></p>
+            <span class="place-tag">Specialty Roaster</span>
+          </div>
+        </div>
+        <p class="place-address">6–8 South College Street, Edinburgh EH8 9AA</p>
+        <a href="https://maps.google.com/?q=Brew+Lab+Coffee+6+South+College+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">One of Edinburgh's first and finest third-wave coffee shops — a minimalist, lab-like space near the National Museum of Scotland where the baristas treat every cup like a masterclass. Single origin beans, precise brewing methods, and a great food menu of toasties and bagels. Perfect for a serious coffee stop in the Old Town.</p>
+        <div class="place-tip"><strong>Tip:</strong> Ask the baristas about their current beans — they genuinely love talking about it. Steps from the National Museum.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏔️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.cairngorm.coffee" target="_blank" rel="noopener">Cairngorm Coffee</a></p>
+            <span class="place-tag">New Town Favourite</span>
+          </div>
+        </div>
+        <p class="place-address">1 Melville Place, Edinburgh EH3 7PR</p>
+        <a href="https://maps.google.com/?q=Cairngorm+Coffee+1+Melville+Place+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's brightest and most beautiful café — a gorgeous corner space in the New Town with an entire wall of windows flooding the room with light. Named after Scotland's famous mountain range, they roast their own beans in the Cairngorms using the first San Remo Opera machine in Scotland. Exceptional coffee, healthy food options, and a wonderfully airy vibe.</p>
+        <div class="place-tip"><strong>Tip:</strong> The Melville Place location is the most beautiful — a perfect stop on the way to Dean Village. Also has a Frederick Street location in central New Town.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SNACKS -->
+  <div class="category-section" id="cat-snacks">
+    <div class="section-header">
+      <p class="section-eyebrow">For the Hungry Wanderer</p>
+      <h2 class="section-title">Snacks & Bites</h2>
+      <p class="section-desc">When hunger strikes between activities — Edinburgh has some excellent quick stops</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍦</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.marysmilkbar.com" target="_blank" rel="noopener">Mary's Milk Bar</a></p>
+            <span class="place-tag gold">Edinburgh Institution</span>
+          </div>
+        </div>
+        <p class="place-address">19 Grassmarket, Edinburgh EH1 2HS</p>
+        <a href="https://maps.google.com/?q=Marys+Milk+Bar+19+Grassmarket+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Voted the best ice cream in the UK — a tiny retro gelato parlour in the Grassmarket with views straight up to Edinburgh Castle. Mary trained at the Carpigiani Gelato University in Bologna and makes new flavours every morning. Expect queues, but they move fast and every scoop is worth it. Try the spaghetti gelato — a scoop presented as spaghetti with cherry "meatballs" and white chocolate "parmesan."</p>
+        <div class="place-tip"><strong>Tip:</strong> Check their Instagram the morning of your visit to see that day's flavours. Open Wed–Sun 11am–7:30pm.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🐟</span>
+          <div class="place-title-group">
+            <p class="place-name">Bertie's Fish & Chips</p>
+            <span class="place-tag">Classic Scottish</span>
+          </div>
+        </div>
+        <p class="place-address">Victoria Street, Edinburgh</p>
+        <a href="https://maps.google.com/?q=Victoria+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Proper Scottish fish and chips — crispy battered haddock, golden chips, and mushy peas on Victoria Street. Sometimes you just need the most perfectly executed version of a classic. This is it. Grab a paper cone and eat them on the Grassmarket steps watching Edinburgh Castle.</p>
+        <div class="place-tip"><strong>Tip:</strong> Get the haggis and chips if you want the full Scottish experience.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🧀</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.mellischeese.net" target="_blank" rel="noopener">I.J. Mellis Cheesemonger</a></p>
+            <span class="place-tag">Artisan Food</span>
+          </div>
+        </div>
+        <p class="place-address">30A Victoria Street, Edinburgh EH1 2JW</p>
+        <a href="https://maps.google.com/?q=IJ+Mellis+30A+Victoria+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's legendary artisan cheesemonger on Victoria Street — a cave-like shop bursting with extraordinary farmhouse and artisan cheeses from Scotland and beyond. Pick up a wedge of mature Scottish cheddar or a creamy soft cheese with oatcakes for the perfect impromptu picnic.</p>
+        <div class="place-tip"><strong>Tip:</strong> The staff will let you taste before you buy — ask for a recommendation and they'll find your perfect cheese.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍫</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.chocolatarium.co.uk" target="_blank" rel="noopener">The Chocolatarium</a></p>
+            <span class="place-tag gold">Viral on TikTok</span>
+          </div>
+        </div>
+        <p class="place-address">3–5 Cranston Street, Edinburgh EH8 8BE</p>
+        <a href="https://maps.google.com/?q=Chocolatarium+3+Cranston+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Scotland's most talked-about chocolate experience — a 90-minute immersive tour at a micro-factory just off the Royal Mile. Taste over 40 varieties of chocolate including haggis chocolate, chilli chocolate and Japanese chocolate, then make your own bar to take home. A TripAdvisor Best of the Best winner and all over TikTok for good reason.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book in advance — it sells out fast. Try the whisky truffle making experience for the most Scottish version! Adults £28.</div>
+      </div>
+
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🥐</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.twelvetriangles.com" target="_blank" rel="noopener">Twelve Triangles</a></p>
+            <span class="place-tag">Artisan Bakery</span>
+          </div>
+        </div>
+        <p class="place-address">90 Brunswick Street, Edinburgh EH7 5HU</p>
+        <a href="https://maps.google.com/?q=Twelve+Triangles+90+Brunswick+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's finest artisan bakery — every loaf and pastry is made by hand using slow-fermented cold-prove doughs that take three to four days. The grilled cheese toasties, sourdough, and flaky croissants are extraordinary. Perfect for a quick and delicious mid-morning snack.</p>
+        <div class="place-tip"><strong>Tip:</strong> Don't miss the seasonal jam doughnuts — they sell out by midday.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SHOPPING -->
+  <div class="category-section" id="cat-shopping">
+    <div class="section-header">
+      <p class="section-eyebrow">Take a Little Scotland Home</p>
+      <h2 class="section-title">Shopping</h2>
+      <p class="section-desc">From designer boutiques to quirky independents — Edinburgh is a shoppers' delight</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🌈</span>
+          <div class="place-title-group">
+            <p class="place-name">Victoria Street</p>
+            <span class="place-tag gold">Most Photogenic</span>
+          </div>
+        </div>
+        <p class="place-address">Victoria Street, Edinburgh EH1</p>
+        <a href="https://maps.google.com/?q=Victoria+Street+Edinburgh+EH1" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most beautiful shopping street — a winding rainbow of colourful buildings said to have inspired J.K. Rowling's Diagon Alley. Lined with independent boutiques, artisan cheese shops, whisky stores, and galleries. You're already visiting for the bag making workshop — but leave time to browse.</p>
+        <div class="place-tip"><strong>Tip:</strong> Don't miss the Red Door Gallery for Scottish art prints, and Museum Context for Harry Potter collectibles.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏛️</span>
+          <div class="place-title-group">
+            <p class="place-name">Multrees Walk</p>
+            <span class="place-tag">Designer Shopping</span>
+          </div>
+        </div>
+        <p class="place-address">Multrees Walk, St Andrew Square, Edinburgh EH1</p>
+        <a href="https://maps.google.com/?q=Multrees+Walk+St+Andrew+Square+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's luxury shopping destination — home to Scotland's only Harvey Nichols alongside Louis Vuitton, Mulberry, Burberry, Michael Kors and more. Steps from The Balmoral, this is the place for a designer treat. The Harvey Nichols is exceptional — four floors of the best fashion and beauty in Scotland.</p>
+        <div class="place-tip"><strong>Tip:</strong> Harvey Nichols has an excellent beauty hall — perfect for picking up a luxury Scottish skincare brand like Arran Aromatics.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎩</span>
+          <div class="place-title-group">
+            <p class="place-name">Grassmarket</p>
+            <span class="place-tag">Independent Boutiques</span>
+          </div>
+        </div>
+        <p class="place-address">Grassmarket, Edinburgh EH1 2JU</p>
+        <a href="https://maps.google.com/?q=Grassmarket+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most characterful shopping area — cobbled streets beneath the castle packed with independent boutiques, vintage shops, and artisan makers. Highlights include Fabhatrix for handmade hats, Armstrong's Vintage for incredible second-hand finds, and Walker & Slater for beautiful Scottish tweed.</p>
+        <div class="place-tip"><strong>Tip:</strong> Saturday morning brings a weekly market with local crafts, artisan food, and live music.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">📚</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.toppingbooks.co.uk" target="_blank" rel="noopener">Topping & Company Booksellers</a></p>
+            <span class="place-tag gold">Edinburgh's Best Bookshop</span>
+          </div>
+        </div>
+        <p class="place-address">2 Blenheim Place, Edinburgh EH7 5JH</p>
+        <a href="https://maps.google.com/?q=Topping+Company+2+Blenheim+Place+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most magical bookshop — a breathtaking three-floor independent in a beautiful Grade A listed building with floor-to-ceiling shelves and iconic rolling library ladders. Over 70,000 books including signed first editions, and they serve complimentary tea and coffee to every browser. Open 9am–9pm daily. An absolute must.</p>
+        <div class="place-tip"><strong>Tip:</strong> Grab a cup of tea, climb a ladder, and lose yourself for an hour. They also do signed author editions and literary events.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🕯️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.thegentlymad.co.uk" target="_blank" rel="noopener">The Gently Mad</a></p>
+            <span class="place-tag">Antiquarian Bookshop</span>
+          </div>
+        </div>
+        <p class="place-address">2 Summer Place, Edinburgh EH3 5NR</p>
+        <a href="https://maps.google.com/?q=The+Gently+Mad+2+Summer+Place+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">One of Edinburgh's most enchanting hidden gems — a tiny family-run antiquarian bookshop and working bookbindery near the Royal Botanic Garden. Stacked floor to ceiling with rare books, leather-bound classics, vintage illustrated editions and old maps, all watched over by warm lamplight and the scent of aged paper. Pure dark academia magic.</p>
+        <div class="place-tip"><strong>Tip:</strong> Combine with a walk through the Royal Botanic Garden — it's a 5-minute stroll. Check hours before visiting as they vary.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">👗</span>
+          <div class="place-title-group">
+            <p class="place-name">George Street</p>
+            <span class="place-tag">Fashion Hub</span>
+          </div>
+        </div>
+        <p class="place-address">George Street, Edinburgh EH2</p>
+        <a href="https://maps.google.com/?q=George+Street+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's chic fashion thoroughfare — a broad Georgian boulevard lined with stylish brands including Anthropologie, Reiss, Karen Millen, AllSaints, and Oliver Bonas alongside beautiful bars and restaurants. Perfect for a leisurely browse followed by a cocktail at one of the street's gorgeous bars.</p>
+        <div class="place-tip"><strong>Tip:</strong> Rox Jewellers on George Street has some stunning Scottish-inspired fine jewellery — a beautiful souvenir.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SIGHTS -->
+  <div class="category-section" id="cat-sights">
+    <div class="section-header">
+      <p class="section-eyebrow">Worth Popping Into</p>
+      <h2 class="section-title">Quick Sights</h2>
+      <p class="section-desc">Edinburgh is a city of extraordinary beauty around every corner — don't miss these during free time</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏔️</span>
+          <div class="place-title-group">
+            <p class="place-name">Calton Hill</p>
+            <span class="place-tag gold">Best City Views</span>
+          </div>
+        </div>
+        <p class="place-address">Calton Hill, Edinburgh EH7 5AA</p>
+        <a href="https://maps.google.com/?q=Calton+Hill+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most spectacular viewpoint — a short climb from the city centre rewarded with panoramic 360-degree views of the castle, Arthur's Seat, the Firth of Forth, and the entire city skyline. Home to the unfinished National Monument (Edinburgh's "Disgrace") and the Nelson Monument. A must for golden hour.</p>
+        <div class="place-tip"><strong>Tip:</strong> Takes about 15 minutes to walk from The Balmoral. Go just before sunset for the most magical views.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">⚰️</span>
+          <div class="place-title-group">
+            <p class="place-name">Greyfriars Kirkyard</p>
+            <span class="place-tag">Harry Potter History</span>
+          </div>
+        </div>
+        <p class="place-address">Greyfriars Place, Edinburgh EH1 2QQ</p>
+        <a href="https://maps.google.com/?q=Greyfriars+Kirkyard+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Edinburgh's most atmospheric graveyard — and the real-life inspiration for Harry Potter. Find Tom Riddle's grave, the graves that inspired other characters, and see the view of George Heriot's School (the real Hogwarts) over the wall. Also home to the statue of Greyfriars Bobby, Edinburgh's most loyal dog.</p>
+        <div class="place-tip"><strong>Tip:</strong> Free to enter and takes 20 minutes. The adjacent Greyfriars Bobby pub is a lovely spot for a pint afterwards.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🌊</span>
+          <div class="place-title-group">
+            <p class="place-name">Dean Village</p>
+            <span class="place-tag">Hidden Gem</span>
+          </div>
+        </div>
+        <p class="place-address">Dean Village, Edinburgh EH4</p>
+        <p class="place-desc">Edinburgh's most secret neighbourhood — a tucked-away medieval mill village just 10 minutes' walk from Princes Street that feels entirely removed from the busy city. Picturesque stone buildings, a rushing river, and almost no tourists. One of Edinburgh's most beautiful and underrated spots for a wander and photos.</p>
+        <div class="place-tip"><strong>Tip:</strong> Walk down from the West End via Bell's Brae for the most dramatic first impression. Free and takes about 30 minutes to explore.</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍺</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.nicholsonspubs.co.uk/restaurants/scotlandandnorthernireland/thelastdropgrassmarketedinburgh" target="_blank" rel="noopener">The Last Drop</a></p>
+            <span class="place-tag gold">Historic Pub</span>
+          </div>
+        </div>
+        <p class="place-address">74–78 Grassmarket, Edinburgh EH1 2JR</p>
+        <a href="https://maps.google.com/?q=The+Last+Drop+74+Grassmarket+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">One of Edinburgh's most atmospheric pubs — and its name is delightfully macabre. Built right next to the Grassmarket gallows, it's named after the last public hanging in Edinburgh in 1864. The condemned would reportedly have their final drink here before their execution across the road. Low ceilings, cosy booths, cask ales, great Scottish pub food, and allegedly a resident ghost. A proper Edinburgh experience.</p>
+        <div class="place-tip"><strong>Tip:</strong> Grab a window seat with views up to Edinburgh Castle and order a Scotch pie with your pint. The history alone is worth the visit!</div>
+      </div>
+
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏛️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.nms.ac.uk" target="_blank" rel="noopener">National Museum of Scotland</a></p>
+            <span class="place-tag">Free Entry</span>
+          </div>
+        </div>
+        <p class="place-address">Chambers Street, Edinburgh EH1 1JF</p>
+        <a href="https://maps.google.com/?q=National+Museum+of+Scotland+Edinburgh" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">One of the best free museums in Europe — a spectacular Victorian building housing thousands of years of Scottish and world history. From Dolly the Sheep to ancient Scottish treasures, Viking artefacts, and the story of Scotland's clans and tartans. Perfect for an hour on a rainy afternoon.</p>
+        <div class="place-tip"><strong>Tip:</strong> Head to the top floor rooftop terrace for free views of the Old Town skyline — Edinburgh Castle looks incredible from here.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GLASGOW -->
+  <div class="category-section" id="cat-glasgow">
+    <div class="section-header">
+      <p class="section-eyebrow">A Night in the City</p>
+      <h2 class="section-title">Glasgow</h2>
+      <p class="section-desc">Glasgow has Scotland's most legendary pub scene — these are the places to spend an evening drinking, dancing, and soaking up that famous Glaswegian welcome</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">💃</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.sloansglasgow.com" target="_blank" rel="noopener">Sloans</a></p>
+            <span class="place-tag gold">Friday Night Ceilidh</span>
+          </div>
+        </div>
+        <p class="place-address">108 Argyle Street, Glasgow G2 8BG</p>
+        <a href="https://maps.google.com/?q=Sloans+108+Argyle+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Glasgow's oldest pub, established in 1797 and tucked away in a quiet courtyard off Buchanan Street. Three floors of Grade-A listed Victorian splendour — tiled entranceway, grand mahogany staircase, and a stunning ballroom with vaulted ceilings and stained glass. Friday night ceilidhs are the stuff of legend.</p>
+        <div class="place-tip"><strong>Tip:</strong> If your Glasgow night falls on a Friday, the ceilidh starts at 9pm in the upstairs ballroom — book ahead, it sells out. Otherwise the courtyard with twinkly fairy lights is magical year-round.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🥃</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.thepotstill.co.uk" target="_blank" rel="noopener">The Pot Still</a></p>
+            <span class="place-tag gold">700+ Whiskies</span>
+          </div>
+        </div>
+        <p class="place-address">154 Hope Street, Glasgow G2 2TH</p>
+        <a href="https://maps.google.com/?q=The+Pot+Still+154+Hope+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A family-run institution since 1867 with over 700 whiskies stretching from floor to ceiling behind the bar. Multi-award-winning, ranked #1 traditional pub in Glasgow on Tripadvisor, and home to the city's first women's whisky club. The expert staff will find your perfect dram no matter your taste.</p>
+        <div class="place-tip"><strong>Tip:</strong> Tell them what you usually drink (or what you've never tried) and let them choose for you — that's the whole point of going.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🐴</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.thehorseshoebarglasgow.co.uk" target="_blank" rel="noopener">The Horseshoe Bar</a></p>
+            <span class="place-tag">Europe's Longest Bar</span>
+          </div>
+        </div>
+        <p class="place-address">17-19 Drury Street, Glasgow G2 5AE</p>
+        <a href="https://maps.google.com/?q=Horseshoe+Bar+17+Drury+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A 170-year-old Victorian gem with the longest continuous bar in Europe — 104 feet of curved mahogany. Original wooden panels, clouded glass, and antique fittings throughout. The crowd is everyone from old regulars to students to visitors, and the atmosphere is pure no-fuss Glaswegian warmth.</p>
+        <div class="place-tip"><strong>Tip:</strong> Two minutes from Glasgow Central Station — perfect for a first stop straight off the train, or a last pint before heading home.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🎵</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.facebook.com/cluthabar" target="_blank" rel="noopener">The Clutha</a></p>
+            <span class="place-tag">Live Music Nightly</span>
+          </div>
+        </div>
+        <p class="place-address">167 Stockwell Street, Glasgow G1 4LN</p>
+        <a href="https://maps.google.com/?q=The+Clutha+167+Stockwell+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A 200-year-old Glasgow institution with live music every single night and a famous mural of past patrons including Billy Connolly, Frank Zappa, and Spike Milligan. Loud, loose, joyful, and absolutely Glaswegian — this is where the city's musical heart beats hardest.</p>
+        <div class="place-tip"><strong>Tip:</strong> Across the street is The Scotia (1792), one of the oldest pubs in the city — do both for a brilliant Stockwell Street pub crawl.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍻</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.bonaccordpub.com" target="_blank" rel="noopener">The Bon Accord</a></p>
+            <span class="place-tag">CAMRA Award Winner</span>
+          </div>
+        </div>
+        <p class="place-address">153 North Street, Glasgow G3 7DA</p>
+        <a href="https://maps.google.com/?q=Bon+Accord+153+North+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Around 800 different real ales rotate through here every year, plus 400+ single malt whiskies. Voted UK's Best Whisky Bar and CAMRA Bar of the Year for Glasgow seven times. Antique wooden bar surrounded by hundreds of bottles — for anyone who takes their drinks seriously, this is hallowed ground.</p>
+        <div class="place-tip"><strong>Tip:</strong> A 10-minute walk from the city centre — pair with a pre-flight breakfast at the nearby West End if you've got time before heading to the airport.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🏔️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.thebennevisbar.co.uk" target="_blank" rel="noopener">The Ben Nevis Bar</a></p>
+            <span class="place-tag">Traditional Trad Sessions</span>
+          </div>
+        </div>
+        <p class="place-address">1147 Argyle Street, Glasgow G3 8TB</p>
+        <a href="https://maps.google.com/?q=Ben+Nevis+Bar+1147+Argyle+Street+Glasgow" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Step inside and feel transported to a Highland bothy — exposed stone walls, a roaring fire, reclaimed timber, and Gaelic etchings everywhere. Traditional music sessions every Wednesday, Thursday, and Sunday from 8pm with local musicians playing fiddle, accordion, and bodhrán.</p>
+        <div class="place-tip"><strong>Tip:</strong> If you only have time for one truly Scottish-feeling pub on this trip, this is it — order a dram, sit by the fire, listen to the trad music, and you'll feel a hundred miles from a city.</div>
+      </div>
+ 
+    </div>
+  </div>
+ 
+ 
+  <!-- LOCH LOMOND -->
+  <div class="category-section" id="cat-lomond">
+    <div class="section-header">
+      <p class="section-eyebrow">Within Easy Reach of Cameron House</p>
+      <h2 class="section-title">Loch Lomond</h2>
+      <p class="section-desc">All within a 25-minute drive of the hotel — so you can wake up, head out, and be back in time for tea</p>
+    </div>
+    <div class="gold-rule"></div>
+    <div class="places-grid">
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🌸</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.lussvillage.com" target="_blank" rel="noopener">Luss Village</a></p>
+            <span class="place-tag gold">Scotland's Prettiest Village</span>
+          </div>
+        </div>
+        <p class="place-address">Luss, G83 8NN · 15 minutes from Cameron House</p>
+        <a href="https://maps.google.com/?q=Luss+Village+Loch+Lomond" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A picture-perfect 18th-century conservation village of whitewashed stone cottages, manicured gardens, and a famous pier with views straight up the loch to Ben Lomond. The whole village can be wandered in an hour, but you'll want longer — every corner is photographable.</p>
+        <div class="place-tip"><strong>Tip:</strong> Park in the North Car Park (G83 8PG) — the village streets are residents-only. Walk down to the pier first thing for the best photos before the day-trippers arrive.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍸</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://lussdistillery.com" target="_blank" rel="noopener">Luss Distillery</a></p>
+            <span class="place-tag">Ben Lomond Gin</span>
+          </div>
+        </div>
+        <p class="place-address">Church Road, Luss, G83 8NY · 15 min from Cameron House</p>
+        <a href="https://maps.google.com/?q=Luss+Distillery+Church+Road+Luss" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Brand-new state-of-the-art distillery on the shores of Loch Lomond, opened in 2025 by First Minister John Swinney. Home of Ben Lomond Scottish Gin and the public face of Loch Lomond Whiskies. Discovery Centre, distillery bar, and immersive gin-making experiences for groups.</p>
+        <div class="place-tip"><strong>Tip:</strong> The Expedition gin-making experience is perfect for a group — you'll each design and bottle your own personalised Ben Lomond gin to take home. Book ahead.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🍽️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.lochlomondarmshotel.com" target="_blank" rel="noopener">Loch Lomond Arms Hotel</a></p>
+            <span class="place-tag">17th-Century Coaching Inn</span>
+          </div>
+        </div>
+        <p class="place-address">Main Road, Luss, G83 8NY · 15 min from Cameron House</p>
+        <a href="https://maps.google.com/?q=Loch+Lomond+Arms+Hotel+Luss" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A beautifully restored 200-year-old coaching inn at the top of Luss village. Crackling fires, tartan armchairs, and a menu of Scottish classics — lamb, beef, venison, and the most famous sticky toffee pudding on the loch. The luxurious bar feels straight out of a Highland film set.</p>
+        <div class="place-tip"><strong>Tip:</strong> A perfect lunch stop after wandering Luss — book a table by the window for the loch views.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">⛵</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.cameronhouse.co.uk" target="_blank" rel="noopener">Cameron House Marina Cruises</a></p>
+            <span class="place-tag gold">On Property</span>
+          </div>
+        </div>
+        <p class="place-address">Cameron House Marina, Alexandria G83 8QZ</p>
+        <a href="https://maps.google.com/?q=Cameron+House+Marina+Loch+Lomond" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">The hotel's own marina runs private speedboat tours, classic loch cruises, and seaplane flights right from the dock. The seaplane is something else — taking off from the loch and flying over the islands and Highlands is unforgettable. Also on offer: jet skis, paddleboarding, kayaks, and katakanu.</p>
+        <div class="place-tip"><strong>Tip:</strong> Book the seaplane experience or a private cruise as a group through the concierge — the seaplane is genuinely once-in-a-lifetime and very photogenic for a 40th birthday moment.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🥃</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.glengoyne.com" target="_blank" rel="noopener">Glengoyne Distillery</a></p>
+            <span class="place-tag">Scotland's Most Beautiful Distillery</span>
+          </div>
+        </div>
+        <p class="place-address">Dumgoyne, by Killearn, G63 9LB · 25 min from Cameron House</p>
+        <a href="https://maps.google.com/?q=Glengoyne+Distillery+Dumgoyne" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">Often called Scotland's most beautiful distillery — tucked into idyllic Dumgoyne Hill countryside since 1820. Their slow-aged single malts are world-renowned. Tour options range from a one-hour taster to The Malt Master experience, where you blend and bottle your own personalised whisky to take home.</p>
+        <div class="place-tip"><strong>Tip:</strong> The Malt Master experience is brilliant for a group of women — everyone leaves with their own labelled, personalised bottle. Book the group package in advance.</div>
+      </div>
+ 
+      <div class="place-card">
+        <div class="place-header">
+          <span class="place-emoji">🛍️</span>
+          <div class="place-title-group">
+            <p class="place-name"><a href="https://www.lochlomondshores.com" target="_blank" rel="noopener">Loch Lomond Shores</a></p>
+            <span class="place-tag">5 min from Cameron House</span>
+          </div>
+        </div>
+        <p class="place-address">Ben Lomond Way, Balloch, G83 8QL</p>
+        <a href="https://maps.google.com/?q=Loch+Lomond+Shores+Balloch" target="_blank" rel="noopener" class="map-link">📍 View on map →</a>
+        <p class="place-desc">A lakeside complex with boutique shops, lochside cafés, and the SEA LIFE Loch Lomond Aquarium. Lovely for a relaxed afternoon — wander the boardwalk, browse Scottish crafts at Jenners, grab a coffee with loch views. The launching point for many of the loch's water bus and cruise services.</p>
+        <div class="place-tip"><strong>Tip:</strong> If anyone wants a quiet morning while others are out adventuring, this is the easy 5-minute option from Cameron House — coffee, a wander, and a lochside bench.</div>
+      </div>
+ 
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Joyce Saad · Just a Wee Bit 40 · Scotland 2026
+</footer>
+
+<script>
+  requireAuth();
+
+  function showCategory(cat) {
+    document.querySelectorAll('.category-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('cat-' + cat).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Ensure only map tab is visible on load
+  document.querySelectorAll('.category-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('cat-map').classList.add('active');
+</script>
+
+</body>
+</html>

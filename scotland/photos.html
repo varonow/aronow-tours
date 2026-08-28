@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<meta name="theme-color" content="#2C4A3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Joyce 40">
+
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Photo Album | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/image-compress.js"></script>
+<link rel="stylesheet" href="css/nav.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2C4A3E">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%; max-width: none; margin: 0;
+  }
+  header::before {
+    content: ''; position: absolute; inset: 0; opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
+  }
+  .header-content { position: relative; z-index: 2; }
+  .header-eyebrow {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.75rem;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400; color: white; line-height: 1.1; margin-bottom: 0.5rem;
+  }
+  .header-title em { font-style: italic; color: var(--gold); }
+  .header-subtitle {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    color: rgba(255,255,255,0.7); font-size: 1.2rem;
+  }
+
+  /* MAIN */
+  main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+
+  /* UPLOAD SECTION */
+  .upload-section {
+    background: white; border-radius: 14px;
+    border: 1px solid var(--mist);
+    padding: 1.5rem; margin-bottom: 2rem;
+    box-shadow: 0 2px 12px rgba(44,74,62,0.07);
+  }
+  .upload-label {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .upload-title {
+    font-family: 'Playfair Display', serif; font-size: 1.3rem;
+    color: var(--forest); margin-bottom: 1rem;
+  }
+  .upload-drop-zone {
+    border: 2px dashed var(--mist); border-radius: 10px;
+    padding: 2rem; text-align: center; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 1rem;
+  }
+  .upload-drop-zone:hover,
+  .upload-drop-zone.drag-over { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+  .upload-drop-zone input { display: none; }
+  .upload-drop-icon { font-size: 2.5rem; opacity: 0.35; margin-bottom: 0.5rem; }
+  .upload-drop-text {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--stone);
+  }
+  .upload-drop-sub {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.9rem; color: var(--stone); opacity: 0.7; margin-top: 0.3rem;
+  }
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.4rem; margin-bottom: 1rem;
+  }
+  .preview-item { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; }
+  .preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .preview-remove {
+    position: absolute; top: 3px; right: 3px;
+    background: rgba(0,0,0,0.6); color: white;
+    border: none; border-radius: 50%;
+    width: 20px; height: 20px; font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .upload-options { display: flex; gap: 0.75rem; align-items: flex-start; flex-wrap: wrap; }
+  .caption-input {
+    flex: 1; min-width: 200px; padding: 0.65rem 0.9rem;
+    border: 1px solid var(--mist); border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+    background: var(--cream);
+  }
+  .caption-input:focus { outline: 2px solid var(--gold); outline-offset: -2px; }
+  .upload-btn {
+    background: var(--forest); color: var(--gold);
+    border: none; padding: 0.65rem 1.4rem;
+    font-family: 'Playfair Display', serif; font-size: 1rem;
+    border-radius: 8px; cursor: pointer; white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .upload-btn:hover { background: #1a2e28; }
+  .upload-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .upload-progress {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.1em; color: var(--heather);
+    margin-top: 0.5rem; min-height: 16px;
+  }
+
+  /* PHOTO COUNT */
+  .album-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .album-count {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone);
+  }
+
+  /* MASONRY PHOTO GRID */
+  .photo-grid {
+    columns: 3 220px;
+    column-gap: 0.6rem;
+  }
+  .photo-card {
+    break-inside: avoid; margin-bottom: 0.6rem;
+    border-radius: 10px; overflow: hidden;
+    cursor: pointer; position: relative;
+    background: var(--mist);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0; transform: translateY(12px);
+    transition: opacity 0.35s, transform 0.35s;
+  }
+  .photo-card.revealed { opacity: 1; transform: translateY(0); }
+  .photo-card:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 8px 24px rgba(44,74,62,0.18); }
+  .photo-card img {
+    width: 100%; display: block;
+    object-fit: cover;
+  }
+  .photo-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.55));
+    padding: 0.75rem 0.75rem 0.6rem;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .photo-card:hover .photo-overlay { opacity: 1; }
+  .photo-author {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+  }
+  .photo-caption-text {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.9rem; color: rgba(255,255,255,0.8);
+    margin-top: 0.2rem; line-height: 1.3;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center; padding: 4rem 2rem;
+    color: var(--stone); font-style: italic; font-size: 1.1rem;
+    background: white; border-radius: 12px;
+    border: 1px dashed var(--mist);
+  }
+  .empty-state span { display: block; font-size: 3rem; opacity: 0.3; margin-bottom: 1rem; }
+
+  /* ─── LIGHTBOX ─────────────────────────────── */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.94);
+    z-index: 900; display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 1rem;
+    touch-action: pan-y;
+  }
+  .lightbox.open { display: flex; }
+
+  .lightbox-top {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(rgba(0,0,0,0.6), transparent);
+    z-index: 10;
+  }
+  .lightbox-counter {
+    font-family: 'Josefin Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.6);
+  }
+  .lightbox-top-right { display: flex; gap: 0.5rem; align-items: center; }
+
+  .lightbox-btn {
+    background: rgba(255,255,255,0.12); border: none;
+    color: white; width: 40px; height: 40px; border-radius: 50%;
+    font-size: 1.2rem; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .lightbox-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .lightbox-download {
+    background: var(--gold); color: var(--dark);
+    border: none; border-radius: 20px;
+    padding: 0.4rem 1rem; cursor: pointer;
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;
+    display: flex; align-items: center; gap: 0.4rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .lightbox-download:hover { background: white; }
+
+  .lightbox-img-wrap {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    width: 100%; max-height: calc(100vh - 140px);
+    position: relative;
+  }
+  .lightbox-img-wrap img {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain; border-radius: 4px;
+    display: block;
+    user-select: none; -webkit-user-drag: none;
+  }
+
+  /* prev/next arrows */
+  .lightbox-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.1); border: none;
+    color: white; width: 44px; height: 44px; border-radius: 50%;
+    font-size: 1.4rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    z-index: 5;
+  }
+  .lightbox-arrow:hover { background: rgba(255,255,255,0.25); }
+  .lightbox-arrow.prev { left: -52px; }
+  .lightbox-arrow.next { right: -52px; }
+
+  .lightbox-bottom {
+    width: 100%; max-width: 700px;
+    padding: 0.75rem 0 0;
+    text-align: center;
+  }
+  .lightbox-author {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); margin-bottom: 0.25rem;
+  }
+  .lightbox-caption {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.1rem; color: rgba(255,255,255,0.8); line-height: 1.4;
+  }
+  .lightbox-delete {
+    font-family: 'Josefin Sans', sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(255,100,100,0.5); background: transparent;
+    border: none; cursor: pointer; margin-top: 0.5rem;
+    padding: 0.25rem 0.5rem;
+  }
+  .lightbox-delete:hover { color: rgba(255,100,100,0.9); }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .photo-grid { columns: 2 140px; }
+    .lightbox-arrow.prev { left: 4px; }
+    .lightbox-arrow.next { right: 4px; }
+    .lightbox-img-wrap { max-height: calc(100vh - 160px); }
+  }
+</style>
+</head>
+
+<body>
+<div class="guest-banner" id="guestBanner" style="display:none">👀 Viewing as Guest — Read Only</div>
+
+<header>
+  <div class="header-content">
+    <p class="header-eyebrow">Scotland 2026</p>
+    <h1 class="header-title">The <em>Album</em></h1>
+    <p class="header-subtitle">Every moment, together</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- UPLOAD -->
+  <div class="upload-section" id="uploadSection">
+    <p class="upload-label">Share a memory</p>
+    <p class="upload-title">Add to the Album</p>
+    <div class="upload-drop-zone" id="dropZone"
+         onclick="document.getElementById('fileInput').click()"
+         ondragover="handleDragOver(event)"
+         ondragleave="handleDragLeave(event)"
+         ondrop="handleDrop(event)">
+      <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(Array.from(this.files))">
+      <div class="upload-drop-icon">📷</div>
+      <p class="upload-drop-text">Tap to add photos</p>
+      <p class="upload-drop-sub">Camera or photo library</p>
+    </div>
+    <div class="preview-grid" id="previewGrid"></div>
+    <div class="upload-options" id="uploadOptions" style="display:none">
+      <input type="text" class="caption-input" id="captionInput" placeholder="Add a caption... (optional)" maxlength="200">
+      <button class="upload-btn" id="uploadBtn" onclick="uploadPhotos()">Upload</button>
+    </div>
+    <p class="upload-progress" id="uploadProgress"></p>
+  </div>
+
+  <!-- ALBUM -->
+  <div class="album-bar">
+    <p class="album-count" id="photoCount"></p>
+  </div>
+  <div class="photo-grid" id="photoGrid">
+    <div class="empty-state"><span>📸</span>No photos yet — be the first to share a moment!</div>
+  </div>
+
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-top">
+    <span class="lightbox-counter" id="lightboxCounter"></span>
+    <div class="lightbox-top-right">
+      <a class="lightbox-download" id="lightboxDownload" href="#" download="scotland-photo.jpg" target="_blank">
+        ⬇ Save
+      </a>
+      <button class="lightbox-btn" id="lightboxDelete" style="display:none" onclick="deleteCurrent()" title="Delete photo">🗑️</button>
+      <button class="lightbox-btn" onclick="closeLightbox()" title="Close">✕</button>
+    </div>
+  </div>
+
+  <div class="lightbox-img-wrap" id="lightboxImgWrap">
+    <button class="lightbox-arrow prev" id="lightboxPrev" onclick="stepLightbox(-1)">‹</button>
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-arrow next" id="lightboxNext" onclick="stepLightbox(1)">›</button>
+  </div>
+
+  <div class="lightbox-bottom">
+    <p class="lightbox-author" id="lightboxAuthor"></p>
+    <p class="lightbox-caption" id="lightboxCaption"></p>
+  </div>
+</div>
+
+<script>
+  const BUCKET = 'scotland-photos';
+
+  let currentUser = null;
+  let currentProfile = null;
+  let isAdminUser = false;
+  let selectedFiles = [];
+  let allPhotos = [];       // full list loaded from DB
+  let lightboxIndex = 0;    // current position in lightbox
+
+  // ─── INIT ───────────────────────────────────
+  async function init() {
+    currentUser = await requireAuth();
+    if (!currentUser) return;
+
+    const guest = await isGuest();
+    if (guest) {
+      document.getElementById('guestBanner').style.display = 'block';
+      document.getElementById('uploadSection').style.display = 'none';
+    }
+
+    currentProfile = await getUserProfile();
+    isAdminUser = !!currentProfile?.is_admin;
+    loadPhotos();
+  }
+
+  // ─── UPLOAD ─────────────────────────────────
+  function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+  function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+  function handleDrop(e) {
+    e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+    handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+  }
+
+  function handleFiles(files) {
+    if (!files.length) return;
+    selectedFiles = [...selectedFiles, ...files];
+    renderPreviews();
+  }
+
+  function removeFile(index) { selectedFiles.splice(index, 1); renderPreviews(); }
+
+  function renderPreviews() {
+    const grid = document.getElementById('previewGrid');
+    const options = document.getElementById('uploadOptions');
+    const btn = document.getElementById('uploadBtn');
+
+    if (!selectedFiles.length) {
+      grid.innerHTML = ''; options.style.display = 'none'; return;
+    }
+
+    options.style.display = 'flex';
+    grid.innerHTML = selectedFiles.map((file, i) => {
+      const url = URL.createObjectURL(file);
+      return `
+        <div class="preview-item">
+          <img src="${url}" alt="">
+          <button class="preview-remove" onclick="removeFile(${i})">×</button>
+        </div>`;
+    }).join('');
+  }
+
+  async function uploadPhotos() {
+    if (!selectedFiles.length) return;
+    const btn = document.getElementById('uploadBtn');
+    const progress = document.getElementById('uploadProgress');
+    const caption = document.getElementById('captionInput').value.trim();
+    const name = currentProfile ? currentProfile.name : 'A Friend';
+
+    btn.disabled = true;
+    let uploaded = 0;
+
+    for (const original of selectedFiles) {
+      progress.textContent = `Uploading ${uploaded + 1} of ${selectedFiles.length}…`;
+      const file = await compressImage(original);
+      const ext = file.name.split('.').pop();
+      const fileName = `${currentUser.id}_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+
+      const { error: storageError } = await db.storage
+        .from(BUCKET).upload(fileName, file, { contentType: file.type });
+      if (storageError) { progress.textContent = `Error uploading ${file.name}`; continue; }
+
+      await db.from('sc_photos').insert({
+        user_id: currentUser.id,
+        user_name: name,
+        file_path: fileName,
+        caption: caption || null,
+        day: null
+      });
+
+      uploaded++;
+    }
+
+    progress.textContent = `✓ ${uploaded} photo${uploaded !== 1 ? 's' : ''} added to the album!`;
+    selectedFiles = [];
+    document.getElementById('fileInput').value = '';
+    document.getElementById('captionInput').value = '';
+    renderPreviews();
+    btn.disabled = false;
+    setTimeout(() => { progress.textContent = ''; }, 3000);
+    loadPhotos();
+  }
+
+  // ─── LOAD PHOTOS ────────────────────────────
+  async function loadPhotos() {
+    const { data: photos } = await db.from('sc_photos').select('*').order('created_at', { ascending: false });
+    const grid = document.getElementById('photoGrid');
+    const count = document.getElementById('photoCount');
+
+    allPhotos = photos || [];
+    count.textContent = allPhotos.length ? `${allPhotos.length} photo${allPhotos.length !== 1 ? 's' : ''}` : '';
+
+    if (!allPhotos.length) {
+      grid.innerHTML = `<div class="empty-state"><span>📸</span>No photos yet — be the first to share a moment!</div>`;
+      return;
+    }
+
+    grid.innerHTML = '';
+    allPhotos.forEach((photo, i) => {
+      const { data: { publicUrl } } = db.storage.from(BUCKET).getPublicUrl(photo.file_path);
+      photo._url = publicUrl; // cache URL on object
+
+      const card = document.createElement('div');
+      card.className = 'photo-card';
+      card.onclick = () => openLightbox(i);
+      card.innerHTML = `
+        <img src="${publicUrl}" alt="${photo.caption || 'Scotland photo'}" loading="lazy">
+        <div class="photo-overlay">
+          <p class="photo-author">${photo.user_name}</p>
+          ${photo.caption ? `<p class="photo-caption-text">${photo.caption}</p>` : ''}
+        </div>
+      `;
+
+      grid.appendChild(card);
+      setTimeout(() => card.classList.add('revealed'), i * 60);
+    });
+  }
+
+  // ─── LIGHTBOX ───────────────────────────────
+  function openLightbox(index) {
+    lightboxIndex = index;
+    renderLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Hide floating sign out so it doesn't cover lightbox toolbar
+    const signOut = document.getElementById('floating-signout');
+    if (signOut) signOut.style.display = 'none';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+    // Restore floating sign out
+    const signOut = document.getElementById('floating-signout');
+    if (signOut) signOut.style.display = '';
+  }
+
+  function stepLightbox(dir) {
+    lightboxIndex = (lightboxIndex + dir + allPhotos.length) % allPhotos.length;
+    renderLightbox();
+  }
+
+  function renderLightbox() {
+    const photo = allPhotos[lightboxIndex];
+    const url = photo._url;
+
+    // Image
+    document.getElementById('lightboxImg').src = url;
+
+    // Counter
+    document.getElementById('lightboxCounter').textContent =
+      `${lightboxIndex + 1} / ${allPhotos.length}`;
+
+    // Download
+    const dl = document.getElementById('lightboxDownload');
+    dl.href = url;
+    dl.download = `scotland-${photo.user_name.split(' ')[0].toLowerCase()}-${lightboxIndex + 1}.jpg`;
+
+    // Caption & author
+    document.getElementById('lightboxAuthor').textContent = `📷 ${photo.user_name}`;
+    const cap = document.getElementById('lightboxCaption');
+    cap.textContent = photo.caption || '';
+    cap.style.display = photo.caption ? 'block' : 'none';
+
+    // Delete — visible to admin OR photo owner
+    const canDelete = isAdminUser || (currentUser && photo.user_id === currentUser.id);
+    document.getElementById('lightboxDelete').style.display = canDelete ? 'inline-flex' : 'none';
+
+    // Arrows
+    document.getElementById('lightboxPrev').style.display = allPhotos.length > 1 ? 'flex' : 'none';
+    document.getElementById('lightboxNext').style.display = allPhotos.length > 1 ? 'flex' : 'none';
+  }
+
+  async function deleteCurrent() {
+    const photo = allPhotos[lightboxIndex];
+    if (!photo) return;
+    const canDelete = isAdminUser || (currentUser && photo.user_id === currentUser.id);
+    if (!canDelete) return;
+    if (!confirm('Delete this photo from the album?')) return;
+
+    await db.storage.from(BUCKET).remove([photo.file_path]);
+    await db.from('sc_photos').delete().eq('id', photo.id);
+
+    closeLightbox();
+    loadPhotos();
+  }
+
+  // ─── KEYBOARD ───────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') stepLightbox(-1);
+    if (e.key === 'ArrowRight') stepLightbox(1);
+  });
+
+  // ─── SWIPE (mobile) ─────────────────────────
+  let swipeStartX = 0;
+  const lb = document.getElementById('lightbox');
+  lb.addEventListener('touchstart', e => { swipeStartX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    if (Math.abs(dx) > 50) stepLightbox(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // Close lightbox on background tap (but not on image or buttons)
+  lb.addEventListener('click', e => {
+    if (e.target === lb) closeLightbox();
+  });
+
+  init();
+</script>
+</body>
+</html>

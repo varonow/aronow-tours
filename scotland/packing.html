@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<meta name="theme-color" content="#2C4A3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Joyce 40">
+
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Packing List | Joyce Just a Wee Bit 40</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<link rel="stylesheet" href="css/nav.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #2C4A3E;
+    --heather: #7B5EA7;
+    --gold: #C9A84C;
+    --cream: #F9F5EE;
+    --stone: #5C4A2A;
+    --mist: #E8E4DC;
+    --dark: #0D0D0D;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--cream);
+    color: var(--dark);
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 100vh;
+    padding-top: 56px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(160deg, #1a2e28 0%, #2C4A3E 40%, #3d2a5a 100%);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px),
+      repeating-linear-gradient(90deg, #fff 0px, #fff 2px, transparent 2px, transparent 40px);
+  }
+  .header-content { position: relative; z-index: 2; }
+
+  .header-eyebrow {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+  header p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.1rem;
+  }
+  .gold-rule {
+    width: 48px; height: 2px;
+    background: var(--gold);
+    margin: 1.25rem auto 0;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    background: white;
+    border-bottom: 1px solid var(--mist);
+    padding: 1.25rem 1.5rem;
+    position: sticky;
+    top: 56px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .progress-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    white-space: nowrap;
+    min-width: 90px;
+  }
+  .progress-bar-outer {
+    flex: 1;
+    height: 6px;
+    background: var(--mist);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--forest), var(--heather));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-count {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    white-space: nowrap;
+  }
+
+  /* MAIN CONTENT */
+  .page-content {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  /* CATEGORY */
+  .category {
+    margin-bottom: 2rem;
+    background: white;
+    border-radius: 14px;
+    border: 1px solid var(--mist);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.1rem 1.5rem;
+    background: var(--forest);
+    cursor: pointer;
+    user-select: none;
+  }
+  .category-emoji { font-size: 1.3rem; }
+  .category-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: white;
+    flex: 1;
+  }
+  .category-count {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6);
+  }
+  .category-chevron {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.75rem;
+    transition: transform 0.3s;
+  }
+  .category.collapsed .category-chevron { transform: rotate(-90deg); }
+  .category-items {
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    max-height: 2000px;
+  }
+  .category.collapsed .category-items { max-height: 0; }
+
+  /* ITEM */
+  .pack-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 0.85rem 1.5rem;
+    border-bottom: 1px solid var(--mist);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .pack-item:last-child { border-bottom: none; }
+  .pack-item:hover { background: #faf8f4; }
+  .pack-item.checked { background: #f4fbf7; }
+
+  .pack-checkbox {
+    width: 20px; height: 20px;
+    border: 2px solid var(--mist);
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: white;
+  }
+  .pack-item.checked .pack-checkbox {
+    background: var(--forest);
+    border-color: var(--forest);
+  }
+  .pack-checkbox::after {
+    content: '';
+    width: 5px; height: 9px;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .pack-item.checked .pack-checkbox::after { opacity: 1; }
+
+  .pack-text { flex: 1; }
+  .pack-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--dark);
+    transition: color 0.2s;
+    line-height: 1.4;
+  }
+  .pack-item.checked .pack-name {
+    color: #aaa;
+    text-decoration: line-through;
+  }
+  .pack-tip {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--heather);
+    margin-top: 2px;
+    font-style: normal;
+  }
+  .pack-item.checked .pack-tip { color: #bbb; }
+
+  /* SCOTLAND NOTE */
+  .scotland-note {
+    background: linear-gradient(135deg, #f0ebe8, #ede8f5);
+    border: 1px solid #d9d0ec;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .scotland-note-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .scotland-note-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--stone);
+    line-height: 1.6;
+  }
+
+  /* RESET BUTTON */
+  .reset-wrap {
+    text-align: center;
+    padding: 1rem 0 2rem;
+  }
+  .reset-btn {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    background: none;
+    border: 1px solid var(--mist);
+    border-radius: 30px;
+    padding: 0.65rem 1.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--forest); color: var(--forest); }
+
+  @media (max-width: 600px) {
+    .pack-item { padding: 0.85rem 1.1rem; }
+    .category-header { padding: 1rem 1.1rem; }
+    .progress-wrap { padding: 1rem 1.1rem; }
+  }
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2C4A3E">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-content">
+    <p class="header-eyebrow">Scotland 2026 &nbsp;·&nbsp; June 1–5</p>
+    <h1>🧳 Packing List</h1>
+    <p>Everything you need for five perfect days in Scotland</p>
+    <div class="gold-rule"></div>
+  </div>
+</header>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap">
+  <span class="progress-label">You're packed</span>
+  <div class="progress-bar-outer">
+    <div class="progress-bar-inner" id="progressBar"></div>
+  </div>
+  <span class="progress-count" id="progressCount">0 / 0</span>
+</div>
+
+<!-- CONTENT -->
+<div class="page-content">
+
+  <div class="scotland-note">
+    <span class="scotland-note-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+    <p class="scotland-note-text">Scottish weather is famously unpredictable — you can get sunshine, mist, and a downpour all before lunch. Layer up, pack a rain jacket no matter what the forecast says, and bring comfortable shoes you don't mind getting a wee bit damp. Your checked items are saved automatically.</p>
+  </div>
+
+  <!-- CLOTHING -->
+  <div class="category" id="cat-clothing">
+    <div class="category-header" onclick="toggleCategory('cat-clothing')">
+      <span class="category-emoji">👗</span>
+      <span class="category-title">Clothing</span>
+      <span class="category-count" id="count-cat-clothing"></span>
+      <span class="category-chevron">▼</span>
+    </div>
+    <div class="category-items">
+
+      <div class="pack-item" data-id="c1" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Lightweight waterproof jacket</p>
+          <p class="pack-tip">Stirling Castle, Pollok Park & the champagne cruise are all outdoors — non-negotiable. Layer up for the boat too</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c2" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Day 1 outfit — Duck & Waffle through The Voodoo Rooms</p>
+          <p class="pack-tip">Think nice pants and a blouse with comfortable shoes — this look carries you from lunch → Mary King's Close → dinner at the Voodoo Rooms. Elevated enough for a glamorous evening, practical enough for a full day on foot</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c3" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Day 2 outfit — Breakfast through the Ceilidh</p>
+          <p class="pack-tip">Think nice pants and a blouse with comfortable shoes — this look carries you from Brasserie Prince → kiltmaking → exploring Edinburgh → Sköll & Hati → Divino Enoteca → Edinburgh Ceilidh Club. The ceilidh is the key constraint — you WILL be dancing hard, so make sure you can move freely</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c4" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Day 3 outfit 1 — Stirling Castle & lunch at MacDonald Forest Hills</p>
+          <p class="pack-tip">Casual and comfortable for a morning at the castle and a scenic loch-side lunch — you'll have time to shower and change at Cameron House before heading to Glasgow</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c4b" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Day 3 outfit 2 — Pollok Park through Blue Dog Piano Bar</p>
+          <p class="pack-tip">Takes you from the Highland coos at Pollok Park → Buchanan Street shopping → Amarone → Blue Dog Piano Bar. Smart and polished but bear in mind you're starting in a park — save the stilettos for after</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c5" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Day 4 outfit 1 — Champagne Cruise (casual, layers)</p>
+          <p class="pack-tip">The Celtic Warrior is a private boat just for the group — no need to dress up. Think cosy layers you can peel off as the day warms up. Save your energy for later</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c5b" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Day 4 — Renaissance Photoshoot Costume 🎭</p>
+          <p class="pack-tip">Don't forget the costume that was provided to you! This is the centrepiece of Day 4 — the group transforms the grounds of Cameron House into a Renaissance masterpiece. Your costume needs to travel with you from Edinburgh so make sure it's packed and not left behind at The Balmoral.</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c6" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Day 4 outfit 2 — Birthday Dinner at Rosslea Hall</p>
+          <p class="pack-tip">A gorgeous Victorian country house on the Gareloch — this is the big birthday dinner, so make it a showstopper. Smart elegant is the vibe.</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c6b" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Day 5 — Airplane home outfit</p>
+          <p class="pack-tip">Comfortable but put-together — you'll be heading home with a lot of memories and probably a lot of shopping. Dress for the journey</p>
+        </div>
+      </div>
+
+      <div class="pack-item" data-id="c8" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Light scarf or wrap</p>
+          <p class="pack-tip">Perfect for Stirling Castle winds and doubling as a shawl over dinner looks</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c7" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Cosy layers — cozy sweater or cardigan (×2)</p>
+          <p class="pack-tip">Loch Lomond evenings are cool and the champagne cruise will be breezy on the water</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c9" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Swimsuit</p>
+          <p class="pack-tip">For the free time on Day 4 — Cameron House spa and pool are waiting</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c10" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Gym clothes</p>
+          <p class="pack-tip">For the free time on Day 4 — gym, spa, or a loch-side walk at Cameron House</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="c11" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Sleepwear, underwear & socks</p>
+          <p class="pack-tip">Pack an extra day's worth — always</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SHOES -->
+  <div class="category" id="cat-shoes">
+    <div class="category-header" onclick="toggleCategory('cat-shoes')">
+      <span class="category-emoji">👟</span>
+      <span class="category-title">Shoes</span>
+      <span class="category-count" id="count-cat-shoes"></span>
+      <span class="category-chevron">▼</span>
+    </div>
+    <div class="category-items">
+      <div class="pack-item" data-id="s1" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Comfortable walking shoes</p>
+          <p class="pack-tip">The Royal Mile, Stirling Castle & Buchanan Street are all on foot — cobblestones are brutal</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="s2" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Waterproof ankle boots</p>
+          <p class="pack-tip">Essential for Pollok Country Park (grass + Highland coo territory) and Stirling Castle</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="s3" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Ceilidh dancing shoes — flat or low heel</p>
+          <p class="pack-tip">You will be doing Strip the Willow and the Gay Gordons — stilettos will not survive</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="s4" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Spa shoes or sliders</p>
+          <p class="pack-tip">For four dinners — block heels handle cobblestones better than stilettos</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOILETRIES -->
+  <div class="category" id="cat-toiletries">
+    <div class="category-header" onclick="toggleCategory('cat-toiletries')">
+      <span class="category-emoji">🧴</span>
+      <span class="category-title">Toiletries & Beauty</span>
+      <span class="category-count" id="count-cat-toiletries"></span>
+      <span class="category-chevron">▼</span>
+    </div>
+    <div class="category-items">
+      <div class="pack-item" data-id="t1" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Skincare routine (travel sizes)</p>
+          <p class="pack-tip">Scottish air is damp — your skin will thank you for extra moisture</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="t2" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Hair products & styling tools</p>
+          <p class="pack-tip">UK plug adapter needed — hotels often have 2000W hairdryers</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="t3" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Makeup & brushes</p>
+          <p class="pack-tip">Pack your evening glam — we have gorgeous dinners ahead</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="t4" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Toothbrush, toothpaste & floss</p>
+          <p class="pack-tip"></p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="t5" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Deodorant & perfume</p>
+          <p class="pack-tip">Travel size perfume for handbag touch-ups</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="t6" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Medications & vitamins</p>
+          <p class="pack-tip">Bring more than you think you need — always</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="t7" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Sunscreen</p>
+          <p class="pack-tip">Scotland can surprise you — especially on the loch</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="t8" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Hand cream & lip balm</p>
+          <p class="pack-tip">Scottish wind is drying — keep these in your handbag</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="category" id="cat-docs">
+    <div class="category-header" onclick="toggleCategory('cat-docs')">
+      <span class="category-emoji">📄</span>
+      <span class="category-title">Documents & Essentials</span>
+      <span class="category-count" id="count-cat-docs"></span>
+      <span class="category-chevron">▼</span>
+    </div>
+    <div class="category-items">
+      <div class="pack-item" data-id="d1" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Passport (valid 6+ months)</p>
+          <p class="pack-tip">Check the expiry date right now — seriously</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="d2" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Flight confirmation / boarding pass</p>
+          <p class="pack-tip">Screenshot it so it works offline</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="d5" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Credit & debit cards</p>
+          <p class="pack-tip">Notify your bank before you leave — and always carry a backup card</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="d6" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Some British pounds (cash)</p>
+          <p class="pack-tip">Useful for tips, Royal Mile markets, Buchanan Street & smaller spots</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH -->
+  <div class="category" id="cat-tech">
+    <div class="category-header" onclick="toggleCategory('cat-tech')">
+      <span class="category-emoji">🔌</span>
+      <span class="category-title">Tech & Gadgets</span>
+      <span class="category-count" id="count-cat-tech"></span>
+      <span class="category-chevron">▼</span>
+    </div>
+    <div class="category-items">
+      <div class="pack-item" data-id="e1" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">UK plug adapter (Type G)</p>
+          <p class="pack-tip">The UK uses 3-pin plugs — this is essential, not optional</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="e2" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Phone & charger</p>
+          <p class="pack-tip">Enable international roaming before you leave or grab a local SIM at Edinburgh Airport</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="e3" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Portable charger / power bank</p>
+          <p class="pack-tip">Full days from castle to ceilidh will drain your battery — bring a big one</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="e5" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Earphones / AirPods</p>
+          <p class="pack-tip">For the flight and the bus to Loch Lomond on Day 3</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="e6" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Laptop or tablet (if needed)</p>
+          <p class="pack-tip">Don't forget the adapter for this too!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCOTLAND SPECIFICS -->
+  <div class="category" id="cat-scotland">
+    <div class="category-header" onclick="toggleCategory('cat-scotland')" style="background: var(--heather);">
+      <span class="category-emoji">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+      <span class="category-title">Scotland Specifics</span>
+      <span class="category-count" id="count-cat-scotland"></span>
+      <span class="category-chevron">▼</span>
+    </div>
+    <div class="category-items">
+      <div class="pack-item" data-id="sc1" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Compact windproof umbrella</p>
+          <p class="pack-tip">Cheap ones flip inside out instantly in Scottish wind — invest in a sturdy one</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="sc2" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Insect repellent (midges!)</p>
+          <p class="pack-tip">Scotland's infamous tiny midges come out in June near the lochs — Smidge brand is the best</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="sc3" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Crossbody or secure handbag</p>
+          <p class="pack-tip">Hands-free is best for cobblestone streets and castle stairs</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="sc4" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">Reusable tote bag</p>
+          <p class="pack-tip">For Royal Mile & Buchanan Street shopping — and to carry home your Islander handmade bag!</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="sc5" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">A great book or Kindle</p>
+          <p class="pack-tip">For the flight and the free afternoon at Cameron House on Day 4</p>
+        </div>
+      </div>
+      <div class="pack-item" data-id="sc6" onclick="toggleItem(this)">
+        <div class="pack-checkbox"></div>
+        <div class="pack-text">
+          <p class="pack-name">An open mind & a thirst for adventure</p>
+          <p class="pack-tip">Scotland will absolutely deliver 🥃🏰🌿</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reset-wrap">
+    <button class="reset-btn" onclick="resetAll()">Reset All Checks</button>
+  </div>
+
+</div><!-- end page-content -->
+
+<script>
+  requireAuth();
+
+  const STORAGE_KEY = 'scotland_packing_v1';
+
+  function getChecked() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch { return {}; }
+  }
+
+  function saveChecked(obj) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+  }
+
+  function toggleItem(el) {
+    const id = el.dataset.id;
+    const checked = getChecked();
+    if (checked[id]) { delete checked[id]; el.classList.remove('checked'); }
+    else { checked[id] = true; el.classList.add('checked'); }
+    saveChecked(checked);
+    updateProgress();
+    updateCategoryCounts();
+  }
+
+  function toggleCategory(id) {
+    document.getElementById(id).classList.toggle('collapsed');
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.pack-item');
+    const done = document.querySelectorAll('.pack-item.checked');
+    const pct = all.length ? Math.round((done.length / all.length) * 100) : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressCount').textContent = done.length + ' / ' + all.length + ' packed';
+  }
+
+  function updateCategoryCounts() {
+    const categories = ['cat-clothing','cat-shoes','cat-toiletries','cat-docs','cat-tech','cat-scotland'];
+    categories.forEach(catId => {
+      const cat = document.getElementById(catId);
+      const all = cat.querySelectorAll('.pack-item').length;
+      const done = cat.querySelectorAll('.pack-item.checked').length;
+      const el = document.getElementById('count-' + catId);
+      if (el) el.textContent = done + ' / ' + all;
+    });
+  }
+
+  function resetAll() {
+    if (!confirm('Reset all your checks?')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    document.querySelectorAll('.pack-item').forEach(el => el.classList.remove('checked'));
+    updateProgress();
+    updateCategoryCounts();
+  }
+
+  // Restore on load
+  function init() {
+    const checked = getChecked();
+    document.querySelectorAll('.pack-item').forEach(el => {
+      if (checked[el.dataset.id]) el.classList.add('checked');
+    });
+    updateProgress();
+    updateCategoryCounts();
+  }
+
+  init();
+</script>
+
+</body>
+</html>
