@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="images/logo.png">
+<meta name="theme-color" content="#1A3350">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Marshall's Way">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Marshall's Way — Home</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/nav.css">
+<style>
+
+  /* === HERO === */
+  .hero {
+    min-height: 100vh;
+    background: var(--navy-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* animated ocean waves */
+  .hero-waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+  }
+
+  .hero-waves svg { width: 100%; height: 100%; }
+
+  /* floating particles */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float var(--dur) ease-in-out infinite;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: var(--opa); }
+    50% { transform: translateY(-20px) rotate(180deg); opacity: calc(var(--opa) * 0.5); }
+  }
+
+  .hero-logo-wrap {
+    position: relative;
+    z-index: 2;
+    width: clamp(200px, 32vw, 300px);
+    height: clamp(200px, 32vw, 300px);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border-radius: 50%;
+    padding: 16px;
+    box-shadow: 0 8px 40px rgba(232,200,74,0.2), 0 0 0 4px rgba(232,200,74,0.15);
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-logo {
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-style: italic;
+    font-weight: 700;
+    color: var(--sand);
+    line-height: 1;
+    margin-bottom: 8px;
+    animation: fadeUp 0.8s ease 0.3s both;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-title span {
+    color: var(--gold);
+  }
+
+  .hero-tagline-1 {
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--azure-light);
+    margin-bottom: 4px;
+    animation: fadeUp 0.8s ease 0.4s both;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-tagline-2 {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    color: var(--terracotta-light);
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.5s both;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* === COUNTDOWN === */
+  .countdown {
+    display: flex;
+    gap: clamp(16px, 3vw, 32px);
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.6s both;
+    position: relative;
+    z-index: 2;
+  }
+
+  .countdown-item {
+    text-align: center;
+    min-width: clamp(64px, 12vw, 90px);
+  }
+
+  .countdown-number {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+    text-shadow: 0 4px 20px rgba(232,200,74,0.3);
+  }
+
+  .countdown-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--azure-light);
+    margin-top: 6px;
+    font-weight: 700;
+  }
+
+  .countdown-sep {
+    font-family: 'Pacifico', cursive;
+    font-size: 3rem;
+    color: var(--terracotta);
+    align-self: center;
+    line-height: 1;
+    margin-top: -12px;
+  }
+
+  .countdown-gone {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.8rem;
+    color: var(--gold);
+  }
+
+  /* === DEPARTURE INFO === */
+  .hero-info {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.7s both;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-info-item {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(232,200,74,0.2);
+    border-radius: 50px;
+    padding: 10px 24px;
+    color: var(--sand);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-info-item span {
+    font-size: 16px;
+  }
+
+  .flights-section {
+    width: 100%;
+  }
+
+  .flights-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--navy);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .flights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .flight-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 28px 24px;
+    box-shadow: 0 2px 16px rgba(26,51,80,0.07);
+    border-top: 2px solid var(--azure);
+  }
+
+  .flight-card:last-child { border-top-color: var(--terracotta); }
+
+  .flight-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #EEF6FC;
+  }
+
+  .flight-icon { font-size: 20px; }
+
+  .flight-number {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--navy);
+    letter-spacing: 1px;
+  }
+
+  .flight-route {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .flight-times {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .flight-time { text-align: center; }
+
+  .flight-time-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .flight-time-date {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--terracotta);
+    letter-spacing: 0.5px;
+    margin-top: 3px;
+  }
+
+  .flight-time-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .flight-arrow {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .flight-arrow-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--azure), var(--terracotta));
+    position: relative;
+  }
+
+  .flight-arrow-line::after {
+    content: '✈';
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: var(--azure);
+    background: var(--white);
+    padding: 0 4px;
+  }
+
+  @media (max-width: 600px) {
+    .flights-grid { grid-template-columns: 1fr; }
+  }
+  .nav-cards {
+    padding: 60px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .nav-cards-title {
+    text-align: center;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .nav-cards-sub {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .nav-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    transition: all 0.25s ease;
+    border-top: 3px solid var(--azure);
+    display: block;
+  }
+
+  .nav-card:nth-child(2n) { border-top-color: var(--terracotta); }
+  .nav-card:nth-child(3n) { border-top-color: var(--gold-dark); }
+
+  .nav-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .nav-card-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .nav-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+  }
+
+  .nav-card p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* === WELCOME BANNER === */
+  .welcome-banner {
+    background: var(--navy);
+    padding: 48px 24px;
+    text-align: center;
+  }
+
+  .welcome-banner h2 {
+    color: var(--sand);
+    font-style: italic;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin-bottom: 8px;
+  }
+
+  .welcome-banner p {
+    color: var(--azure-light);
+    font-size: 14px;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .welcome-name {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    background: var(--navy-dark);
+    padding: 32px 24px;
+    text-align: center;
+    color: rgba(250,243,226,0.3);
+    font-size: 11px;
+    letter-spacing: 3px;
+  }
+
+  .footer a {
+    color: rgba(250,243,226,0.4);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .footer a:hover { color: var(--gold); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 500px) {
+    .countdown { gap: 12px; }
+    .countdown-sep { font-size: 2rem; }
+    .hero-info-item { font-size: 12px; padding: 8px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero waves">
+
+  <!-- Particles -->
+  <div class="hero-bg" id="particles"></div>
+
+  <!-- Waves -->
+  <div class="hero-waves">
+    <svg viewBox="0 0 1200 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 80 Q150 40 300 80 Q450 120 600 80 Q750 40 900 80 Q1050 120 1200 80 L1200 200 L0 200 Z" fill="rgba(26,123,184,0.25)"/>
+      <path d="M0 100 Q200 60 400 100 Q600 140 800 100 Q1000 60 1200 100 L1200 200 L0 200 Z" fill="rgba(26,123,184,0.2)"/>
+      <path d="M0 130 Q300 100 600 130 Q900 160 1200 130 L1200 200 L0 200 Z" fill="rgba(26,51,80,0.4)"/>
+    </svg>
+  </div>
+
+  <div class="hero-logo-wrap">
+    <img src="images/logo.png" alt="Marshall's Way" class="hero-logo">
+  </div>
+
+  <h1 class="hero-title">Marshall's <span>Way</span></h1>
+  <p class="hero-tagline-1">Amalfi Coast · July 2026</p>
+  <p class="hero-tagline-2" id="heroTagline">His way. Our adventure.</p>
+
+  <!-- Countdown -->
+  <div class="countdown" id="countdown"></div>
+
+  <!-- end hero -->
+
+</div>
+
+<!-- Flight Details Section -->
+<div id="flights" style="background: var(--white); padding: 60px 24px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    <div id="flightsContent"></div>
+  </div>
+</div>
+
+<!-- La Cocumella Section -->
+<div id="cocumella" style="background: var(--navy); padding: 60px 24px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+
+    <div style="text-align:center; margin-bottom:36px;">
+      <p style="font-size:10px; font-weight:700; letter-spacing:5px; text-transform:uppercase; color:var(--azure-light); margin-bottom:10px;">July 3 – 5 · Sant'Agnello, Sorrento</p>
+      <h2 style="font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(1.8rem,4vw,2.8rem); color:var(--sand); margin-bottom:8px;">Grand Hotel <span style="color:var(--gold);">La Cocumella</span></h2>
+      <p style="font-size:12px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35);">Via Cocumella 7 · Sant'Agnello · Sorrento</p>
+    </div>
+
+    <!-- Photos -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:32px;">
+      <img src="images/cocumella-1.png" alt="La Cocumella entrance" style="width:100%; height:240px; object-fit:cover; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+      <img src="images/cocumella-2.png" alt="La Cocumella terrace" style="width:100%; height:240px; object-fit:cover; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+    </div>
+
+    <!-- Description -->
+    <div style="max-width:700px; margin:0 auto 32px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-style:italic; font-size:1.1rem; color:var(--sand); line-height:1.9;">
+        One of the most storied hotels on the Sorrentine peninsula, La Cocumella has been welcoming guests since 1699 — making it one of the oldest hotels in all of Italy. Set in a former Jesuit convent surrounded by lemon groves and gardens, with private sea access, a spectacular pool and some of the finest views of the Bay of Naples you will ever encounter.
+      </p>
+    </div>
+
+    <!-- Details grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; max-width:800px; margin:0 auto 32px;">
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(232,200,74,0.2); border-radius:12px; padding:20px; text-align:center;">
+        <div style="font-size:24px; margin-bottom:8px;">🏊</div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--azure-light); margin-bottom:4px;">Pool</div>
+        <div style="font-size:13px; color:var(--sand);">Heated outdoor pool with Gulf of Naples views</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(232,200,74,0.2); border-radius:12px; padding:20px; text-align:center;">
+        <div style="font-size:24px; margin-bottom:8px;">🌊</div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--azure-light); margin-bottom:4px;">Private Beach</div>
+        <div style="font-size:13px; color:var(--sand);">Exclusive seafront via private lift</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(232,200,74,0.2); border-radius:12px; padding:20px; text-align:center;">
+        <div style="font-size:24px; margin-bottom:8px;">🍋</div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--azure-light); margin-bottom:4px;">L'Agrumeto</div>
+        <div style="font-size:13px; color:var(--sand);">Poolside restaurant under orange & lemon trees</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(232,200,74,0.2); border-radius:12px; padding:20px; text-align:center;">
+        <div style="font-size:24px; margin-bottom:8px;">🌿</div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--azure-light); margin-bottom:4px;">Gardens</div>
+        <div style="font-size:13px; color:var(--sand);">Former Jesuit convent gardens · Est. 1699</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(232,200,74,0.2); border-radius:12px; padding:20px; text-align:center;">
+        <div style="font-size:24px; margin-bottom:8px;">💆</div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--azure-light); margin-bottom:4px;">Spa</div>
+        <div style="font-size:13px; color:var(--sand);">Treatments and wellness with Bay of Naples views</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(232,200,74,0.2); border-radius:12px; padding:20px; text-align:center;">
+        <div style="font-size:24px; margin-bottom:8px;">🎾</div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--azure-light); margin-bottom:4px;">Tennis</div>
+        <div style="font-size:13px; color:var(--sand);">Private tennis court in the hotel gardens</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="https://www.cocumella.com" target="_blank" style="display:inline-flex; align-items:center; gap:8px; padding:12px 28px; background:rgba(255,255,255,0.08); border:1px solid rgba(232,200,74,0.3); border-radius:50px; color:var(--gold); font-family:'Lato',sans-serif; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; transition:all 0.2s;">
+        Visit La Cocumella →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Welcome banner -->
+<div class="welcome-banner" id="welcomeBanner">
+  <h2>Welcome aboard, <span class="welcome-name" id="welcomeName">family</span>!</h2>
+  <p><em>La dolce vita awaits!</em></p>
+</div>
+
+<!-- Navigation cards -->
+<div class="nav-cards">
+  <h2 class="nav-cards-title">Everything You Need</h2>
+  <p class="nav-cards-sub">Amalfi Coast · July 2026</p>
+  <div class="cards-grid">
+    <a href="itinerary.html" class="nav-card">
+      <span class="nav-card-icon">🗓</span>
+      <h3>Itinerary</h3>
+      <p>Day by day from Naples to the Amalfi Coast — every meal, activity and adventure</p>
+    </a>
+    <a href="yacht.html" class="nav-card">
+      <span class="nav-card-icon">🛥</span>
+      <h3>M/Y R23</h3>
+      <p>Everything you need to know about our home on the water — crew, cabins and amenities</p>
+    </a>
+    <a href="photos.html" class="nav-card">
+      <span class="nav-card-icon">📸</span>
+      <h3>Photo Album</h3>
+      <p>Upload your favourite moments and see the whole trip come to life</p>
+    </a>
+    <a href="map.html" class="nav-card">
+      <span class="nav-card-icon">📍</span>
+      <h3>Map</h3>
+      <p>Our full voyage route from Naples to the Amalfi Coast and back</p>
+    </a>
+    <a href="rooms.html" class="nav-card">
+      <span class="nav-card-icon">🛏</span>
+      <h3>Rooms</h3>
+      <p>The official cabin draw aboard M/Y R23 — Captain Mauro spins the wheel</p>
+    </a>
+    <a href="journal.html" class="nav-card">
+      <span class="nav-card-icon">📝</span>
+      <h3>Journal</h3>
+      <p>Share your thoughts, notes and memories from the voyage</p>
+    </a>
+    <a href="letters.html" class="nav-card" id="lettersCard">
+      <span class="nav-card-icon">💌</span>
+      <h3>Letters to Marshall</h3>
+      <p>Write a heartfelt note — all letters read aloud at his birthday dinner</p>
+    </a>
+    <a href="memories.html" class="nav-card" id="memoriesCard">
+      <span class="nav-card-icon">🧠</span>
+      <h3>Marshall's Memories</h3>
+      <p>Share your favourite stories and memories of the birthday boy</p>
+    </a>
+    <a href="shopping.html" class="nav-card">
+      <span class="nav-card-icon">💸</span>
+      <h3>Shopping Guide</h3>
+      <p>What to buy and where — from Capri boutiques to Amalfi ceramics</p>
+    </a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>MARSHALL'S WAY &nbsp;·&nbsp; AMALFI COAST &nbsp;·&nbsp; JULY 2026</p>
+  <p style="margin-top:8px"><a onclick="logout()">Sign out</a></p>
+</footer>
+
+<script type="module">
+  import { requireAuth, getCurrentUser, signOut } from './js/supabase.js';
+  import { renderNav } from './js/nav.js';
+
+  await requireAuth();
+  renderNav('index.html');
+
+  const user = getCurrentUser();
+  if (user) {
+    document.getElementById('welcomeName').textContent = user;
+  }
+
+  // Hide Marshall-only cards from Marshall
+  if (user === 'Marshall') {
+    const lettersCard = document.getElementById('lettersCard');
+    const memoriesCard = document.getElementById('memoriesCard');
+    if (lettersCard) lettersCard.style.display = 'none';
+    if (memoriesCard) memoriesCard.style.display = 'none';
+  }
+
+  // Particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random() * 4;
+    p.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 80}%;
+      background: ${Math.random() > 0.5 ? 'rgba(232,200,74,0.4)' : 'rgba(26,123,184,0.4)'};
+      --dur: ${4 + Math.random() * 6}s;
+      --delay: ${Math.random() * 4}s;
+      --opa: ${0.3 + Math.random() * 0.4};
+    `;
+    container.appendChild(p);
+  }
+
+  // Countdown to July 3, 2026
+  function updateCountdown() {
+    const target = new Date('2026-07-03T11:40:00');
+    const now = new Date();
+    const diff = target - now;
+
+    const el = document.getElementById('countdown');
+
+    if (diff <= 0) {
+      el.innerHTML = '<span class="countdown-gone">🛫 We\'re on our way!</span>';
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    el.innerHTML = `
+      <div class="countdown-item">
+        <span class="countdown-number">${String(days).padStart(2,'0')}</span>
+        <div class="countdown-label">Days</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number">${String(hours).padStart(2,'0')}</span>
+        <div class="countdown-label">Hours</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number">${String(mins).padStart(2,'0')}</span>
+        <div class="countdown-label">Mins</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-item">
+        <span class="countdown-number">${String(secs).padStart(2,'0')}</span>
+        <div class="countdown-label">Secs</div>
+      </div>
+    `;
+  }
+
+  // Render flight section
+  const isSaad = ['Joyce', 'Mousa', 'Selly'].includes(user);
+
+  const flights = [
+    isSaad ? {
+      icon: '✈️',
+      number: 'UA 966',
+      route: 'Newark (EWR) → Naples (NAP)',
+      depart: { time: '8:40 PM', date: 'Sun Jul 5' },
+      arrive: { time: '11:40 AM', date: 'Mon Jul 6' },
+      flightaware: 'https://flightaware.com/live/flight/UAL966',
+    } : {
+      icon: '✈️',
+      number: 'UA 966',
+      route: 'Newark (EWR) → Naples (NAP)',
+      depart: { time: '8:40 PM', date: 'Thu Jul 2' },
+      arrive: { time: '11:40 AM', date: 'Fri Jul 3' },
+      flightaware: 'https://flightaware.com/live/flight/UAL966',
+    },
+    {
+      icon: '🏠',
+      number: 'UA 967',
+      route: 'Naples (NAP) → Newark (EWR)',
+      depart: { time: '2:00 PM', date: 'Sun Jul 12' },
+      arrive: { time: '6:25 PM', date: 'Sun Jul 12' },
+      flightaware: 'https://flightaware.com/live/flight/UAL967',
+    }
+  ];
+
+  const flightsEl = document.getElementById('flightsContent');
+  flightsEl.innerHTML = `
+    <p class="flights-title">✈ ${isSaad ? 'Your Flights' : 'Flight Details'}</p>
+    <div class="flights-grid">
+      ${flights.map((f, i) => `
+        <div class="flight-card">
+          <div class="flight-header">
+            <span class="flight-icon">${f.icon}</span>
+            <div>
+              <div class="flight-number">${f.number}</div>
+              <div class="flight-route">${f.route}</div>
+            </div>
+          </div>
+          <div class="flight-times">
+            <div class="flight-time">
+              <div class="flight-time-value">${f.depart.time}</div>
+              <div class="flight-time-date">${f.depart.date}</div>
+              <div class="flight-time-label">DEPART</div>
+            </div>
+            <div class="flight-arrow">
+              <div class="flight-arrow-line"></div>
+            </div>
+            <div class="flight-time">
+              <div class="flight-time-value">${f.arrive.time}</div>
+              <div class="flight-time-date">${f.arrive.date}</div>
+              <div class="flight-time-label">ARRIVE</div>
+            </div>
+          </div>
+          <a href="${f.flightaware}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:#EEF6FC;border:1px solid var(--azure-light);border-radius:6px;color:var(--azure);font-size:11px;font-weight:700;letter-spacing:1px;text-decoration:none;margin-top:12px;transition:all 0.2s;">
+            ✈ Live Flight Status on FlightAware
+          </a>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  window.logout = async function() {
+    await signOut();
+  };
+</script>
+</body>
+</html>
