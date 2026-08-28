@@ -14,47 +14,31 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --ink:#0D1F33; --gold:#C9A84C; --gold-soft:#e4cf94; --cream:#F7F3EA;
-    --mist:#c9d3dd; --muted:#8ea0b2;
-  }
+  :root{--ink:#0D1F33;--gold:#C9A84C;--gold-soft:#e4cf94;--cream:#F7F3EA;--mist:#c9d3dd;--muted:#8ea0b2}
   body{
-    font-family:'Cormorant Garamond',Georgia,serif; color:var(--cream);
-    background:
-      radial-gradient(1100px 600px at 50% -8%, #17324e 0%, rgba(23,50,78,0) 58%),
-      linear-gradient(160deg,#0a1826 0%,#0D1F33 48%,#0a1420 100%);
-    min-height:100dvh; padding:0 22px 64px;
+    font-family:'Cormorant Garamond',Georgia,serif;color:var(--cream);
+    background:radial-gradient(1100px 600px at 50% -8%, #17324e 0%, rgba(23,50,78,0) 58%),linear-gradient(160deg,#0a1826 0%,#0D1F33 48%,#0a1420 100%);
+    min-height:100dvh;padding:0 22px 64px;
   }
-  .topbar{
-    max-width:1080px; margin:0 auto; display:flex; align-items:center;
-    justify-content:space-between; padding:22px 0 8px;
-  }
-  .brandmini{display:flex; align-items:center; gap:11px}
+  .topbar{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:22px 0 8px}
+  .brandmini{display:flex;align-items:center;gap:11px}
   .brandmini svg{width:34px;height:34px;display:block}
   .brandmini .txt{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
-  .signout{
-    font-family:'Josefin Sans',sans-serif; font-size:10.5px; letter-spacing:.18em;
-    text-transform:uppercase; color:var(--muted); background:none; border:1px solid rgba(142,160,178,.35);
-    padding:8px 15px; border-radius:8px; cursor:pointer; transition:all .2s;
-  }
-  .signout:hover{color:var(--cream); border-color:var(--gold)}
-  header.hero{max-width:1080px; margin:0 auto; padding:34px 0 26px; text-align:center}
+  .signout{font-family:'Josefin Sans',sans-serif;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid rgba(142,160,178,.35);padding:8px 15px;border-radius:8px;cursor:pointer;transition:all .2s}
+  .signout:hover{color:var(--cream);border-color:var(--gold)}
+  header.hero{max-width:1080px;margin:0 auto;padding:34px 0 26px;text-align:center}
   .eyebrow{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
   header.hero h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.4rem);line-height:1.04}
   header.hero .sub{font-style:italic;font-size:1.2rem;color:var(--mist);margin-top:8px}
   .rule{width:44px;height:1px;background:var(--gold);margin:22px auto 0;opacity:.8}
   .denied{max-width:640px;margin:18px auto 0;padding:12px 16px;border:1px solid rgba(201,168,76,.4);background:rgba(201,168,76,.1);border-radius:9px;font-family:'Josefin Sans',sans-serif;font-size:12.5px;letter-spacing:.03em;color:var(--gold-soft);text-align:center;display:none}
   .grid{max-width:1080px;margin:30px auto 0;display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-  .trip{
-    position:relative; display:block; text-decoration:none; color:inherit;
-    border-radius:16px; overflow:hidden; min-height:230px;
-    border:1px solid rgba(201,168,76,.22); background:#0f2337;
-    transition:transform .18s ease, box-shadow .25s ease, border-color .25s;
-  }
+  .trip{position:relative;display:block;text-decoration:none;color:inherit;border-radius:16px;overflow:hidden;min-height:230px;border:1px solid rgba(201,168,76,.22);background:#0f2337;transition:transform .18s ease,box-shadow .25s ease,border-color .25s}
   .trip:hover{transform:translateY(-4px);box-shadow:0 18px 44px rgba(0,0,0,.42);border-color:rgba(201,168,76,.6)}
-  .trip .band{height:118px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .trip .band::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(15,35,55,.85) 100%)}
+  .trip .band{height:132px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .trip .band::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(15,35,55,.85) 100%)}
   .trip .emoji{font-size:3.2rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));position:relative;z-index:1}
+  .trip .triplogo{max-height:88px;max-width:78%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,.5));position:relative;z-index:1}
   .trip .body{padding:20px 22px 24px}
   .trip .loc{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
   .trip h2{font-family:'Playfair Display',serif;font-weight:400;font-size:1.6rem;line-height:1.12;margin-bottom:6px}
@@ -78,7 +62,7 @@
   </div>
 
   <header class="hero">
-    <div class="eyebrow" id="eyebrow">Your Journeys</div>
+    <div class="eyebrow">Your Journeys</div>
     <h1 id="greeting">Welcome</h1>
     <p class="sub">Choose a trip to begin</p>
     <div class="rule"></div>
@@ -97,12 +81,10 @@
 
 <script type="module">
   import { requireAuth, myTrips, myProfile, signOut, rootUrl } from './js/supabase.js';
-
   document.getElementById('signout').addEventListener('click', signOut);
 
   const params = new URLSearchParams(location.search);
-  const denied = params.get('denied');
-  if (denied) {
+  if (params.get('denied')) {
     const el = document.getElementById('denied');
     el.style.display = 'block';
     el.textContent = "You're not on that trip yet. Here are the trips you can open.";
@@ -111,14 +93,12 @@
   (async () => {
     const user = await requireAuth('');
     if (!user) return;
-
     const profile = await myProfile();
     const first = (profile && profile.name ? profile.name : '').split(' ')[0] || 'traveler';
     document.getElementById('greeting').textContent = 'Welcome, ' + first;
 
     const trips = await myTrips();
     document.getElementById('loading').style.display = 'none';
-
     if (!trips.length) { document.getElementById('empty').style.display = 'block'; return; }
 
     const grid = document.getElementById('grid');
@@ -128,12 +108,16 @@
       const accent = t.accent_color || '#C9A84C';
       const role = t.membership && t.membership.is_admin ? 'Host'
                  : (t.membership && t.membership.is_guest ? 'Guest' : '');
+      const emoji = t.emoji || '✈️';
+      const art = t.logo
+        ? '<img class="triplogo" src="' + esc(t.logo) + '" alt="' + esc(t.name || '') + '" ' +
+            'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
+          '<span class="emoji" style="display:none">' + emoji + '</span>'
+        : '<span class="emoji">' + emoji + '</span>';
       return '' +
-      '<a class="trip" href="' + t.slug + '/" style="--accent:' + accent + '">' +
+      '<a class="trip" href="' + t.slug + '/">' +
         (role ? '<span class="role">' + role + '</span>' : '') +
-        '<div class="band" style="background:linear-gradient(140deg,' + band + ' 0%, ' + shade(band) + ' 100%)">' +
-          '<span class="emoji">' + (t.emoji || '✈️') + '</span>' +
-        '</div>' +
+        '<div class="band" style="background:linear-gradient(140deg,' + band + ' 0%, ' + shade(band) + ' 100%)">' + art + '</div>' +
         '<div class="body">' +
           '<div class="loc" style="color:' + accent + '">' + esc(t.location || '') + '</div>' +
           '<h2>' + esc(t.name || t.slug) + '</h2>' +
@@ -144,15 +128,12 @@
     }).join('');
   })();
 
-  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
   function shade(hex){
-    // darken a hex color ~22% for the gradient tail
-    try{
-      const h = hex.replace('#',''); const n = parseInt(h.length===3? h.split('').map(x=>x+x).join(''):h,16);
-      let r=(n>>16)&255,g=(n>>8)&255,b=n&255; const f=0.72;
-      r=Math.round(r*f);g=Math.round(g*f);b=Math.round(b*f);
+    try{ const h=hex.replace('#','');const n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);
+      let r=(n>>16)&255,g=(n>>8)&255,b=n&255;const f=0.72;r=Math.round(r*f);g=Math.round(g*f);b=Math.round(b*f);
       return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
-    }catch(e){ return hex; }
+    }catch(e){return hex;}
   }
 </script>
 <script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js').catch(function(){})})}</script>

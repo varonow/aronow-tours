@@ -89,3 +89,12 @@ export async function myProfile() {
   const { data } = await db.from('profiles').select('name, emoji').eq('id', user.id).maybeSingle();
   return data || { name: 'Guest', emoji: '\u{1F464}' };
 }
+
+// Verify a 6-digit email code (used by the in-app sign-in flow).
+export async function verifyEmailCode(email, token) {
+  const { data, error } = await db.auth.verifyOtp({
+    email: String(email).trim(), token: String(token).trim(), type: 'email'
+  });
+  if (error) throw error;
+  return data;
+}
