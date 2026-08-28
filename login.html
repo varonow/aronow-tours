@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sign In · Aronow Tours</title>
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0D1F33">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#0D1F33; --ink-2:#12283f; --gold:#C9A84C; --gold-soft:#e4cf94;
+    --cream:#F7F3EA; --mist:#c9d3dd; --muted:#8ea0b2;
+  }
+  html,body{height:100%}
+  body{
+    font-family:'Cormorant Garamond',Georgia,serif;
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #17324e 0%, rgba(23,50,78,0) 60%),
+      linear-gradient(160deg,#0a1826 0%,#0D1F33 45%,#0a1420 100%);
+    color:var(--cream); min-height:100dvh;
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .wrap{width:100%; max-width:440px; text-align:center}
+  .crest{width:76px;height:76px;margin:0 auto 22px;display:block}
+  .eyebrow{
+    font-family:'Josefin Sans',sans-serif; font-weight:300; font-size:11px;
+    letter-spacing:.42em; text-transform:uppercase; color:var(--gold);
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'Playfair Display',serif; font-weight:400; font-size:2.7rem;
+    line-height:1.05; letter-spacing:.01em; margin-bottom:8px;
+  }
+  .sub{font-style:italic; font-size:1.18rem; color:var(--mist); margin-bottom:34px}
+  .rule{width:44px;height:1px;background:var(--gold);margin:0 auto 34px;opacity:.8}
+  .card{
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(201,168,76,.28);
+    border-radius:14px; padding:34px 30px 30px; backdrop-filter:blur(6px);
+    text-align:left;
+  }
+  label{
+    font-family:'Josefin Sans',sans-serif; font-size:10.5px; font-weight:400;
+    letter-spacing:.24em; text-transform:uppercase; color:var(--muted);
+    display:block; margin-bottom:9px;
+  }
+  input[type=email]{
+    width:100%; padding:15px 16px; font-family:'Cormorant Garamond',serif;
+    font-size:1.18rem; color:var(--cream); background:rgba(8,18,29,.6);
+    border:1px solid rgba(201,168,76,.35); border-radius:9px; outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  input[type=email]:focus{border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,.14)}
+  input[type=email]::placeholder{color:#5f7488}
+  button{
+    width:100%; margin-top:20px; padding:15px 18px; cursor:pointer;
+    font-family:'Playfair Display',serif; font-size:1.12rem; letter-spacing:.04em;
+    color:#0D1F33; background:linear-gradient(180deg,var(--gold-soft),var(--gold));
+    border:none; border-radius:9px; transition:transform .1s, filter .2s;
+  }
+  button:hover{filter:brightness(1.05); transform:translateY(-1px)}
+  button:active{transform:translateY(0)}
+  button:disabled{opacity:.5; cursor:default; transform:none}
+  .note{
+    font-family:'Josefin Sans',sans-serif; font-size:12px; letter-spacing:.04em;
+    line-height:1.7; color:var(--mist); margin-top:18px; text-align:center;
+  }
+  .msg{
+    margin-top:16px; padding:13px 15px; border-radius:9px; display:none;
+    font-family:'Josefin Sans',sans-serif; font-size:12.5px; letter-spacing:.03em; line-height:1.6;
+  }
+  .msg.error{display:block; background:rgba(140,40,40,.18); border:1px solid rgba(200,90,90,.4); color:#f0c9c9}
+  .msg.ok{display:block; background:rgba(201,168,76,.12); border:1px solid rgba(201,168,76,.4); color:var(--gold-soft)}
+  .sent{display:none; text-align:center}
+  .sent.show{display:block}
+  .sent .big{font-family:'Playfair Display',serif; font-size:1.9rem; margin-bottom:10px}
+  .sent .em{color:var(--gold-soft); font-style:italic}
+  .foot{
+    margin-top:26px; font-family:'Josefin Sans',sans-serif; font-size:10px;
+    letter-spacing:.32em; text-transform:uppercase; color:#5f7488;
+  }
+  .resend{background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:12px;letter-spacing:.05em;text-decoration:underline;padding:0;width:auto;margin-top:14px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <svg class="crest" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="45" fill="none" stroke="#C9A84C" stroke-width="1.6"/>
+      <polygon points="50,18 58,50 50,82 42,50" fill="#C9A84C"/>
+      <polygon points="18,50 50,42 82,50 50,58" fill="#C9A84C" opacity="0.85"/>
+    </svg>
+    <div class="eyebrow">Aronow Tours</div>
+    <h1>Welcome</h1>
+    <p class="sub">Every journey, in one place</p>
+    <div class="rule"></div>
+
+    <div class="card">
+      <!-- Email form -->
+      <form id="loginForm" novalidate>
+        <label for="email">Your Email</label>
+        <input type="email" id="email" placeholder="you@email.com" autocomplete="email" inputmode="email" required>
+        <button type="submit" id="submitBtn">Send Me a Sign-In Link</button>
+        <div class="msg" id="msg"></div>
+        <p class="note">No password needed. We'll email you a secure link that signs you straight in.</p>
+      </form>
+
+      <!-- Sent confirmation -->
+      <div class="sent" id="sent">
+        <div class="big">Check your email</div>
+        <p style="color:#c9d3dd;font-size:1.1rem;line-height:1.6">
+          We sent a sign-in link to <span class="em" id="sentTo"></span>.<br>
+          Open it on this device to continue.
+        </p>
+        <button class="resend" id="resend" type="button">Use a different email</button>
+      </div>
+    </div>
+
+    <div class="foot">By Invitation</div>
+  </div>
+
+<script type="module">
+  import { db, sendMagicLink, rootUrl } from './js/supabase.js';
+
+  const params = new URLSearchParams(location.search);
+  const next = params.get('next') || '';
+
+  const form = document.getElementById('loginForm');
+  const sent = document.getElementById('sent');
+  const msg  = document.getElementById('msg');
+  const btn  = document.getElementById('submitBtn');
+  const emailInput = document.getElementById('email');
+
+  let redirected = false;
+  function go() {
+    if (redirected) return;
+    redirected = true;
+    window.location.replace(rootUrl(next || 'index.html'));
+  }
+  function showError(t){ msg.className = 'msg error'; msg.textContent = t; }
+
+  // If a magic-link token brought us here, a session appears — send them onward.
+  db.auth.onAuthStateChange((_e, session) => { if (session) go(); });
+  (async () => {
+    const { data: { session } } = await db.auth.getSession();
+    if (session) go();
+  })();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.className = 'msg';
+    const email = emailInput.value.trim();
+    if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      await sendMagicLink(email, next);
+      document.getElementById('sentTo').textContent = email;
+      form.style.display = 'none';
+      sent.classList.add('show');
+    } catch (err) {
+      showError(err && err.message ? err.message : 'Something went wrong. Please try again.');
+      btn.disabled = false; btn.textContent = 'Send Me a Sign-In Link';
+    }
+  });
+
+  document.getElementById('resend').addEventListener('click', () => {
+    sent.classList.remove('show'); form.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Send Me a Sign-In Link';
+    emailInput.value = ''; emailInput.focus();
+  });
+</script>
+<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js').catch(function(){})})}</script>
+</body>
+</html>
