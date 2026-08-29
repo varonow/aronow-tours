@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#14263F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Asia Adventure">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Asia Adventure — Itinerary</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<header class="itin-header">
+  <div class="sec-eyebrow">Seoul &middot; Bangkok &middot; Phuket &middot; Dec 2026</div>
+  <h1>Our <em>Itinerary</em></h1>
+  <div class="sub">December 20 &ndash; January 3 &middot; 13 nights &middot; two couples</div>
+</header>
+<div class="day-tabs-wrap"><div class="day-tabs" id="dayTabs"><a class="day-tab" data-id="d0" href="#d0" onclick="jump(event,'d0')"><div class="day-tab-date">Dec 21</div><div class="day-tab-name">Arrive</div></a><a class="day-tab" data-id="d1" href="#d1" onclick="jump(event,'d1')"><div class="day-tab-date">Dec 22</div><div class="day-tab-name">Tech &amp; Shop</div></a><a class="day-tab" data-id="d2" href="#d2" onclick="jump(event,'d2')"><div class="day-tab-date">Dec 23</div><div class="day-tab-name">Korean Day</div></a><a class="day-tab" data-id="d3" href="#d3" onclick="jump(event,'d3')"><div class="day-tab-date">Dec 24</div><div class="day-tab-name">&rarr; Bangkok</div></a><a class="day-tab" data-id="d4" href="#d4" onclick="jump(event,'d4')"><div class="day-tab-date">Dec 25</div><div class="day-tab-name">Chaotic BKK</div></a><a class="day-tab" data-id="d5" href="#d5" onclick="jump(event,'d5')"><div class="day-tab-date">Dec 26</div><div class="day-tab-name">Chatuchak</div></a><a class="day-tab" data-id="d6" href="#d6" onclick="jump(event,'d6')"><div class="day-tab-date">Dec 27</div><div class="day-tab-name">&rarr; Trisara</div></a><a class="day-tab" data-id="d7" href="#d7" onclick="jump(event,'d7')"><div class="day-tab-date">Dec 28</div><div class="day-tab-name">Phang Nga</div></a><a class="day-tab" data-id="d8" href="#d8" onclick="jump(event,'d8')"><div class="day-tab-date">Dec 29</div><div class="day-tab-name">Elephants</div></a><a class="day-tab" data-id="d9" href="#d9" onclick="jump(event,'d9')"><div class="day-tab-date">Dec 30</div><div class="day-tab-name">Racha</div></a><a class="day-tab" data-id="d10" href="#d10" onclick="jump(event,'d10')"><div class="day-tab-date">Dec 31</div><div class="day-tab-name">NYE</div></a><a class="day-tab" data-id="d11" href="#d11" onclick="jump(event,'d11')"><div class="day-tab-date">Jan 1</div><div class="day-tab-name">Phi Phi</div></a><a class="day-tab" data-id="d12" href="#d12" onclick="jump(event,'d12')"><div class="day-tab-date">Jan 2</div><div class="day-tab-name">Rest</div></a><a class="day-tab" data-id="d13" href="#d13" onclick="jump(event,'d13')"><div class="day-tab-date">Jan 3</div><div class="day-tab-name">Home</div></a></div></div>
+<div class="itin-body"><div class="day-section" id="d0">
+      <div class="day-header"><div class="day-num">21<small>Mon</small></div>
+        <div><div class="day-label">Seoul · Four Seasons</div><div class="day-title">Land, Recover &amp; Seoul After Dark</div>
+          <div class="day-date">Monday, December 21, 2026</div><span class="day-loc">Gwanghwamun, Seoul</span></div></div>
+      <div class="events"><div class="event" id="ev-0-0"><div class="event-toggle" onclick="toggleEvent('ev-0-0')">
+      <span class="event-time">Morning</span>
+      <span class="event-title">Land at Incheon — VIP arrival service</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-fly">🛬 VIP arrival</span>Wheels down at 6:30am after the long one — and a VIP airport team is waiting to walk all four of you through immigration and baggage. No lines, no thinking. Then a private car sweeps you the ~45 minutes into Seoul: check in, hot shower, and absolutely no agenda. The trip has begun; the sightseeing can wait.</div><div class="event-info">📍 Four Seasons Hotel Seoul — 97 Saemunan-ro, Jongno-gu &nbsp;·&nbsp; ☎ +82 2-6388-5000 &nbsp;·&nbsp; Aronow conf. <b>4377284930</b> · Salame conf. <b>4377333669</b></div><div class="event-conf">✓ VIP airport service booked — met on landing, escorted through arrivals</div></div></div></div><div class="event" id="ev-0-1"><div class="event-toggle" onclick="toggleEvent('ev-0-1')">
+      <span class="event-time">9:30a</span>
+      <span class="event-title">Breakfast at The Market Kitchen</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍳 Breakfast</span>No alarm-clock tourism after sixteen hours in the air. A slow breakfast downstairs at The Market Kitchen, the hotel's bright market-style dining room — coffee, something warm, and a firm plan to do very little for a while.</div></div></div></div><div class="event" id="ev-0-2"><div class="event-toggle" onclick="toggleEvent('ev-0-2')">
+      <span class="event-time">11:00a</span>
+      <span class="event-title">Four Seasons Seoul Spa — all four of you</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-spa">💆 Spa</span>One of Asia's great hotel spas and the perfect reset. Heated pools, steam rooms, and the legendary Korean body scrub that sends the whole flight down the drain and leaves you feeling brand new. Three glorious hours.</div><div class="event-note">⚡ <b>Book ahead</b> — reserve treatment rooms for all four when you book the hotel.</div></div></div></div><div class="event" id="ev-0-3"><div class="event-toggle" onclick="toggleEvent('ev-0-3')">
+      <span class="event-time">2:30p</span>
+      <span class="event-title">Boccalino — right downstairs</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍽 Lunch</span>Homey Italian inside the hotel: pasta, fish, wonderful bread. Exactly the familiar comfort you want when you're jet-lagged and not ready to be brave yet.</div></div></div></div><div class="event" id="ev-0-4"><div class="event-toggle" onclick="toggleEvent('ev-0-4')">
+      <span class="event-time">4:00p</span>
+      <span class="event-title">Heesum — Hands-On Korean Tea Ceremony</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-spa">🍵 Tea</span>Five minutes away, a certified tea master walks the four of you through the Korean darye — the gestures, the meaning, two premium teas from Korea's finest regions, poured by your own hands. Seventy minutes of dedicated instruction and tasting: calm, meditative, the best possible antidote to a red-eye.</div><div class="event-info">📍 Heesum Tea Room — Gwanghwamun, 5–10 min from the hotel &nbsp;·&nbsp; 🔗 <a href='https://heesum.com' target='_blank'>heesum.com</a></div><div class="event-conf">✓ Booked — with Jason L &nbsp;·&nbsp; ₩160,000 per guest, settled on-site by card or cash (cash greatly appreciated) &nbsp;·&nbsp; 70 minutes</div></div></div></div><div class="event" id="ev-0-5"><div class="event-toggle" onclick="toggleEvent('ev-0-5')">
+      <span class="event-time">6:00p</span>
+      <span class="event-title">Seoul Sky — Lotte World Tower, floors 117–123</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-art">🌆 Seoul Sky</span>Timed for dusk sliding into night. At 555 meters, glass floors and a 360° sweep of a ten-million-person city spilling into the mountains. Warm, indoors, and the fastest way to grasp just how big Seoul is.</div><div class="event-info">📍 Lotte World Tower — 300 Olympic-ro, Songpa-gu &nbsp;·&nbsp; 🔗 <a href='https://seoulsky.lotteworld.com' target='_blank'>seoulsky.lotteworld.com</a></div><div class="event-note">⚡ ₩29,000pp. Book online to skip the line.</div></div></div></div><div class="event" id="ev-0-6"><div class="event-toggle" onclick="toggleEvent('ev-0-6')">
+      <span class="event-time">7:30p</span>
+      <span class="event-title">Doma — modern European, Itaewon</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍽 Dinner</span>Seoul's most talked-about modern European room — small plates, a serious wine list, very New York in feel. Easy and delicious for arrival night, with fish and vegetables all over the menu.</div></div></div></div><div class="event" id="ev-0-7"><div class="event-toggle" onclick="toggleEvent('ev-0-7')">
+      <span class="event-time">9:30p</span>
+      <span class="event-title">Charles H. — a nightcap back at the hotel</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🍸 Nightcap</span>The drive back from Doma delivers you to one of Asia's most celebrated cocktail bars, hidden in your own hotel's basement. Soju-based cocktails you won't find at home, impeccable design — and when the last glass is empty, no cab to catch. Just the elevator up to bed. A perfect Day 1 curtain.</div></div></div></div></div></div><div class="day-section" id="d1">
+      <div class="day-header"><div class="day-num">22<small>Tue</small></div>
+        <div><div class="day-label">Seoul · Four Seasons</div><div class="day-title">Tech, Shopping &amp; a Jazz Nightcap</div>
+          <div class="day-date">Tuesday, December 22, 2026</div><span class="day-loc">Gangnam &amp; Apgujeong, Seoul</span></div></div>
+      <div class="events"><div class="event" id="ev-1-0"><div class="event-toggle" onclick="toggleEvent('ev-1-0')">
+      <span class="event-time">10:00a</span>
+      <span class="event-title">T.um — SK Telecom Future Tech Center, VIP visit</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-tech">🤖 T.um</span>Not a tourist stop. SKT's showcase of where telecom is heading — 6G, AI, robotics, smart cities. For four people who run a telecom company, the goal is a private executive briefing, not the public tour.</div><div class="event-note">⚡ <b>Arrange now</b> — via the concierge and SK Telecom corporate relations, referencing your company. This takes time to set up.</div></div></div></div><div class="event" id="ev-1-1"><div class="event-toggle" onclick="toggleEvent('ev-1-1')">
+      <span class="event-time">12:00p</span>
+      <span class="event-title">Hanbok — private fitting + portrait session</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-art">👘 Hanbok</span>Couture, not costume rental. Victoria and Susan in extraordinary Korean silk, Marshall and Teddy in matching robes, and a real photographer capturing all of it. One of the trip's best keepsakes.</div><div class="event-note">⚡ <b>Book</b> — ask the concierge for a high-end designer + photographer in Insadong/Anguk.</div></div></div></div><div class="event" id="ev-1-2"><div class="event-toggle" onclick="toggleEvent('ev-1-2')">
+      <span class="event-time">1:30p</span>
+      <span class="event-title">Lunch in Cheongdam</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍱 Lunch</span>A good fish-and-vegetable Korean lunch near the shops — let the concierge pick the room.</div></div></div></div><div class="event" id="ev-1-3"><div class="event-toggle" onclick="toggleEvent('ev-1-3')">
+      <span class="event-time">2:30p</span>
+      <span class="event-title">Shopping — Cheongdam + Apgujeong with an insider</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-shop">🛍 Shopping</span>Not Gucci and Prada. A private local shopper takes you to Korean designers the rest of the world is copying — Gentle Monster (each store a full art installation, sometimes with roaming robots), Ader Error's designed flagship, and finds you simply cannot get in New York. Men included — no sofa duty.</div><div class="event-note">⚡ <b>Book</b> — Seoul Insiders / Like A Local, 2.5-hour private session.</div></div></div></div><div class="event" id="ev-1-4"><div class="event-toggle" onclick="toggleEvent('ev-1-4')">
+      <span class="event-time">5:00p</span>
+      <span class="event-title">The afternoon fork — sports vs K-beauty</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sport">⛳ Split</span><b>Marshall &amp; Ted, Gangnam:</b> a private bay at Golfzon (play Pebble or Augusta on the best sim tech on earth, food and drinks in the bay), then Sports Monster — VR baseball against real pitchers, archery, a dunk zone, 30+ ways to compete indoors. <b>Victoria &amp; Susan, Apgujeong:</b> a private K-beauty guide who knows what's actually worth it for Western skin — the Sulwhasoo flagship, Olive Young, the best boutiques, no rushing.</div><div class="event-note">⚡ <b>Book</b> — Golfzon Gangnam private bay 5pm; K-beauty guide 5pm (Sulwhasoo + Olive Young + Apgujeong).</div></div></div></div><div class="event" id="ev-1-5"><div class="event-toggle" onclick="toggleEvent('ev-1-5')">
+      <span class="event-time">8:30p</span>
+      <span class="event-title">Dinner — Schedule Cheongdam</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍽 Dinner</span>Dinner right in the neighborhood you spent the afternoon shopping — Schedule Cheongdam is one of the most stylish rooms in Gangnam, all European-inspired design and a fashionable crowd, with a menu that slides happily between Western plates and Korean comfort. Trendy without trying too hard, and open late if the night runs long.</div><div class="event-info">📍 Schedule Cheongdam — 37 Seolleung-ro 152-gil, Gangnam (9 min from Apgujeong Rodeo) &nbsp;·&nbsp; ☎ +82 2-2548-0236 &nbsp;·&nbsp; 🔗 <a href='https://schedulecorp.co.kr/cheongdam/' target='_blank'>schedulecorp.co.kr</a></div></div></div></div><div class="event" id="ev-1-6"><div class="event-toggle" onclick="toggleEvent('ev-1-6')">
+      <span class="event-time">10:30p</span>
+      <span class="event-title">Once in a Blue Moon — Seoul's finest jazz</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🎷 Live jazz</span>Gangnam's celebrated jazz room — world-class players, great cocktails, a sophisticated night out rather than a serious concert. The right finish to the tech-and-shopping day.</div></div></div></div></div></div><div class="day-section" id="d2">
+      <div class="day-header"><div class="day-num">23<small>Wed</small></div>
+        <div><div class="day-label">Seoul · Four Seasons</div><div class="day-title">The Really Korean Day</div>
+          <div class="day-date">Wednesday, December 23, 2026</div><span class="day-loc">Seoul &amp; Suwon</span></div></div>
+      <div class="events"><div class="event" id="ev-2-0"><div class="event-toggle" onclick="toggleEvent('ev-2-0')">
+      <span class="event-time">9:30a</span>
+      <span class="event-title">Breakfast — Tartine or Passion 5</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🥐 Breakfast</span>Either the San Francisco sourdough icon transplanted to Seoul, or a patisserie that rivals Paris. A very good start to the last Seoul day.</div></div></div></div><div class="event" id="ev-2-1"><div class="event-toggle" onclick="toggleEvent('ev-2-1')">
+      <span class="event-time">10:30a</span>
+      <span class="event-title">Kimchi master class — the luxury version</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🥬 Kimchi</span>Not the tourist one. A private session with a master maker in a traditional kitchen — the fermentation science, the regional variations, the history, and your own batch to take home. Hands-on, genuinely Korean, and perfect for the group's diet.</div><div class="event-note">⚡ <b>Book</b> — ask the concierge for a private luxury session, not a group class.</div></div></div></div><div class="event" id="ev-2-2"><div class="event-toggle" onclick="toggleEvent('ev-2-2')">
+      <span class="event-time">12:30p</span>
+      <span class="event-title">Lunch near the kimchi kitchen</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍜 Lunch</span>Something easy before drumming.</div></div></div></div><div class="event" id="ev-2-3"><div class="event-toggle" onclick="toggleEvent('ev-2-3')">
+      <span class="event-time">1:30p</span>
+      <span class="event-title">Korean drumming — private Samulnori session</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-art">🥁 Drumming</span>A private instructor at the National Gugak Center teaches all four of you traditional percussion — the hourglass Janggu and the four-instrument ensemble — building to the four of you playing together. Loud, physical, and the story you'll tell for years.</div><div class="event-info">📍 National Gugak Center — 2364 Nambusunhwan-ro, Seocho-gu &nbsp;·&nbsp; 🔗 <a href='https://www.gugak.go.kr' target='_blank'>gugak.go.kr</a></div><div class="event-note">⚡ <b>Book</b> — 90-minute private session via the concierge or National Gugak Center.</div></div></div></div><div class="event" id="ev-2-4"><div class="event-toggle" onclick="toggleEvent('ev-2-4')">
+      <span class="event-time">3:45p</span>
+      <span class="event-title">Samsung Innovation Museum — Suwon, private tour</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-tech">📱 Samsung</span>A 45-minute drive to Samsung's own HQ. Five floors from the first transistors to 6G and semiconductors — genuinely fascinating for people who run a telecom company. Book the English guided tour and let the guide go deep.</div><div class="event-info">📍 Samsung Innovation Museum — 129 Samsung-ro, Yeongtong-gu, Suwon &nbsp;·&nbsp; 🔗 <a href='https://www.samsunginnovationmuseum.com' target='_blank'>samsunginnovationmuseum.com</a></div><div class="event-note">⚡ <b>Book</b> — weekday visits need advance reservation; request an English guide. Free entry, ~2 hrs.</div></div></div></div><div class="event" id="ev-2-5"><div class="event-toggle" onclick="toggleEvent('ev-2-5')">
+      <span class="event-time">8:15p</span>
+      <span class="event-title">Final Seoul dinner — People the Terrace</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-star">🌟 Big dinner</span>The plan for the last Seoul night: Korea's largest dining bar, and one of Cheongdam's most glamorous rooms — contemporary fusion plates, a serious cocktail and wine program, and the kind of crowd where you might spot a familiar face from a K-drama. Dinner that turns into an evening rather than ending at dessert.</div><div class="event-info">📍 People the Terrace — 13 Dosan-daero 81-gil, Cheongdam, Gangnam &nbsp;·&nbsp; Open 6pm–2am</div><div class="event-note">⚡ <b>Current thinking — not booked yet.</b> Reserve ahead; it's a scene.</div></div></div></div><div class="event" id="ev-2-6"><div class="event-toggle" onclick="toggleEvent('ev-2-6')">
+      <span class="event-time">10:15p</span>
+      <span class="event-title">Final Seoul night — live Western music</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🎸 Live music</span>A great band playing songs you actually know — classic rock, 70s/80s, soul, somewhere in Hongdae or Itaewon. Or the sophisticated 1914 Lounge at Josun Palace for late cocktails.</div></div></div></div></div></div><div class="day-section" id="d3">
+      <div class="day-header"><div class="day-num">24<small>Thu</small></div>
+        <div><div class="day-label">Seoul &rarr; Bangkok</div><div class="day-title">Last Morning in Seoul, then Bangkok</div>
+          <div class="day-date">Thursday, December 24, 2026</div><span class="day-loc">Incheon &rarr; Chao Phraya</span></div></div>
+      <div class="events"><div class="event" id="ev-3-0"><div class="event-toggle" onclick="toggleEvent('ev-3-0')">
+      <span class="event-time">Morning</span>
+      <span class="event-title">Late breakfast, pack, check out</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">No early wake-up. A leisurely breakfast, then bags — your Seoul winter layers already shipped home, so you land in Bangkok travelling light.</div></div></div></div><div class="event" id="ev-3-1"><div class="event-toggle" onclick="toggleEvent('ev-3-1')">
+      <span class="event-time">8:00a</span>
+      <span class="event-title">Private car to Incheon — VIP check-in</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">An easy run to the airport, where the VIP team takes over: check-in, bags, and formalities handled while you have a coffee.</div><div class="event-conf">✓ VIP check-in service booked at Incheon</div></div></div></div><div class="event" id="ev-3-2"><div class="event-toggle" onclick="toggleEvent('ev-3-2')">
+      <span class="event-time">10:50a</span>
+      <span class="event-title">Fly Seoul &rarr; Bangkok — Thai Airways 657</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-fly">✈️ Fly</span>Business class — a flat seat and excellent Thai service. Wheels down Bangkok at 2:45pm.</div></div></div></div><div class="event" id="ev-3-3"><div class="event-toggle" onclick="toggleEvent('ev-3-3')">
+      <span class="event-time">2:45p</span>
+      <span class="event-title">Land Suvarnabhumi — VIP meet + Four Seasons car</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">VIP meet-and-assist through immigration, then a private Four Seasons car to the river. At the hotel by roughly 4:45pm.</div><div class="event-info">📍 Four Seasons Bangkok at Chao Phraya — 300/1 Charoen Krung Road, Sathorn &nbsp;·&nbsp; ☎ +66 2 032 0888 &nbsp;·&nbsp; Aronow conf. <b>4377300029</b> · Salame conf. <b>4377333148</b></div></div></div></div><div class="event" id="ev-3-4"><div class="event-toggle" onclick="toggleEvent('ev-3-4')">
+      <span class="event-time">4:45p</span>
+      <span class="event-title">Check in, shower, decompress</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Two hours to settle in — save the energy for the rooftop.</div></div></div></div><div class="event" id="ev-3-5"><div class="event-toggle" onclick="toggleEvent('ev-3-5')">
+      <span class="event-time">7:30p</span>
+      <span class="event-title">Sirocco — rooftop dinner, 63rd floor</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🌆 Sirocco</span>The dramatic ‘we're in Bangkok' opener: open-air on the 63rd floor of State Tower, the whole city glittering in every direction. You go for the walk out onto that rooftop as much as for the meal.</div><div class="event-info">📍 Sirocco — lebua at State Tower, 63/F, 1055 Silom Road, Bang Rak &nbsp;·&nbsp; 🔗 <a href='https://www.lebua.com' target='_blank'>lebua.com</a> &nbsp;·&nbsp; Smart dress — no shorts or sandals</div><div class="event-conf">✓ Confirmed — Reservation <b>TVNYV7</b> · Dec 24, 7:30pm · 4 guests · outdoor Sky Bar table</div></div></div></div></div></div><div class="day-section" id="d4">
+      <div class="day-header"><div class="day-num">25<small>Fri</small></div>
+        <div><div class="day-label">Bangkok · Four Seasons</div><div class="day-title">Chaotic Bangkok — Temple, Tuk-tuks &amp; Chinatown</div>
+          <div class="day-date">Friday, December 25, 2026</div><span class="day-loc">Old Bangkok &amp; the river</span></div></div>
+      <div class="events"><div class="event" id="ev-4-0"><div class="event-toggle" onclick="toggleEvent('ev-4-0')">
+      <span class="event-time">8:45a</span>
+      <span class="event-title">Breakfast, then a private guide + driver for the day</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Out early, using the river as much as the roads. Your guide stays with you into the afternoon.</div></div></div></div><div class="event" id="ev-4-1"><div class="event-toggle" onclick="toggleEvent('ev-4-1')">
+      <span class="event-time">9:15a</span>
+      <span class="event-title">Wat Arun — the one temple</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-art">🛕 Wat Arun</span>The Temple of Dawn, porcelain spires on the river, done early before the heat and crowds. Wander, take it in — and then we are gloriously done with temples for the trip.</div><div class="event-info">📍 Wat Arun Ratchawararam — 158 Wang Doem Road, Thonburi (west bank of the river)</div></div></div></div><div class="event" id="ev-4-2"><div class="event-toggle" onclick="toggleEvent('ev-4-2')">
+      <span class="event-time">12:45p</span>
+      <span class="event-title">Lunch — Supanniga, with Wat Arun views</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍽 Lunch</span>A pretty riverfront terrace looking straight across at the temple you just climbed. Refined Thai home cooking, fish and vegetables, an hour on the river before the shopping.</div><div class="event-info">📍 Supanniga Eating Room (Tha Tien) — Maha Rat Road riverfront &nbsp;·&nbsp; 🔗 <a href='https://www.supannigaeatingroom.com' target='_blank'>supannigaeatingroom.com</a></div></div></div></div><div class="event" id="ev-4-3"><div class="event-toggle" onclick="toggleEvent('ev-4-3')">
+      <span class="event-time">2:00p</span>
+      <span class="event-title">Platinum Fashion Mall — Susan's shopping hour</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-shop">🛍 Shopping</span>Thousands of little shops, great prices, real finds. The guys drop in for 30–45 minutes, then get spirited away for a drink and returned around 4:15.</div></div></div></div><div class="event" id="ev-4-4"><div class="event-toggle" onclick="toggleEvent('ev-4-4')">
+      <span class="event-time">7:00p</span>
+      <span class="event-title">Bangkok by tuk-tuk — two private tuk-tuks + guide</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🛺 Tuk-tuks</span>This one should feel a little crazy. Illuminated old Bangkok, then the Pak Khlong Talat flower market — mountains of orchids, lotus and jasmine — then straight into Chinatown's neon and delicious chaos on Yaowarat.</div><div class="event-note">⚡ <b>Book</b> — private tuk-tuk night tour for 4, flower market + Chinatown route.</div></div></div></div><div class="event" id="ev-4-5"><div class="event-toggle" onclick="toggleEvent('ev-4-5')">
+      <span class="event-time">9:15p</span>
+      <span class="event-title">Dinner — Red Rose, a Chinatown jazz lounge</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🎷 Dinner</span>Inside Shanghai Mansion right on Yaowarat, so you never leave Chinatown — a Chinese restaurant and jazz lounge in one, air-conditioned and full of atmosphere to land in after the tuk-tuks.</div><div class="event-info">📍 Red Rose — Shanghai Mansion, 479–481 Yaowarat Road, Chinatown &nbsp;·&nbsp; 🔗 <a href='https://www.shanghaimansion.com' target='_blank'>shanghaimansion.com</a></div><div class="event-note">⚡ <b>First choice — pending.</b> Verify open Dec 25, live music, and a fish/veg menu. Line up a Plan B.</div></div></div></div></div></div><div class="day-section" id="d5">
+      <div class="day-header"><div class="day-num">26<small>Sat</small></div>
+        <div><div class="day-label">Bangkok · Four Seasons</div><div class="day-title">Glamorous Bangkok — Chatuchak, Canals &amp; a River Night</div>
+          <div class="day-date">Saturday, December 26, 2026</div><span class="day-loc">Chatuchak &amp; Thonburi</span></div></div>
+      <div class="events"><div class="event" id="ev-5-0"><div class="event-toggle" onclick="toggleEvent('ev-5-0')">
+      <span class="event-time">9:30a</span>
+      <span class="event-title">Chatuchak — a design treasure hunt with a guide</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-shop">🛍 Chatuchak</span>Not souvenir junk. A guide takes your interiors eye straight to home, design, antiques and beautiful objects — ceramics, big vessels, lamps, textiles, vintage finds. If something enormous steals your heart, ship it home.</div><div class="event-note">⚡ <b>Book</b> — private Chatuchak guide; brief them: home / design / antiques, no junk.</div></div></div></div><div class="event" id="ev-5-1"><div class="event-toggle" onclick="toggleEvent('ev-5-1')">
+      <span class="event-time">1:00p</span>
+      <span class="event-title">Lunch — 345 by Yorwor, inside Chatuchak</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍽 Lunch</span>Air-conditioned recovery without leaving the market — sit, cool down, a fish/veg lunch before the boat.</div></div></div></div><div class="event" id="ev-5-2"><div class="event-toggle" onclick="toggleEvent('ev-5-2')">
+      <span class="event-time">2:30p</span>
+      <span class="event-title">Private Thonburi canal boat — a long-tail</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sea">⛵ Canals</span>The real Bangkok water experience — the nicest long-tail (cushions, shade), deliberately not a yacht. Across the river into the Thonburi khlongs: stilt houses, tiny gardens, monks, monitor lizards, and a giant golden Buddha rising over the rooftops.</div><div class="event-note">⚡ <b>Book</b> — private long-tail charter for 4, Thonburi khlongs, nicest boat available.</div></div></div></div><div class="event" id="ev-5-3"><div class="event-toggle" onclick="toggleEvent('ev-5-3')">
+      <span class="event-time">8:00p</span>
+      <span class="event-title">Osca &amp; Blanco — riverside, band into DJ</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🍸 River night</span>The final Bangkok night: on the Chao Phraya, Mediterranean plates, cocktails, and a live band that rolls into a DJ so dinner becomes a night out. Request an outdoor river table and stay as long as it's fun.</div><div class="event-note">⚡ <b>First choice — pending.</b> Verify Dec 26 has band + DJ and a fish/veg menu. Have a Plan B.</div></div></div></div></div></div><div class="day-section" id="d6">
+      <div class="day-header"><div class="day-num">27<small>Sun</small></div>
+        <div><div class="day-label">Bangkok &rarr; Phuket · Trisara</div><div class="day-title">Fly to Phuket &amp; Arrive in Paradise</div>
+          <div class="day-date">Sunday, December 27, 2026</div><span class="day-loc">Bangkok &rarr; Trisara</span></div></div>
+      <div class="events"><div class="event" id="ev-6-0"><div class="event-toggle" onclick="toggleEvent('ev-6-0')">
+      <span class="event-time">7:00a</span>
+      <span class="event-title">Quick breakfast, leave early</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Err on the early side — don't let Bangkok traffic anywhere near the flight.</div></div></div></div><div class="event" id="ev-6-1"><div class="event-toggle" onclick="toggleEvent('ev-6-1')">
+      <span class="event-time">9:40a</span>
+      <span class="event-title">Fly Bangkok &rarr; Phuket — Thai Airways 205</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-fly">✈️ Fly</span>A short hop south, 9:40 to 11:10. A private car waits at Phuket, ~20 minutes to Trisara — at the resort by around 12:15.</div></div></div></div><div class="event" id="ev-6-2"><div class="event-toggle" onclick="toggleEvent('ev-6-2')">
+      <span class="event-time">2:00p</span>
+      <span class="event-title">Check into the villas</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Unpack, settle, breathe. This is deliberately the one day with no plan — you've just done Seoul and Bangkok, and this is the completely different chapter.</div><div class="event-info">📍 Trisara — 60/1 Moo 6, Srisoonthorn Road, Cherngtalay, Phuket &nbsp;·&nbsp; ☎ +66 76 310 100 &nbsp;·&nbsp; ✉ reservations@trisara.com &nbsp;·&nbsp; 🔗 <a href='https://www.trisara.com' target='_blank'>trisara.com</a></div><div class="event-conf">✓ Booked &amp; paid — Booking <b>82606</b> · Aronow Ocean View Pool Villa · Salame Ocean View Pool Junior Suite · adjacent villas requested</div></div></div></div><div class="event" id="ev-6-3"><div class="event-toggle" onclick="toggleEvent('ev-6-3')">
+      <span class="event-time">4:00p</span>
+      <span class="event-title">Pool, beach, explore Trisara</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Drinks, a swim, and settling into the villas and their private pools.</div></div></div></div><div class="event" id="ev-6-4"><div class="event-toggle" onclick="toggleEvent('ev-6-4')">
+      <span class="event-time">5:30p</span>
+      <span class="event-title">Sunset cocktails</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🌅 Sunset</span>The first Andaman sunset. Ease in.</div></div></div></div><div class="event" id="ev-6-5"><div class="event-toggle" onclick="toggleEvent('ev-6-5')">
+      <span class="event-time">7:00p</span>
+      <span class="event-title">Dinner — La Crique at Trisara</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍽 Dinner</span>Oceanfront French-Mediterranean, upscale but relaxed — no stiff tasting menu. An easy first night, early to bed.</div></div></div></div></div></div><div class="day-section" id="d7">
+      <div class="day-header"><div class="day-num">28<small>Mon</small></div>
+        <div><div class="day-label">Phuket · Trisara</div><div class="day-title">Phang Nga Bay — The Adventure Boat Day</div>
+          <div class="day-date">Monday, December 28, 2026</div><span class="day-loc">Phang Nga Bay</span></div></div>
+      <div class="events"><div class="event" id="ev-7-0"><div class="event-toggle" onclick="toggleEvent('ev-7-0')">
+      <span class="event-time">10:00a</span>
+      <span class="event-title">Private exploration boat into Phang Nga Bay</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sea">⛵ Boat day</span>A nimble premium catamaran with kayaks and a tender — maneuverability over sun-deck size, because today is about getting deep into the landscape. Shaded seats, crew, drinks, lunch aboard.</div></div></div></div><div class="event" id="ev-7-1"><div class="event-toggle" onclick="toggleEvent('ev-7-1')">
+      <span class="event-time">11:00a</span>
+      <span class="event-title">Sea caves &amp; hidden hongs — the wow of the day</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sea">🛶 Sea caves</span>Limestone cliffs rising straight out of the water, then into guided kayaks — they paddle — through low sea caves until you pop out inside a hong, a lagoon fully ringed by towering cliffs. Extraordinary.</div></div></div></div><div class="event" id="ev-7-2"><div class="event-toggle" onclick="toggleEvent('ev-7-2')">
+      <span class="event-time">12:30p</span>
+      <span class="event-title">James Bond Island + lunch aboard</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-art">🏝 Island</span>See the famous island because you're right there, without losing half a day to crowds. Lunch on your own boat — grilled fish, salads, vegetables, noodles, fruit, wine.</div></div></div></div><div class="event" id="ev-7-3"><div class="event-toggle" onclick="toggleEvent('ev-7-3')">
+      <span class="event-time">8:30p</span>
+      <span class="event-title">Dinner — Carpe Diem Beach Club</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🍸 Beach club</span>Beachfront Mediterranean-Italian: fish, pasta, pizza, cocktails and music. Stylish, not serious, and booked a little later so the afternoon stays lazy.</div><div class="event-conf">✓ Confirmed — Invoice <b>CarpeKTSDJYB</b> · Dec 28, 8:30pm</div></div></div></div></div></div><div class="day-section" id="d8">
+      <div class="day-header"><div class="day-num">29<small>Tue</small></div>
+        <div><div class="day-label">Phuket · Trisara</div><div class="day-title">Elephants — The Animal Day</div>
+          <div class="day-date">Tuesday, December 29, 2026</div><span class="day-loc">Phuket</span></div></div>
+      <div class="events"><div class="event" id="ev-8-0"><div class="event-toggle" onclick="toggleEvent('ev-8-0')">
+      <span class="event-time">9:30a</span>
+      <span class="event-title">Phuket Mountain Elephant Care — hands-on in the jungle</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-art">🐘 Elephants</span>Not railing-watching. Sixteen acres of jungle in the hills above Chalong, with waterfalls and views — you prepare the elephants' food, feed them, walk with them, and help with their bath. Small groups only, no riding, no hooks, no chains, a vet on site daily — and they send you home with the photos. About two and a half to three hours.</div><div class="event-info">📍 Phuket Mountain Elephant Care — Chalong, Phuket &nbsp;·&nbsp; ~2.5–3 hrs, photos &amp; refreshments included</div><div class="event-note">⚡ <b>Book</b> — program for 4 via the Trisara concierge; only ~4 small sessions a day, so lock the morning slot.</div></div></div></div><div class="event" id="ev-8-1"><div class="event-toggle" onclick="toggleEvent('ev-8-1')">
+      <span class="event-time">1:00p</span>
+      <span class="event-title">Casual lunch near the camp</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍜 Lunch</span>Somewhere easy and sensible — no destination restaurant today.</div></div></div></div><div class="event" id="ev-8-2"><div class="event-toggle" onclick="toggleEvent('ev-8-2')">
+      <span class="event-time">2:30p</span>
+      <span class="event-title">Back to Trisara — pool, beach, rest</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Real downtime: nap, swim, spa. Nothing added just to fill the afternoon.</div></div></div></div><div class="event" id="ev-8-3"><div class="event-toggle" onclick="toggleEvent('ev-8-3')">
+      <span class="event-time">7:00p</span>
+      <span class="event-title">Dinner — Three Monkeys, a jungle restaurant</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🌴 Dinner</span>Built into the jungle on wooden platforms among the trees — an experience as much as a meal. A big menu that works for the group: fin fish, tuna, salmon, plenty of vegetarian, cocktails, atmosphere.</div><div class="event-info">📍 Three Monkeys — 100/2 Moo 4, Kathu, Phuket &nbsp;·&nbsp; 🔗 <a href='https://threemonkeysphuket.com' target='_blank'>threemonkeysphuket.com</a></div><div class="event-note">⚡ <b>Book</b> — Three Monkeys.</div></div></div></div></div></div><div class="day-section" id="d9">
+      <div class="day-header"><div class="day-num">30<small>Wed</small></div>
+        <div><div class="day-label">Phuket · Trisara</div><div class="day-title">Racha Islands — The Fabulous Catamaran Day ❤️</div>
+          <div class="day-date">Wednesday, December 30, 2026</div><span class="day-loc">Racha Islands</span></div></div>
+      <div class="events"><div class="event" id="ev-9-0"><div class="event-toggle" onclick="toggleEvent('ev-9-0')">
+      <span class="event-time">10:00a</span>
+      <span class="event-title">Private power catamaran — just the four of you</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sea">⛵ Catamaran</span>Big forward sun deck, shaded rear lounge, air-conditioned salon, easy swim platform, paddleboards, a floating mat, champagne — and space. The leisurely play day: shoes off, music on, let's go somewhere beautiful.</div></div></div></div><div class="event" id="ev-9-1"><div class="event-toggle" onclick="toggleEvent('ev-9-1')">
+      <span class="event-time">11:30a</span>
+      <span class="event-title">Racha Yai — first anchorage</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sea">🏊 Swim</span>Turquoise water, white sand, protected bays. Swim, snorkel, paddleboard, or lie on the bow. Susan stays aboard with a drink and the view — no problem at all.</div></div></div></div><div class="event" id="ev-9-2"><div class="event-toggle" onclick="toggleEvent('ev-9-2')">
+      <span class="event-time">12:30p</span>
+      <span class="event-title">Lunch aboard</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍽 Lunch</span>A proper lunch set up on the cat — grilled fish, salads, vegetarian Thai, fruit, wine. No mediocre island restaurant required.</div></div></div></div><div class="event" id="ev-9-3"><div class="event-toggle" onclick="toggleEvent('ev-9-3')">
+      <span class="event-time">5:30p</span>
+      <span class="event-title">Catch Beach Club — the whole evening</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🍸 Beach club</span>Reserve a great spot for sunset cocktails, music into a DJ, and dinner — and stay. No second reservation; Catch is the night. The most purely fun day of the week.</div><div class="event-info">📍 Catch Beach Club — Bang Tao Beach &nbsp;·&nbsp; 🔗 <a href='https://www.catchbeachclub.com' target='_blank'>catchbeachclub.com</a></div><div class="event-note">⚡ <b>Book</b> — Catch Beach Club, Bang Tao — sunset table or daybed.</div></div></div></div></div></div><div class="day-section" id="d10">
+      <div class="day-header"><div class="day-num">31<small>Thu</small></div>
+        <div><div class="day-label">Phuket · Trisara</div><div class="day-title">Sportfishing + New Year's Eve 🎣</div>
+          <div class="day-date">Thursday, December 31, 2026</div><span class="day-loc">Andaman Sea &amp; Trisara</span><div class="day-highlight">New Year's Eve — Trisara's gala on The Deck: an exquisite dinner over the Andaman, live jazz, a cabaret show, firelit celebration, and fireworks over the sea at midnight. Dress code: Jewel Elegance in the Garden.</div></div></div>
+      <div class="events"><div class="event" id="ev-10-0"><div class="event-toggle" onclick="toggleEvent('ev-10-0')">
+      <span class="event-time">9:30a</span>
+      <span class="event-title">Private fishing charter — the competitive boat day</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sport">🎣 Fishing</span>A comfortable sportfishing cruiser — the captain and crew do all the technical work, you just reel. Trolling so everyone's involved: tuna, mahi-mahi, trevally. The moment Ted lands one, Marshall will suddenly care very deeply about fishing.</div><div class="event-note">⚡ <b>Book</b> — private sportfishing cruiser for 4, morning of Dec 31.</div></div></div></div><div class="event" id="ev-10-1"><div class="event-toggle" onclick="toggleEvent('ev-10-1')">
+      <span class="event-time">2:30p</span>
+      <span class="event-title">Back to Trisara — rest, then get glamorous</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Plenty of time before the gala — nap, pool, then hair, dresses, champagne and music at the villas.</div></div></div></div><div class="event" id="ev-10-2"><div class="event-toggle" onclick="toggleEvent('ev-10-2')">
+      <span class="event-time">7:30p</span>
+      <span class="event-title">Trisara NYE Gala — The Deck</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-star">🎆 NYE Gala</span>The big glamorous night: an exquisite dinner over the Andaman, live jazz, a cabaret show, firelit celebration, and fireworks over the sea at midnight — then the easiest walk home to your villa there is.</div><div class="event-info">📍 The Deck at Trisara &nbsp;·&nbsp; Dress code: <b>Jewel Elegance in the Garden</b> &nbsp;·&nbsp; ✉ reservations@trisara.com</div><div class="event-note">⚡ <b>Book immediately</b> — reserve with the villas; premium seating is limited (early-bird deadline was Sept 15). Flag to Mook.</div></div></div></div></div></div><div class="day-section" id="d11">
+      <div class="day-header"><div class="day-num">1<small>Fri</small></div>
+        <div><div class="day-label">Phuket · Trisara</div><div class="day-title">Phi Phi — The Cinematic Catamaran Day</div>
+          <div class="day-date">Friday, January 1, 2026</div><span class="day-loc">Phi Phi Islands</span></div></div>
+      <div class="events"><div class="event" id="ev-11-0"><div class="event-toggle" onclick="toggleEvent('ev-11-0')">
+      <span class="event-time">10:00a</span>
+      <span class="event-title">Fast power catamaran — a gentle NYE-recovery start</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sea">⛵ Catamaran</span>No 5:30am wake-up. A faster cat for the longer run to Phi Phi — stable and quick, a huge lounging deck, shaded dining, A/C salon, tender, paddleboards. Coffee and fruit on the crossing.</div></div></div></div><div class="event" id="ev-11-1"><div class="event-toggle" onclick="toggleEvent('ev-11-1')">
+      <span class="event-time">12:00p</span>
+      <span class="event-title">Maya Bay — the beach from ‘The Beach'</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-art">🏝 Maya Bay</span>Go ashore at the famous setting — likely busy over the holidays, but worth seeing. No need to linger.</div></div></div></div><div class="event" id="ev-11-2"><div class="event-toggle" onclick="toggleEvent('ev-11-2')">
+      <span class="event-time">1:00p</span>
+      <span class="event-title">Pileh Lagoon + lunch aboard — the real wow</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-sea">🪸 Lagoon</span>The boat slips between towering cliffs into impossibly turquoise water — this is where you linger. Swim, float, take the tender in, or just look. Lunch at anchor: fish, vegetarian Thai, salads, fruit, wine.</div></div></div></div><div class="event" id="ev-11-3"><div class="event-toggle" onclick="toggleEvent('ev-11-3')">
+      <span class="event-time">2:30p</span>
+      <span class="event-title">Monkey Island — a proper stop</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-art">🐒 Monkeys</span>The tender takes you in close to Monkey Beach, where the resident macaques hold court on the sand — cameras out, bags zipped, and let the crew handle the introductions. Then the cruise home past Viking Cave and the big cliffs, with a possible swim stop at Bamboo Island if conditions are right. Music and drinks all the way back.</div></div></div></div><div class="event" id="ev-11-4"><div class="event-toggle" onclick="toggleEvent('ev-11-4')">
+      <span class="event-time">7:30p</span>
+      <span class="event-title">Private villa dinner — shoes off</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🏡 Villa dinner</span>Deliberately easy after NYE and Phi Phi — nobody dresses up. Your music, your wine, fish and vegetarian Thai in the villa, laughing about the night before.</div><div class="event-note">⚡ <b>Arrange</b> — private in-villa dinner for 4 with Trisara.</div></div></div></div></div></div><div class="day-section" id="d12">
+      <div class="day-header"><div class="day-num">2<small>Sat</small></div>
+        <div><div class="day-label">Phuket · Trisara</div><div class="day-title">Enjoy Trisara — The ‘We're Not Going Anywhere' Day ❤️</div>
+          <div class="day-date">Saturday, January 2, 2026</div><span class="day-loc">Trisara, Phuket</span></div></div>
+      <div class="events"><div class="event" id="ev-12-0"><div class="event-toggle" onclick="toggleEvent('ev-12-0')">
+      <span class="event-time">10:00a</span>
+      <span class="event-title">Late breakfast, no alarm</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">After a huge week, a genuinely restful day — finally enjoy the resort you're staying in.</div></div></div></div><div class="event" id="ev-12-1"><div class="event-toggle" onclick="toggleEvent('ev-12-1')">
+      <span class="event-time">11:00a</span>
+      <span class="event-title">Beach, pool, do nothing</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Swim, the villa pool, a book, a nap.</div></div></div></div><div class="event" id="ev-12-2"><div class="event-toggle" onclick="toggleEvent('ev-12-2')">
+      <span class="event-time">1:00p</span>
+      <span class="event-title">A long lunch at Trisara</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-food">🍽 Lunch</span>Fish, salads, vegetables, wine, no hurry.</div></div></div></div><div class="event" id="ev-12-3"><div class="event-toggle" onclick="toggleEvent('ev-12-3')">
+      <span class="event-time">2:30p</span>
+      <span class="event-title">Spa for everyone</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-spa">💆 Spa</span>Massage, steam, quiet — the one spa afternoon in Phuket, and by now thoroughly earned.</div></div></div></div><div class="event" id="ev-12-4"><div class="event-toggle" onclick="toggleEvent('ev-12-4')">
+      <span class="event-time">8:00p</span>
+      <span class="event-title">Final dinner — Café del Mar</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-night">🍸 Final night</span>Last night, still fun: a good table, cocktails, dinner, music, a DJ. It's Saturday, so if everyone's flying, stay; if not, you've had your send-off. No pressure.</div><div class="event-info">📍 Café del Mar — Kamala Beach &nbsp;·&nbsp; 🔗 <a href='https://cafedelmarphuket.com' target='_blank'>cafedelmarphuket.com</a></div><div class="event-note">⚡ <b>Book</b> — Café del Mar, Kamala — a good table.</div></div></div></div></div></div><div class="day-section" id="d13">
+      <div class="day-header"><div class="day-num">3<small>Sun</small></div>
+        <div><div class="day-label">Phuket &rarr; Home</div><div class="day-title">Home</div>
+          <div class="day-date">Sunday, January 3, 2026</div><span class="day-loc">Phuket → JFK</span></div></div>
+      <div class="events"><div class="event" id="ev-13-0"><div class="event-toggle" onclick="toggleEvent('ev-13-0')">
+      <span class="event-time">Daytime</span>
+      <span class="event-title">Breakfast, late checkout, one last swim</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc">Late checkout (~4pm) since the flight's in the evening — enjoy the villa and pool all day.</div></div></div></div><div class="event" id="ev-13-1"><div class="event-toggle" onclick="toggleEvent('ev-13-1')">
+      <span class="event-time">3:30p</span>
+      <span class="event-title">Transfer to the airport — VIP departure service</span>
+      <span class="event-chev">▾</span></div>
+      <div class="event-body"><div class="event-inner"><div class="event-desc"><span class="tag t-fly">✈️ Fly home</span>A 20-minute run to Phuket airport, where the VIP team meets you and glides everyone through check-in and departure formalities. Emirates First departs 7:05pm via Dubai and lands JFK 8:15am Monday, Jan 4. Home, with about four hundred photographs and the best two weeks in ages.</div><div class="event-conf">✓ VIP airport service booked — escorted through check-in and departures at Phuket</div></div></div></div></div></div></div>
+<footer><div class="f-script">one unforgettable trip</div>
+  ASIA ADVENTURE &nbsp;&middot;&nbsp; SEOUL &middot; BANGKOK &middot; PHUKET &nbsp;&middot;&nbsp; DEC 2026</footer>
+
+
+<script type="module">
+  import { requireAuth, getCurrentUser, signOut } from './js/supabase.js';
+  import { renderNav } from './js/nav.js';
+
+  await requireAuth();
+  renderNav('itinerary.html');
+
+
+function toggleEvent(id){document.getElementById(id).classList.toggle('open');}
+function jump(e,id){e.preventDefault();document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+(function(){
+ var sections=document.querySelectorAll('.day-section'),tabs=document.querySelectorAll('.day-tab');
+ var obs=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var id=x.target.id;
+   tabs.forEach(function(t){t.classList.toggle('active',t.dataset.id===id);});
+   var at=document.querySelector('.day-tab[data-id="'+id+'"]');if(at)at.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}});},{rootMargin:'-25% 0px -65% 0px'});
+ sections.forEach(function(s){obs.observe(s);});
+ window.addEventListener('scroll',function(){var st=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+   document.getElementById('scrollProgress').style.width=(st/h*100)+'%';});
+})();
+
+window.toggleEvent = toggleEvent; window.jump = jump;
+</script>
+</body>
+</html>

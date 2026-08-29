@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#14263F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Asia Adventure">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Asia Adventure — What to Wear</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="itin-header">
+  <div class="sec-eyebrow">Packing, Solved</div>
+  <h1>What to <em>Wear</em></h1>
+  <div class="sub">One suitcase · two seasons · four boats · one gala</div>
+</header>
+<div class="info-wrap">
+<div class="callout" style="margin:0 0 26px"><b>The suitcase math.</b> Two seasons, one suitcase — solved: pack Seoul's winter layer as ONE warm system (coat, gloves, hat) and we ship the winter clothes home from Seoul before flying to Bangkok. From Dec 24 on, it's tropics only.</div>
+
+<div class="city-card"><div class="cc-head"><span class="ci">🧥</span><div><div class="cn">Seoul</div><div class="cd">Dec 21 – 24 · dress warm, dress well</div></div></div>
+<div class="cc-body"><div class="check-list"><div class="check"><span class="ci2">🧥</span><span><b>One real winter coat</b> plus gloves, hat and a scarf — it's in the 20s at night, and it all ships home Dec 24.</span></div><div class="check"><span class="ci2">👕</span><span><b>Layers</b> — sweaters over shirts; every interior is warmly heated, so you'll be peeling.</span></div><div class="check"><span class="ci2">👞</span><span><b>Comfortable shoes with grip</b> — short walks between cars and doors, possibly on a dusting of snow.</span></div><div class="check"><span class="ci2">👗</span><span><b>Two dressier evening looks</b> — Schedule Cheongdam and People the Terrace are stylish rooms; Seoul dresses up.</span></div><div class="check"><span class="ci2">👘</span><span><b>Hanbok day (Dec 22)</b> — they dress you in silk for the portraits; wear simple base layers that morning.</span></div><div class="check"><span class="ci2">🧖</span><span><b>Spa day (Day 1)</b> — the hotel provides everything; arrive in whatever's comfortable off the plane.</span></div></div></div></div>
+
+<div class="city-card"><div class="cc-head"><span class="ci">🌴</span><div><div class="cn">Bangkok</div><div class="cd">Dec 24 – 27 · light, breathable, one smart night</div></div></div>
+<div class="cc-body"><div class="check-list"><div class="check"><span class="ci2">👕</span><span><b>Lightest fabrics you own</b> — linen and cotton; upper 80s and sunny every day.</span></div><div class="check"><span class="ci2">🛕</span><span><b>Temple morning (Dec 25)</b> — shoulders and knees covered at Wat Arun; a light shawl works.</span></div><div class="check"><span class="ci2">👞</span><span><b>Real walking shoes</b> — Chatuchak and Chinatown are miles on your feet; sandals for the rest.</span></div><div class="check"><span class="ci2">🍸</span><span><b>Sirocco night (Dec 24)</b> — smart dress enforced on the rooftop: no shorts, no sandals for the men.</span></div><div class="check"><span class="ci2">🧢</span><span><b>Hat and sunglasses</b> — the flower-market-to-Chinatown tuk-tuk night is warm; day sun is strong.</span></div></div></div></div>
+
+<div class="city-card"><div class="cc-head"><span class="ci">🐚</span><div><div class="cn">Phuket</div><div class="cd">Dec 27 – Jan 3 · resort life + one gala</div></div></div>
+<div class="cc-body"><div class="check-list"><div class="check"><span class="ci2">🏊</span><span><b>More swimwear than you think</b> — villa pool plus four boat days; suits never quite dry by morning.</span></div><div class="check"><span class="ci2">⛵</span><span><b>Boat-day kit</b> — cover-up, non-slip footing (barefoot works aboard), sun shirt, hat that ties, dry bag for phones.</span></div><div class="check"><span class="ci2">🧴</span><span><b>Serious sunscreen</b> — reef-safe for the lagoons; the Andaman sun is no joke even in 'winter.'</span></div><div class="check"><span class="ci2">👗</span><span><b>Beach-club evenings</b> — Catch and Café del Mar are chic-casual: linen, flowy, barefoot-adjacent.</span></div><div class="check"><span class="ci2">💎</span><span><b>New Year's Eve — 'Jewel Elegance in the Garden'</b> — THE dress-up night of the trip. Bring the good jewelry and something spectacular; the men in elegant tropical formal.</span></div><div class="check"><span class="ci2">🐘</span><span><b>Elephant morning (Dec 29)</b> — clothes that can get muddy and wet, water shoes, and a full change for after.</span></div></div></div></div>
+</div>
+<footer><div class="f-script">one unforgettable trip</div>
+  ASIA ADVENTURE &nbsp;&middot;&nbsp; SEOUL &middot; BANGKOK &middot; PHUKET &nbsp;&middot;&nbsp; DEC 2026</footer>
+
+<script type="module">
+  import { requireAuth, getCurrentUser, signOut } from './js/supabase.js';
+  import { renderNav } from './js/nav.js';
+
+  await requireAuth();
+  renderNav('wear.html');
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#14263F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Asia Adventure">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Asia Adventure — Weather</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+<header class="itin-header">
+  <div class="sec-eyebrow">Live Forecast</div>
+  <h1>The <em>Weather</em></h1>
+  <div class="sub">Seoul · Bangkok · Phuket — updated every time you open this page</div>
+</header>
+<div class="info-wrap" style="max-width:960px">
+  <div id="weatherContent"><div class="wx-loading"><div class="wx-spin"></div> Checking the skies…</div></div>
+</div>
+<footer><div class="f-script">one unforgettable trip</div>
+  ASIA ADVENTURE &nbsp;&middot;&nbsp; SEOUL &middot; BANGKOK &middot; PHUKET &nbsp;&middot;&nbsp; DEC 2026</footer>
+
+<script type="module">
+  import { requireAuth, getCurrentUser, signOut } from './js/supabase.js';
+  import { renderNav } from './js/nav.js';
+
+  await requireAuth();
+  renderNav('weather.html');
+
+
+const LOCS = {
+  seoul:   { lat:37.5665, lng:126.9780, tz:'Asia/Seoul',   label:'Seoul',   sub:'Gwanghwamun',        icon:'\u2744\uFE0F' },
+  bangkok: { lat:13.7563, lng:100.5018, tz:'Asia/Bangkok', label:'Bangkok', sub:'On the Chao Phraya', icon:'\u2600\uFE0F' },
+  phuket:  { lat:8.0060,  lng:98.2760,  tz:'Asia/Bangkok', label:'Phuket',  sub:'Trisara \u00b7 Layan', icon:'\uD83C\uDFDD' },
+};
+const TRIP_DAYS = [
+  { date:'2026-12-21', label:'Mon Dec 21', city:'seoul',   activity:'Arrive \u00b7 spa \u00b7 Seoul Sky' },
+  { date:'2026-12-22', label:'Tue Dec 22', city:'seoul',   activity:'T.um \u00b7 hanbok \u00b7 shopping' },
+  { date:'2026-12-23', label:'Wed Dec 23', city:'seoul',   activity:'Kimchi \u00b7 drumming \u00b7 Samsung' },
+  { date:'2026-12-24', label:'Thu Dec 24', city:'bangkok', activity:'Fly to Bangkok \u00b7 Sirocco' },
+  { date:'2026-12-25', label:'Fri Dec 25', city:'bangkok', activity:'Wat Arun \u00b7 tuk-tuks \u00b7 Chinatown' },
+  { date:'2026-12-26', label:'Sat Dec 26', city:'bangkok', activity:'Chatuchak \u00b7 canals \u00b7 river night' },
+  { date:'2026-12-27', label:'Sun Dec 27', city:'phuket',  activity:'Fly to Phuket \u00b7 arrive Trisara' },
+  { date:'2026-12-28', label:'Mon Dec 28', city:'phuket',  activity:'Phang Nga Bay boat day \u26F5' },
+  { date:'2026-12-29', label:'Tue Dec 29', city:'phuket',  activity:'Elephants \u00b7 Three Monkeys' },
+  { date:'2026-12-30', label:'Wed Dec 30', city:'phuket',  activity:'Racha catamaran \u00b7 Catch \u26F5' },
+  { date:'2026-12-31', label:'Thu Dec 31 \uD83C\uDF86', city:'phuket', activity:'Fishing \u00b7 NYE Gala on The Deck' },
+  { date:'2027-01-01', label:'Fri Jan 1',  city:'phuket',  activity:'Phi Phi \u00b7 Monkey Island \u26F5' },
+  { date:'2027-01-02', label:'Sat Jan 2',  city:'phuket',  activity:'Rest day \u00b7 spa \u00b7 Caf\u00e9 del Mar' },
+  { date:'2027-01-03', label:'Sun Jan 3',  city:'phuket',  activity:'Last swim \u00b7 fly home' },
+];
+function cToF(c){ return Math.round(c*9/5+32); }
+function wIcon(c){ if(c===0)return'\u2600\uFE0F'; if(c<=2)return'\u26C5'; if(c<=3)return'\u2601\uFE0F'; if(c<=48)return'\uD83C\uDF2B\uFE0F'; if(c<=67)return'\uD83C\uDF27\uFE0F'; if(c<=77)return'\uD83C\uDF28\uFE0F'; if(c<=82)return'\uD83C\uDF26\uFE0F'; if(c<=86)return'\uD83C\uDF28\uFE0F'; if(c<=99)return'\u26C8\uFE0F'; return'\uD83C\uDF24\uFE0F'; }
+function wDesc(c){ if(c===0)return'Clear skies'; if(c<=2)return'Partly cloudy'; if(c<=3)return'Overcast'; if(c<=48)return'Foggy'; if(c<=57)return'Light drizzle'; if(c<=67)return'Rain showers'; if(c<=77)return'Snow showers'; if(c<=82)return'Rain showers'; return'Thunderstorms'; }
+function seaDesc(h){ if(h<0.5)return'Glassy \u2014 perfect boat day water'; if(h<1.0)return'Slight swell \u2014 comfortable'; if(h<1.5)return'Moderate swell'; return'Rough \u2014 captain\u2019s call'; }
+
+async function loadWeather(){
+  try{
+    const reqs = Object.values(LOCS).map(L =>
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${L.lat}&longitude=${L.lng}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max&current=temperature_2m,weathercode&timezone=${encodeURIComponent(L.tz)}&forecast_days=16`).then(r=>r.json()));
+    reqs.push(fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${LOCS.phuket.lat}&longitude=${LOCS.phuket.lng}&daily=wave_height_max,sea_surface_temperature_max&timezone=Asia%2FBangkok&forecast_days=16`).then(r=>r.json()).catch(()=>null));
+    const [seoul,bangkok,phuket,marine] = await Promise.all(reqs);
+    render({seoul,bangkok,phuket},marine);
+  }catch(e){
+    document.getElementById('weatherContent').innerHTML =
+      `<div style="text-align:center;padding:40px;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">\uD83C\uDF24\uFE0F</div>
+        <p style="font-style:italic">Live forecast unavailable right now \u2014 check back soon.</p>
+        <p style="font-size:13px;margin-top:8px">Typically in late December: Seoul mid-30s\u00b0F and dry \u00b7 Bangkok upper 80s\u00b0F and sunny \u00b7 Phuket upper 80s\u00b0F, sea 84\u00b0F.</p>
+      </div>`;
+  }
+}
+
+function cityNow(key,d){
+  const L=LOCS[key];
+  const t=d.current?Math.round(d.current.temperature_2m):null;
+  const code=d.current?d.current.weathercode:1;
+  const hi=d.daily.temperature_2m_max[0], lo=d.daily.temperature_2m_min[0], rain=d.daily.precipitation_probability_max[0];
+  return `<div class="wx-city">
+    <div class="wx-city-head"><span class="wx-ci">${L.icon}</span>
+      <div><div class="wx-cn">${L.label}</div><div class="wx-cs">${L.sub}</div></div>
+      <span class="wx-big-ic">${wIcon(code)}</span></div>
+    <div class="wx-now">${t!==null?cToF(t):'--'}\u00b0<span>F right now</span></div>
+    <div class="wx-desc">${wDesc(code)}</div>
+    <div class="wx-hl">High ${cToF(hi)}\u00b0 \u00b7 Low ${cToF(lo)}\u00b0 \u00b7 \uD83D\uDCA7 ${rain}%</div>
+  </div>`;
+}
+
+function render(data,marine){
+  const todayISO = new Date().toISOString().split('T')[0];
+  const preTrip = todayISO < '2026-12-20';
+
+  let html = `<div class="section-title">${preTrip?'Right now, where we\u2019re headed':'Right now'}</div>
+    <div class="wx-cities">${cityNow('seoul',data.seoul)}${cityNow('bangkok',data.bangkok)}${cityNow('phuket',data.phuket)}</div>`;
+
+  if(marine && marine.daily){
+    const w7=(marine.daily.wave_height_max||[]).slice(0,7).filter(x=>x!=null);
+    const s7=(marine.daily.sea_surface_temperature_max||[]).slice(0,7).filter(x=>x!=null);
+    const avgW=w7.length?(w7.reduce((a,b)=>a+b,0)/w7.length):null;
+    const avgS=s7.length?Math.round(s7.reduce((a,b)=>a+b,0)/s7.length):null;
+    html += `<div class="section-title">The Andaman \u00b7 boat-day water</div>
+      <div class="wx-sea">
+        <div class="wx-sea-c"><div class="ws-i">\uD83C\uDF0A</div><div class="ws-v">${avgW!==null?avgW.toFixed(1)+'m':'--'}</div><div class="ws-l">Avg wave height</div><div class="ws-s">${avgW!==null?seaDesc(avgW):''}</div></div>
+        <div class="wx-sea-c"><div class="ws-i">\uD83C\uDF21\uFE0F</div><div class="ws-v">${avgS!==null?cToF(avgS)+'\u00b0F':'--'}</div><div class="ws-l">Sea temperature</div><div class="ws-s">${avgS!==null&&cToF(avgS)>=80?'Bathwater \u2014 stay in all day':'Warm swimming water'}</div></div>
+      </div>`;
+  }
+
+  html += `<div class="section-title">Trip day by day</div><div class="trip-table">
+    <div class="trip-table-header"><div>Day</div><div style="text-align:center">Sky</div><div style="text-align:center">High</div><div style="text-align:center">Low</div><div style="text-align:center">Rain</div></div>
+    ${TRIP_DAYS.map(td=>{
+      const d=data[td.city]; const idx=d.daily.time.indexOf(td.date);
+      const cityTag=`<span class="trip-city">${LOCS[td.city].label}</span>`;
+      if(idx===-1) return `<div class="trip-row"><div><div class="trip-row-day">${td.label} ${cityTag}</div><div class="trip-row-activity">${td.activity}</div></div><div class="trip-row-icon">\u2014</div><div class="trip-row-temp" style="color:var(--muted);font-size:12px">Too far out</div><div class="trip-row-low">\u2014</div><div class="trip-row-rain">\u2014</div></div>`;
+      return `<div class="trip-row"><div><div class="trip-row-day">${td.label} ${cityTag}</div><div class="trip-row-activity">${td.activity}</div></div><div class="trip-row-icon">${wIcon(d.daily.weathercode[idx])}</div><div class="trip-row-temp">${cToF(d.daily.temperature_2m_max[idx])}\u00b0F</div><div class="trip-row-low">${cToF(d.daily.temperature_2m_min[idx])}\u00b0F</div><div class="trip-row-rain">${d.daily.precipitation_probability_max[idx]}%</div></div>`;
+    }).join('')}
+  </div>
+  <p style="font-size:13.5px;color:var(--muted);text-align:center;margin-top:18px">Live forecast, refreshed every time you open this page. Trip days fill in as they come within 16 days \u2014 until then: Seoul mid-30s\u00b0F and dry, Bangkok and Phuket upper 80s\u00b0F and sunny.</p>`;
+
+  document.getElementById('weatherContent').innerHTML = html;
+}
+loadWeather();
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#14263F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Asia Adventure">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Asia Adventure — Maps</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body>
+
+
+<header class="itin-header">
+  <div class="sec-eyebrow">Getting Around</div>
+  <h1>The <em>Maps</em></h1>
+  <div class="sub">One journey &middot; three cities &middot; tap any pin</div>
+</header>
+<div class="map-tabs-wrap"><div class="map-tabs"><button class="map-tab active" onclick="showMap('journey',this)"><span class="mt-ic">🌏</span><span class="mt-n">The Journey</span></button><button class="map-tab" onclick="showMap('seoul',this)"><span class="mt-ic">🇰🇷</span><span class="mt-n">Seoul</span></button><button class="map-tab" onclick="showMap('bangkok',this)"><span class="mt-ic">🇹🇭</span><span class="mt-n">Bangkok</span></button><button class="map-tab" onclick="showMap('phuket',this)"><span class="mt-ic">🏝</span><span class="mt-n">Phuket</span></button></div></div>
+<div class="mpanel active" id="mp-journey"><p class="mp-intro">Around the world in four flights — three countries, no Saturday travel, home with the new year.</p><div class="lmap" id="map-journey"></div><div class="stops-grid" id="cards-journey"></div></div><div class="mpanel" id="mp-seoul"><p class="mp-intro">Everything radiates from Gwanghwamun: the palace and tea room at your feet, Cheongdam and Gangnam about 35 minutes south, Suwon 45. A private driver has us all three days — tap a pin for the story.</p><div class="lmap" id="map-seoul"></div><div class="stops-grid" id="cards-seoul"></div></div><div class="mpanel" id="mp-bangkok"><p class="mp-intro">The river is the highway — the hotel sits on it, the temple and flower market line it, and the canal boat crosses it. A guide and driver both full days.</p><div class="lmap" id="map-bangkok"></div><div class="stops-grid" id="cards-bangkok"></div></div><div class="mpanel" id="mp-phuket"><p class="mp-intro">Trisara on the quiet northwest coast, 20 minutes from the airport — and the gold dotted lines are the boat days: Phang Nga's caves, Racha's turquoise bays, and the Phi Phi run with Monkey Beach.</p><div class="lmap" id="map-phuket"></div><div class="stops-grid" id="cards-phuket"></div></div>
+<footer><div class="f-script">one unforgettable trip</div>
+  ASIA ADVENTURE &nbsp;&middot;&nbsp; SEOUL &middot; BANGKOK &middot; PHUKET &nbsp;&middot;&nbsp; DEC 2026</footer>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script type="module">
+  import { requireAuth, getCurrentUser, signOut } from './js/supabase.js';
+  import { renderNav } from './js/nav.js';
+
+  await requireAuth();
+  renderNav('maps.html');
+
+
+const CITY_DATA = {
+ journey: { center:[28,80], zoom:3, route:[[40.6413,-73.7781],[37.4602,126.4407],[13.69,100.7501],[8.1132,98.3169],[25.2532,55.3657],[40.6413,-73.7781]], stops:[
+  {num:1,name:'New York — JFK',date:'Sun Dec 20',desc:'Korean Air 0086 lifts off at 12:50am — dinner, a movie, a real sleep, and you wake up over Korea.',lat:40.6413,lng:-73.7781},
+  {num:2,name:'Seoul — Incheon',date:'Dec 21–24',desc:'Three nights in Asia’s most exciting city. The VIP team meets you at the gate, both directions.',lat:37.4602,lng:126.4407},
+  {num:3,name:'Bangkok',date:'Dec 24–27',desc:'Thai Airways 657 south to three nights on the Chao Phraya.',lat:13.69,lng:100.7501},
+  {num:4,name:'Phuket',date:'Dec 27–Jan 3',desc:'Seven nights at Trisara — four boats, elephants, and fireworks over the Andaman.',lat:8.1132,lng:98.3169},
+  {num:5,name:'Dubai (transit)',date:'Sun Jan 3',desc:'A First Class pause with Emirates on the way home — JFK by 8:15am Monday.',lat:25.2532,lng:55.3657},
+ ]},
+ seoul: { center:[37.52,127.00], zoom:11, route:null, stops:[
+  {num:1,name:'Four Seasons Seoul',date:'Home base · Dec 21–24',desc:'Gwanghwamun — palace views, the spa, and Charles H. hiding in the basement.',lat:37.5710,lng:126.9768},
+  {num:2,name:'Heesum Tea Room',date:'Dec 21 · 4pm ✓',desc:'Booked with Jason L — 70 minutes of tea ceremony to dissolve the flight.',lat:37.5741,lng:126.9822},
+  {num:3,name:'Seoul Sky · Lotte World Tower',date:'Dec 21 · dusk',desc:'555 meters up, glass floors, ten million lights coming on below you.',lat:37.5125,lng:127.1025},
+  {num:4,name:'Doma',date:'Dec 21 · dinner',desc:'Itaewon’s most talked-about modern European room. Very New York.',lat:37.5346,lng:126.9946},
+  {num:5,name:'T.um — SK Telecom',date:'Dec 22 · 10am',desc:'The industry-insider visit — 6G and robots for four people who run a telecom.',lat:37.5666,lng:126.9862},
+  {num:6,name:'Haus Dosan · Gentle Monster',date:'Dec 22 · shopping',desc:'Each floor a full art installation — the store the world is copying.',lat:37.5243,lng:127.0378},
+  {num:7,name:'Schedule Cheongdam',date:'Dec 22 · dinner',desc:'European-inspired, fashionable, right where you spent the afternoon.',lat:37.5249,lng:127.0431},
+  {num:8,name:'National Gugak Center',date:'Dec 23 · drumming',desc:'Four New Yorkers, four Korean drums, one very loud and happy hour.',lat:37.4779,lng:127.0116},
+  {num:9,name:'Samsung Innovation Museum',date:'Dec 23 · Suwon',desc:'45 minutes south — the whole history of electronics inside Samsung’s HQ.',lat:37.2570,lng:127.0520},
+  {num:10,name:'People the Terrace',date:'Dec 23 · the plan',desc:'Korea’s largest dining bar for the final Seoul night. Reserve — it’s a scene.',lat:37.5240,lng:127.0455},
+ ]},
+ bangkok: { center:[13.745,100.51], zoom:12, route:null, stops:[
+  {num:1,name:'Four Seasons at Chao Phraya',date:'Home base · Dec 24–27',desc:'#2 hotel in the world, right on the river. The infinity pool faces the boats.',lat:13.7046,lng:100.5093},
+  {num:2,name:'Sirocco · lebua',date:'Dec 24 · 7:30pm ✓',desc:'Confirmed (TVNYV7) — dinner on the open-air 63rd floor. The walk out is the show.',lat:13.7216,lng:100.5165},
+  {num:3,name:'Wat Arun',date:'Dec 25 · 9:15am',desc:'The Temple of Dawn, porcelain spires on the river — the one temple, done right.',lat:13.7437,lng:100.4889},
+  {num:4,name:'Supanniga Eating Room',date:'Dec 25 · lunch',desc:'Riverfront terrace looking straight back at the temple you just climbed.',lat:13.7446,lng:100.4920},
+  {num:5,name:'Platinum Fashion Mall',date:'Dec 25 · 2pm',desc:'Thousands of little shops — Susan’s hour. The men escape for a drink.',lat:13.7500,lng:100.5405},
+  {num:6,name:'Pak Khlong Talat',date:'Dec 25 · by tuk-tuk',desc:'The flower market at night — mountains of orchids, lotus and jasmine.',lat:13.7415,lng:100.4970},
+  {num:7,name:'Chinatown · Yaowarat',date:'Dec 25 · night',desc:'Neon, noise, delicious chaos — then jazz at Red Rose inside Shanghai Mansion.',lat:13.7405,lng:100.5102},
+  {num:8,name:'Chatuchak Weekend Market',date:'Dec 26 · 9:30am',desc:'The design treasure hunt — ceramics, lamps, antiques. Ship the big finds home.',lat:13.7999,lng:100.5502},
+  {num:9,name:'Thonburi khlongs',date:'Dec 26 · 2:30pm',desc:'A private long-tail into the canal world — stilt houses, temples, a golden Buddha over the rooftops.',lat:13.7440,lng:100.4750},
+ ]},
+ phuket: { center:[7.95,98.50], zoom:9, route:'boats', stops:[
+  {num:1,name:'Trisara',date:'Home · Dec 27–Jan 3 ✓',desc:'Paid, booking 82606 — your pool villas above the Andaman.',lat:8.0060,lng:98.2760},
+  {num:2,name:'Ao Po Grand Marina',date:'Dec 28 · boat day 1',desc:'Where the Phang Nga exploration boat departs.',lat:8.0733,lng:98.4442},
+  {num:3,name:'Phang Nga Bay · the hongs',date:'Dec 28',desc:'Guided kayaks through sea caves into hidden lagoons ringed by cliffs.',lat:8.2470,lng:98.5000},
+  {num:4,name:'James Bond Island',date:'Dec 28',desc:'Seen from your own boat, lunch aboard — no fighting the crowds.',lat:8.2743,lng:98.5007},
+  {num:5,name:'Phuket Mountain Elephant Care',date:'Dec 29 · 9:30am',desc:'16 jungle acres in Chalong — feed them, walk with them, bathe them.',lat:7.8560,lng:98.3320},
+  {num:6,name:'Three Monkeys',date:'Dec 29 · dinner',desc:'Dinner on wooden platforms up in the jungle canopy.',lat:7.9124,lng:98.3345},
+  {num:7,name:'Racha Yai',date:'Dec 30 · boat day 2',desc:'The fabulous catamaran day ❤️ — turquoise bays, paddleboards, champagne.',lat:7.6047,lng:98.3661},
+  {num:8,name:'Catch Beach Club',date:'Dec 30 · sunset on',desc:'Bang Tao — cocktails, DJ, dinner, stay as long as it’s fun.',lat:7.9877,lng:98.2924},
+  {num:9,name:'Maya Bay',date:'Jan 1 · boat day 4',desc:'The beach from ‘The Beach’ — see it, snap it, sail on.',lat:7.6787,lng:98.7654},
+  {num:10,name:'Pileh Lagoon',date:'Jan 1',desc:'The boat slides between cliffs into water that doesn’t look real. Linger here.',lat:7.6740,lng:98.7690},
+  {num:11,name:'Monkey Beach',date:'Jan 1',desc:'The macaques hold court — tender in close, cameras out, bags zipped.',lat:7.7423,lng:98.7663},
+  {num:12,name:'Café del Mar',date:'Jan 2 · final night',desc:'Kamala Beach — one last sunset dinner with a DJ.',lat:7.9668,lng:98.2790},
+ ]},
+};
+const BOAT_ROUTES = [
+ [[8.0060,98.2760],[8.0733,98.4442],[8.2470,98.5000],[8.2743,98.5007]],
+ [[8.0060,98.2760],[7.9877,98.2924],[7.6047,98.3661]],
+ [[8.0060,98.2760],[7.7423,98.7663],[7.6787,98.7654],[7.6740,98.7690]],
+];
+const maps={};
+function makeIcon(num){return L.divIcon({html:'<div style="width:32px;height:32px;border-radius:50%;background:#14263F;border:2.5px solid #D8BD80;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:13px;font-weight:bold;color:#D8BD80;box-shadow:0 2px 8px rgba(0,0,0,.3)">'+num+'</div>',className:'',iconSize:[32,32],iconAnchor:[16,16]});}
+function buildMap(key){
+  if(maps[key])return;
+  const D=CITY_DATA[key];
+  const m=L.map('map-'+key,{center:D.center,zoom:D.zoom,scrollWheelZoom:false});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors',maxZoom:18}).addTo(m);
+  const pts=[];
+  D.stops.forEach(function(s){
+    L.marker([s.lat,s.lng],{icon:makeIcon(s.num)}).addTo(m).bindPopup(
+      '<div class="popup-number">Stop '+s.num+'</div><div class="popup-name">'+s.name+'</div><div class="popup-date">'+s.date+'</div><div class="popup-desc">'+s.desc+'</div>',{maxWidth:240});
+    pts.push([s.lat,s.lng]);
+  });
+  if(D.route==='boats'){BOAT_ROUTES.forEach(function(r){L.polyline(r,{color:'#C09A46',weight:2.5,opacity:.75,dashArray:'8,6'}).addTo(m);});}
+  else if(Array.isArray(D.route)){L.polyline(D.route,{color:'#C09A46',weight:2.5,opacity:.75,dashArray:'8,6'}).addTo(m);}
+  if(key!=='journey')m.fitBounds(pts,{padding:[40,40]});
+  maps[key]=m;
+}
+function showMap(key,btn){
+  document.querySelectorAll('.mpanel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.map-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('mp-'+key).classList.add('active');btn.classList.add('active');
+  buildMap(key); setTimeout(function(){maps[key].invalidateSize();},60);
+}
+Object.keys(CITY_DATA).forEach(function(key){
+  const grid=document.getElementById('cards-'+key); if(!grid)return;
+  grid.innerHTML=CITY_DATA[key].stops.map(function(s){return '<div class="stop-card"><div class="stop-number">'+s.num+'</div><div><div class="stop-name"><a href="https://maps.google.com/?q='+s.lat+','+s.lng+'" target="_blank">'+s.name+'</a></div><div class="stop-date">'+s.date+'</div><div class="stop-desc">'+s.desc+'</div></div></div>';}).join('');
+});
+buildMap('journey');
+
+window.showMap = showMap;
+</script>
+</body>
+</html>

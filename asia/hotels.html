@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#14263F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Asia Adventure">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Asia Adventure — Hotels</title>
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+<header class="itin-header">
+  <div class="sec-eyebrow">Where We Stay</div>
+  <h1>Our <em>Hotels</em></h1>
+  <div class="sub">Three homes &middot; 13 nights &middot; all confirmed</div>
+</header>
+<div class="hotel-tabs-wrap"><div class="hotel-tabs"><button class="hotel-tab active" data-p="hp0" onclick="showHotel('hp0',this)"><div class="ht-city">Seoul</div><div class="ht-name">Four Seasons</div></button><button class="hotel-tab" data-p="hp1" onclick="showHotel('hp1',this)"><div class="ht-city">Bangkok</div><div class="ht-name">FS Chao Phraya</div></button><button class="hotel-tab" data-p="hp2" onclick="showHotel('hp2',this)"><div class="ht-city">Phuket</div><div class="ht-name">Trisara</div></button></div></div>
+<div class="hpanel active" id="hp0">
+      <div class="h-hero" style="background-image:url(images/hotel-seoul.jpg);background-size:cover;background-position:center"><div class="h-hero-inner">
+        <div class="hh-city">Seoul</div><h2>Four Seasons Hotel Seoul</h2><div class="hh-dates">Dec 21 – 24 · 3 nights</div></div></div>
+      <div class="h-desc"><p>Ringed by verdant mountains and dotted with grand, historic palaces and modern glass-and-steel towers, Seoul is a dynamic capital that is both deeply traditional and forward-thinking — one look through the room's floor-to-ceiling windows makes the point. The first Four Seasons in South Korea, this contemporary five-star hotel invites complete serenity at its urban spa, a dip in the year-round pool, and Cantonese cuisine at Yu Yuan — before toasting Asia's city that never sleeps over drinks at Charles H. or the new contemporary H. Bar.</p></div>
+      <div class="h-grid">
+        <div class="h-box"><h3>🛏 Our rooms</h3><div class="h-row"><span class="k">Aronow</span><span class="v">Palace-View Executive Suite — floor-to-ceiling windows over Gyeongbokgung Palace<br><b>conf. 4377284930</b></span></div><div class="h-row"><span class="k">Salame</span><span class="v">Grand Family Room<br><b>conf. 4377333669</b></span></div></div>
+        <div class="h-box"><h3>📍 Contact &amp; details</h3><div class="h-row"><span class="k">Address</span><span class="v">97 Saemunan-ro, Jongno-gu, Seoul</span></div><div class="h-row"><span class="k">Phone</span><span class="v">+82 2-6388-5000</span></div><div class="h-row"><span class="k">Web</span><span class="v"><a class="event-link" href="https://www.fourseasons.com/seoul/" target="_blank">fourseasons.com/seoul</a></span></div><div class="h-row"><span class="k">Check-in</span><span class="v">Mon Dec 21, morning arrival — early check-in requested</span></div><div class="h-row"><span class="k">Check-out</span><span class="v">Thu Dec 24, 8:00am car to Incheon</span></div></div>
+      </div>
+      <div style="text-align:center;margin-top:6px">
+        <a class="h-visit" href="https://www.fourseasons.com/seoul/" target="_blank">Visit Four Seasons Seoul &rarr;</a>
+      </div>
+    </div><div class="hpanel" id="hp1">
+      <div class="h-hero" style="background-image:url(images/hotel-bangkok.jpg);background-size:cover;background-position:center"><div class="h-hero-inner">
+        <div class="hh-city">Bangkok</div><h2>Four Seasons Bangkok at Chao Phraya</h2><div class="hh-dates">Dec 24 – 27 · 3 nights</div></div></div>
+      <div class="h-desc"><p>This luxury riverside hotel in Bangkok's creative district is where contemporary design meets the calm of the Chao Phraya River, blending city energy with resort-style serenity. Swim in two temperature-controlled infinity pools, or begin the morning at the 35-metre (115-foot) lap pool. At the Urban Wellness Centre, cutting-edge fitness, spa and holistic therapies offer the perfect retreat — complemented by Michelin-recognized dining, lush green courtyards and refined guest rooms with river views.</p></div>
+      <div class="h-grid">
+        <div class="h-box"><h3>🛏 Our rooms</h3><div class="h-row"><span class="k">Aronow</span><span class="v">Executive Suite<br><b>conf. 4377300029</b></span></div><div class="h-row"><span class="k">Salame</span><span class="v">River-View Room<br><b>conf. 4377333148</b></span></div></div>
+        <div class="h-box"><h3>📍 Contact &amp; details</h3><div class="h-row"><span class="k">Address</span><span class="v">300/1 Charoen Krung Road, Sathorn, Bangkok</span></div><div class="h-row"><span class="k">Phone</span><span class="v">+66 2 032 0888</span></div><div class="h-row"><span class="k">Web</span><span class="v"><a class="event-link" href="https://www.fourseasons.com/bangkok/" target="_blank">fourseasons.com/bangkok</a></span></div><div class="h-row"><span class="k">Check-in</span><span class="v">Thu Dec 24, ~4:45pm after the flight from Seoul</span></div><div class="h-row"><span class="k">Check-out</span><span class="v">Sun Dec 27, 7:00am — early run to the airport</span></div></div>
+      </div>
+      <div style="text-align:center;margin-top:6px">
+        <a class="h-visit" href="https://www.fourseasons.com/bangkok/" target="_blank">Visit Four Seasons Bangkok &rarr;</a>
+      </div>
+    </div><div class="hpanel" id="hp2">
+      <div class="h-hero" style="background-image:url(images/hotel-trisara.jpg);background-size:cover;background-position:center"><div class="h-hero-inner">
+        <div class="hh-city">Phuket</div><h2>Trisara</h2><div class="hh-dates">Dec 27 – Jan 3 · 7 nights</div></div></div>
+      <div class="h-desc"><p><em style="font-family:'Playfair Display',serif;font-size:1.15em;color:var(--gold-ink)">The Garden in the Third Heaven</em></p>
+<p>Trisara redefines luxury on Phuket's north-western coast. A secluded beach, reserved exclusively for in-residence guests, extends along the resort's boundary — perfect for sunbathing, water sports, and long walks.</p>
+<p>Inspired by Thailand's rich heritage, Trisara embodies timeless tradition and a deep connection to nature. An intimate community of private villas and residences offers panoramic sea views, fostering sincere, generous experiences that celebrate spiritual and physical wellbeing while encouraging moments of reflection and connection.</p></div>
+      <div class="h-grid">
+        <div class="h-box"><h3>🛏 Our rooms</h3><div class="h-row"><span class="k">Aronow</span><span class="v">Ocean View Pool Villa — private pool above the Andaman<br><b>conf. Booking 82606 · PAID</b></span></div><div class="h-row"><span class="k">Salame</span><span class="v">Ocean View Pool Junior Suite<br><b>conf. Booking 82606 · PAID</b></span></div></div>
+        <div class="h-box"><h3>📍 Contact &amp; details</h3><div class="h-row"><span class="k">Address</span><span class="v">60/1 Moo 6, Srisoonthorn Road, Cherngtalay, Phuket</span></div><div class="h-row"><span class="k">Phone</span><span class="v">+66 76 310 100</span></div><div class="h-row"><span class="k">Email</span><span class="v"><a class="event-link" href="mailto:reservations@trisara.com">reservations@trisara.com</a></span></div><div class="h-row"><span class="k">Web</span><span class="v"><a class="event-link" href="https://www.trisara.com" target="_blank">trisara.com</a></span></div><div class="h-row"><span class="k">Check-in</span><span class="v">Sun Dec 27, ~12:15pm from the airport (20 min)</span></div><div class="h-row"><span class="k">Check-out</span><span class="v">Sun Jan 3 — late checkout ~4pm requested</span></div></div>
+      </div>
+      <div style="text-align:center;margin-top:6px">
+        <a class="h-visit" href="https://www.trisara.com" target="_blank">Visit Trisara &rarr;</a>
+      </div>
+    </div>
+<footer><div class="f-script">one unforgettable trip</div>
+  ASIA ADVENTURE &nbsp;&middot;&nbsp; SEOUL &middot; BANGKOK &middot; PHUKET &nbsp;&middot;&nbsp; DEC 2026</footer>
+
+
+<script type="module">
+  import { requireAuth, getCurrentUser, signOut } from './js/supabase.js';
+  import { renderNav } from './js/nav.js';
+
+  await requireAuth();
+  renderNav('hotels.html');
+
+
+function showHotel(id,btn){
+  document.querySelectorAll('.hpanel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.hotel-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById(id).classList.add('active');btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});}
+
+window.showHotel = showHotel;
+</script>
+</body>
+</html>
