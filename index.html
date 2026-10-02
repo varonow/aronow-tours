@@ -38,7 +38,12 @@
   .trip .band{height:132px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
   .trip .band::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(15,35,55,.85) 100%)}
   .trip .emoji{font-size:3.2rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));position:relative;z-index:1}
-  .trip .triplogo{max-height:88px;max-width:78%;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,.5));position:relative;z-index:1}
+  .trip .triplogo{max-height:112px;max-width:72%;object-fit:contain;border-radius:10px;position:relative;z-index:1;filter:drop-shadow(0 6px 16px rgba(0,0,0,.45))}
+  .trip .triplogo.plate{background:#fff;padding:8px 12px;filter:none;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+  .trip .band{height:150px}
+  .htabs{max-width:1080px;margin:26px auto 0;display:flex;gap:10px;justify-content:center}
+  .htab{font-family:'Josefin Sans',sans-serif;font-size:14px;letter-spacing:.16em;text-transform:uppercase;min-height:50px;padding:0 22px;border-radius:9px;cursor:pointer;color:var(--cream);background:none;border:1px solid rgba(201,168,76,.45)}
+  .htab.on{background:var(--gold);color:#0D1F33;border-color:var(--gold)}
   .trip .body{padding:20px 22px 24px}
   .trip .loc{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
   .trip h2{font-family:'Playfair Display',serif;font-weight:400;font-size:1.6rem;line-height:1.12;margin-bottom:6px}
@@ -70,6 +75,7 @@
   </header>
 
   <div class="loading" id="loading">Gathering your trips…</div>
+  <div class="htabs" id="htabs" style="display:none"></div>
   <main class="grid" id="grid" style="display:none"></main>
 
   <div class="empty" id="empty" style="display:none">
@@ -101,9 +107,26 @@
     document.getElementById('loading').style.display = 'none';
     if (!trips.length) { document.getElementById('empty').style.display = 'block'; return; }
 
+    // Upcoming trips (soonest first) and past trips (most recent first)
+    const todayISO = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date());
+    const isPast = t => (t.end_date || t.start_date || '9999') < todayISO;
+    const upcoming = trips.filter(t => !isPast(t)).sort((a, b) => (a.start_date || '9999').localeCompare(b.start_date || '9999'));
+    const past = trips.filter(isPast).sort((a, b) => (b.end_date || '').localeCompare(a.end_date || ''));
     const grid = document.getElementById('grid');
     grid.style.display = 'grid';
-    grid.innerHTML = trips.map(function(t){
+    const htabs = document.getElementById('htabs');
+    function show(which){
+      const list = which === 'past' ? past : upcoming;
+      htabs.querySelectorAll('.htab').forEach(b => b.classList.toggle('on', b.dataset.w === which));
+      grid.innerHTML = list.map(card).join('');
+    }
+    if (upcoming.length && past.length) {
+      htabs.style.display = 'flex';
+      htabs.innerHTML = '<button class="htab" data-w="upcoming">Upcoming</button><button class="htab" data-w="past">Past trips</button>';
+      htabs.addEventListener('click', e => { const b = e.target.closest('.htab'); if (b) show(b.dataset.w); });
+    }
+    show(upcoming.length ? 'upcoming' : 'past');
+    function card(t){
       const band = t.theme_color || '#12283f';
       const accent = t.accent_color || '#C9A84C';
       const role = t.membership && t.membership.is_admin ? 'Host'
@@ -111,7 +134,7 @@
       const emoji = t.emoji || '✈️';
       const art = t.logo
         ? '<img class="triplogo" src="' + esc(t.logo) + '" alt="' + esc(t.name || '') + '" ' +
-            'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
+            'onload="logoPlate(this)" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
           '<span class="emoji" style="display:none">' + emoji + '</span>'
         : '<span class="emoji">' + emoji + '</span>';
       return '' +
@@ -125,9 +148,20 @@
           '<span class="enter" style="border-color:' + accent + '">Enter &rarr;</span>' +
         '</div>' +
       '</a>';
-    }).join('');
+    }
   })();
 
+  // A see-through logo drawn in dark ink disappears on the dark card, so give it a white plate.
+  // Light logos and solid pictures are left as they are.
+  window.logoPlate = function(img){
+    try{
+      const c=document.createElement('canvas'), n=48; c.width=n; c.height=n;
+      const x=c.getContext('2d'); x.drawImage(img,0,0,n,n);
+      const d=x.getImageData(0,0,n,n).data; let clear=0, lum=0, ink=0;
+      for(let i=0;i<d.length;i+=4){ if(d[i+3]<40){clear++;} else { ink++; lum+=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]; } }
+      if(clear/(n*n) > 0.08 && ink && lum/ink < 150) img.classList.add('plate');
+    }catch(e){}
+  };
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
   function shade(hex){
     try{ const h=hex.replace('#','');const n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);
