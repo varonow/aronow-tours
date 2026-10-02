@@ -18,6 +18,7 @@
 <body>
 <main>
 <header class="page-head "><div class="wrap"><div class="eyebrow">Emara East &middot; Emara West</div><h1>Rooms</h1><p class="sub">Everyone can see who is staying where. The details of a room show only for your own room and your children’s.</p></div></header>
+<figure class="photo"><img src="images/estate-top.jpg" alt="Emara Estate from directly above, showing both houses, the pool and the tennis court" style="object-position:center 35%" loading="lazy"><figcaption>Both houses from above</figcaption></figure>
 <section class="band band-white"><div class="wrap narrow">
   <div class="note"><b>Luggage tags.</b> Tag every bag with its room before you leave home, so the butlers can bring it straight to the right door. East rooms have turquoise tags, West rooms have coral.</div>
   <div class="eyebrow">Turquoise tags</div><h2 class="sec-title">Emara East</h2>
@@ -42,7 +43,7 @@ const mine = new Set([...(ctx.me ? [ctx.me] : []), ...ctx.kids].flatMap(p => p.r
 function detail(code) {
   const r = det[code]; if (!r) return '';
   const rows = [['Where', [r.building, r.level].filter(Boolean).join(' · ')], ['View', r.view], ['Bed', r.bed], ['Features', (r.features || []).join(' · ')]].filter(x => x[1]);
-  return `<div class="room-detail"><div class="label">${esc(code)} &middot; Emara’s name for this room</div><h3>“${esc(r.name)}”</h3>
+  return `<div class="room-detail"><img class="room-photo" src="images/rooms/${esc(code)}.jpg" alt="Room ${esc(code)}" loading="lazy"><div class="label">${esc(code)} &middot; Emara’s name for this room</div><h3>“${esc(r.name)}”</h3>
     <p style="margin-top:6px">${esc(r.description || '')}</p>
     <dl class="kv">${rows.map(x => `<dt>${x[0]}</dt><dd>${esc(x[1])}</dd>`).join('')}</dl></div>`;
 }

@@ -207,3 +207,18 @@ details.room-more .room-detail{margin-top:0}
 .band-bright .sec-title,.band-bright .eyebrow{color:var(--ink)}
 .tile{border-color:var(--white)}
 .band-aqua .tile,.band-white .tile{border-color:var(--teal)}
+
+/* ---------- photographs ---------- */
+figure.photo{margin:0;position:relative;background:var(--ink)}
+figure.photo img{width:100%;height:clamp(220px,42vw,520px);object-fit:cover}
+figure.photo figcaption{background:var(--ink);color:#fff;font-family:Jost,sans-serif;font-weight:500;font-size:16px;letter-spacing:.06em;padding:10px 22px;text-align:center}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gallery figure{margin:0;background:var(--white)}
+.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.gallery figcaption{font-family:Jost,sans-serif;font-weight:600;font-size:16px;padding:8px 10px 10px;color:var(--ink)}
+@media(min-width:820px){.gallery{grid-template-columns:repeat(3,1fr)}}
+.map-teaser{display:grid;gap:22px;align-items:center}
+.map-teaser img{border:2px solid var(--teal);width:100%}
+@media(min-width:820px){.map-teaser{grid-template-columns:1.2fr 1fr}}
+.room-photo{width:100%;margin:0 0 14px;aspect-ratio:3/2;object-fit:cover}
+.map-info img{width:100%;max-height:340px;object-fit:cover;margin-bottom:14px}
