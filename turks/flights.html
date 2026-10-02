@@ -41,18 +41,30 @@ import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('flights.html');
 if (ctx) {
-const { data: rows } = await db.from('turks_travel').select('*').order('day').order('dep_time');
+const { data: allRows } = await db.from('turks_travel').select('*').order('day').order('dep_time');
+let showAll = false;
+const fam = ctx.me ? ctx.me.family : null;
+let rows = [];
+function pickRows() { rows = (allRows || []).filter(r => showAll || !fam || (ctx.byId[r.person_id] || {}).family === fam); }
+pickRows();
 function cards(leg) {
   const g = {};
   (rows || []).filter(r => r.leg === leg).forEach(r => {
-    const k = [r.day, r.carrier, r.flight, r.to_place, r.confirmation || '', ctx.isAdmin ? (ctx.byId[r.person_id] || {}).family : ''].join('|');
-    (g[k] = g[k] || { r, ppl: [] }).ppl.push(ctx.byId[r.person_id]);
+    const k = (showAll ? [r.day, r.carrier, r.flight, r.to_place] : [r.day, r.carrier, r.flight, r.to_place, r.confirmation || '']).join('|');
+    const x = (g[k] = g[k] || { r, ppl: [], codes: {}, notes: {} });
+    const who = ctx.byId[r.person_id];
+    x.ppl.push(who);
+    (x.codes[r.confirmation || ''] = x.codes[r.confirmation || ''] || []).push(who);
+    if (r.note) (x.notes[r.note] = x.notes[r.note] || []).push(who);
   });
   const list = Object.values(g);
   list.forEach(x => x.ppl.sort((a, b) => a.sort - b.sort));
   list.sort((a, b) => a.r.day.localeCompare(b.r.day) || a.ppl[0].sort - b.ppl[0].sort);
   if (!list.length) return '<p class="muted">No flights on file for you yet. Ask Victoria.</p>';
-  return list.map(({ r, ppl }) => {
+  return list.map(({ r, ppl, codes, notes }) => {
+    const bySort = a => a.slice().sort((x, y) => x.sort - y.sort);
+    const codeList = Object.entries(codes).sort((a, b) => bySort(a[1])[0].sort - bySort(b[1])[0].sort);
+    const noteList = Object.entries(notes);
     ppl.sort((a, b) => a.sort - b.sort);
     const jet = r.carrier === 'Private jet';
     return `<div class="card">
@@ -61,17 +73,28 @@ function cards(leg) {
       ${jet ? `<p>${esc(r.flight)}</p>` : ''}
       <div class="times"><div class="t"><b>${esc(r.dep_time)}</b><span>${esc(r.from_place)}</span></div><div class="arrow"></div><div class="t"><b>${esc(r.arr_time)}</b><span>${esc(r.to_place)}</span></div></div>
       <dl class="kv">
-        <dt>Who</dt><dd>${esc(names(ppl.map(p => p.name)))}</dd>
-        <dt>${jet ? 'Trip code' : 'Confirmation'}</dt><dd>${r.confirmation ? `<span class="conf">${esc(r.confirmation)}</span>` : 'Not on file yet'}</dd>
+        <dt>${showAll ? 'Who is on it (' + ppl.length + ')' : 'Who'}</dt><dd>${esc(names(ppl.map(p => p.name)))}</dd>
+        <dt>${jet ? 'Trip code' : 'Confirmation'}</dt><dd>${codeList.length > 1 ? codeList.map(([c, ps]) => `${c ? `<span class="conf">${esc(c)}</span>` : '<b>No code on file yet</b>'}<br>${esc(names(bySort(ps).map(p => p.name)))}`).join('<br><br>') : (r.confirmation ? `<span class="conf">${esc(r.confirmation)}</span>` : 'Not on file yet')}</dd>
         <dt>\u{1F690} Ride</dt><dd>${esc(r.transfer || '')}</dd>
-        ${r.note ? `<dt>Note</dt><dd>${esc(r.note)}</dd>` : ''}
+        ${noteList.length ? `<dt>Note</dt><dd>${noteList.map(([n, ps]) => esc(n) + (ps.length < ppl.length ? ' (' + esc(names(bySort(ps).map(p => p.name))) + ')' : '')).join('<br>')}</dd>` : ''}
       </dl>
       ${r.track_url ? `<p style="margin-top:14px"><a class="btn ghost small" href="${esc(r.track_url)}" target="_blank" rel="noopener">Check live flight status</a></p>` : ''}
     </div>`;
   }).join('');
 }
-document.getElementById('arrive').innerHTML = cards('arrive');
-document.getElementById('depart').innerHTML = cards('depart');
+function draw() {
+  document.getElementById('arrive').innerHTML = cards('arrive');
+  document.getElementById('depart').innerHTML = cards('depart');
+}
+draw();
+if (ctx.isAdmin) {
+  document.querySelector('.page-head').insertAdjacentHTML('afterend', '<div class="tabs" id="ftabs" style="grid-template-columns:1fr 1fr"><button class="tab on" data-v="mine">My flights</button><button class="tab" data-v="all">Everyone\u2019s flights</button></div>');
+  document.getElementById('ftabs').addEventListener('click', e => {
+    const b = e.target.closest('.tab'); if (!b) return;
+    showAll = b.dataset.v === 'all'; pickRows(); draw();
+    document.querySelectorAll('#ftabs .tab').forEach(t => t.classList.toggle('on', t === b));
+  });
+}
 }
 </script>
 </body>
