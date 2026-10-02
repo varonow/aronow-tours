@@ -13,11 +13,11 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Estate map</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=12">
 </head>
 <body>
 <main>
-<header class="page-head "><div class="wrap"><div class="eyebrow">Eight acres on Turtle Tail</div><h1>The Estate</h1><p class="sub">Tap any number on the map, or any name in the list, to see what it is.</p></div></header>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Eight acres on Turtle Tail</div><h1>The Estate</h1><p class="sub">Tap a number or a name to see what it is. Press + to make the map bigger, then slide it with your finger.</p></div></header>
 <figure class="photo"><img src="images/estate-aerial.jpg" alt="Emara Estate from the air" style="object-position:center" loading="lazy"><figcaption>Emara Estate, Turtle Tail</figcaption></figure>
 <div class="tabs" id="mtabs" style="grid-template-columns:1fr 1fr"><button class="tab on" data-v="places">📍 Places</button><button class="tab" data-v="rooms">🛏️ Rooms</button></div>
 <div id="viewPlaces">
@@ -43,7 +43,7 @@
 </div>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=12';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('map.html');
 if (ctx) {
@@ -68,8 +68,9 @@ const LEVELS = [1, 1.8, 2.8, 4];
 function zoomable(el) {
   const wrap = document.createElement('div'); wrap.className = 'zwrap';
   const bar = document.createElement('div'); bar.className = 'zbar';
-  bar.innerHTML = '<button class="btn small" data-z="1">➕ Zoom in</button><button class="btn ghost small" data-z="-1" disabled>➖ Zoom out</button><span class="zhint">Zoom in, then drag the map to move around</span>';
-  el.parentNode.insertBefore(bar, el); el.parentNode.insertBefore(wrap, el); wrap.appendChild(el);
+  bar.innerHTML = '<button class="zbtn" data-z="1" aria-label="Zoom in">+</button><button class="zbtn" data-z="-1" aria-label="Zoom out" disabled>\u2212</button>';
+  const box = document.createElement('div'); box.className = 'zbox';
+  el.parentNode.insertBefore(box, el); box.appendChild(wrap); wrap.appendChild(el); box.appendChild(bar);
   let i = 0;
   const [bin, bout] = bar.querySelectorAll('button');
   function set(n, fx = 0.5, fy = 0.5) {
@@ -81,6 +82,13 @@ function zoomable(el) {
     bin.disabled = i === LEVELS.length - 1; bout.disabled = i === 0;
   }
   bar.addEventListener('click', e => { const b = e.target.closest('[data-z]'); if (b) set(i + +b.dataset.z); });
+  // drag with a mouse (a finger already slides it on phones and iPads)
+  let d = null, moved = false;
+  wrap.addEventListener('mousedown', e => { d = { x: e.clientX, y: e.clientY, l: wrap.scrollLeft, t: wrap.scrollTop }; moved = false; });
+  window.addEventListener('mousemove', e => { if (!d) return; const dx = e.clientX - d.x, dy = e.clientY - d.y; if (Math.abs(dx) + Math.abs(dy) > 5) moved = true; wrap.scrollLeft = d.l - dx; wrap.scrollTop = d.t - dy; if (moved) e.preventDefault(); });
+  window.addEventListener('mouseup', () => { d = null; });
+  wrap.addEventListener('click', e => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+  wrap.addEventListener('dragstart', e => e.preventDefault());
   return { wrap, set, level: () => i, center(xPct, yPct) { wrap.scrollLeft = wrap.scrollWidth * xPct / 100 - wrap.clientWidth / 2; wrap.scrollTop = wrap.scrollHeight * yPct / 100 - wrap.clientHeight / 2; } };
 }
 const zPlaces = zoomable(map);

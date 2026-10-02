@@ -239,10 +239,13 @@ figure.photo figcaption{background:var(--ink);color:#fff;font-family:Jost,sans-s
 .rbld p b{font-family:Jost,sans-serif;font-weight:600;color:var(--teal)}
 .rnote{font-size:17px;font-style:italic}
 
-/* zoomable maps */
-.zbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
-.zhint{font-size:17px;font-style:italic}
-.zwrap{overflow:auto;-webkit-overflow-scrolling:touch;max-height:78vh;border:2px solid var(--teal);background:#fff}
+/* zoomable maps: + and - sit on the map's bottom-left corner */
+.zbox{position:relative}
+.zbar{position:absolute;left:8px;bottom:8px;z-index:5;display:flex;gap:6px}
+.zbtn{width:46px;height:46px;border:2px solid #fff;background:var(--ink);color:#fff;font-family:Jost,sans-serif;font-weight:600;font-size:32px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 4px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.zbtn[disabled]{background:#fff;color:#9BB3BD;border-color:#9BB3BD;cursor:default;box-shadow:none}
+.zwrap{overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;max-height:78vh;border:2px solid var(--teal);background:#fff}
 .zwrap.zoomed{cursor:grab}
 .zwrap>.map-box,.zwrap>.zoom{border:0;touch-action:auto;max-width:none}
-.zwrap+.map-info{border-top:0}
+.zwrap img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
+.zbox+.map-info{border-top:0}
