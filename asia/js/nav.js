@@ -33,7 +33,7 @@ export function renderNav(activePage = '') {
         <div class="drawer-user-name">${user || 'Guest'}</div>
         <div class="drawer-user-sub">Asia Adventure</div></div></div>
       <nav class="drawer-nav">${items}</nav>
-      <div class="drawer-footer"><button class="drawer-signout" onclick="handleSignOut()">\u{1F6AA} \u00a0 Sign Out</button></div>
+      <div class="drawer-footer"><a class="drawer-signout drawer-hub" href="../index.html">\u{1F9ED} \u00a0 All Aronow Tours trips</a><button class="drawer-signout" onclick="handleSignOut()">\u{1F6AA} \u00a0 Sign Out</button></div>
     </div>
     <div class="nav-spacer"></div>`;
   document.body.insertAdjacentHTML('afterbegin', navHTML);
