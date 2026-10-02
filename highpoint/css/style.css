@@ -235,3 +235,13 @@ body:not(.ready) main{visibility:hidden}
 .wx-row .d{font-weight:600}.wx-row .a{font-size:17px}.wx-row .c{text-align:center}
 .wx-row.far{grid-template-columns:1fr auto}.wx-row.far .c{font-size:16px;font-style:italic}
 @media(max-width:560px){.wx-row{grid-template-columns:1fr 34px 48px 48px 48px;gap:6px;font-size:18px}}
+
+/* photos */
+.hero-photo{background:linear-gradient(rgba(30,29,27,.72),rgba(30,29,27,.82)),url(../images/market.jpg) center/cover no-repeat;padding-top:70px;padding-bottom:64px}
+.card.has-photo{overflow:hidden}
+.card-photo{display:block;width:calc(100% + 44px);max-width:none;margin:-22px -22px 18px;aspect-ratio:3/2;object-fit:cover}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.pics figure{margin:0}
+.pics img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid var(--ink)}
+.pics figcaption{font-family:Jost,sans-serif;font-size:16px;font-weight:600;margin-top:6px;line-height:1.3}
+.dinner-photo{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;margin-bottom:16px;border:1px solid rgba(255,255,255,.35)}

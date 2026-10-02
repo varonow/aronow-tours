@@ -13,11 +13,11 @@
 <meta name="robots" content="noindex">
 <title>High Point Market — Home</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=3">
+<link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
 <main>
-<section class="hero">
+<section class="hero hero-photo">
   <div class="eyebrow">Fall 2026 &middot; Sourcing trip</div>
   <h1>High Point Market</h1>
   <p class="hero-welcome" id="welcome">Welcome</p>
@@ -73,19 +73,20 @@ else {
     <p style="margin-top:14px"><a class="btn ghost small" href="https://flightaware.com/live/flight/${encodeURIComponent(String(l.flight).replace(/\s+/g, '').replace(/^DL/i, 'DAL'))}" target="_blank" rel="noopener">✈️ Check live flight status</a></p></div>`).join('') + `</div>
     <p style="margin-top:18px">Confirmation <span class="conf">${esc(f.conf)}</span> &nbsp;&middot;&nbsp; SkyMiles ${esc(f.skymiles)}</p>`;
   const h = L.hotel;
-  $('hotel').innerHTML = `<div class="card"><div class="meta">Reservation ${esc(h.res)}</div><h3>${esc(h.name)}</h3>
+  $('hotel').innerHTML = `<div class="card has-photo"><img class="card-photo" src="images/ohenry-lobby.jpg" alt="The lobby at the O.Henry Hotel"><div class="meta">Reservation ${esc(h.res)}</div><h3>${esc(h.name)}</h3>
     <p><a href="${mapUrl(h.name + ', ' + h.address)}" target="_blank" rel="noopener">${esc(h.address)}</a></p>
     <dl class="kv"><dt>Check in</dt><dd>${esc(h.checkin)}</dd><dt>Check out</dt><dd>${esc(h.checkout)}</dd><dt>Guests</dt><dd>${esc(h.guests)}</dd>
     ${h.rooms.map(r => `<dt>${esc(r.night.split(',')[0])}</dt><dd>${esc(r.room)}, ${esc(r.rate)}</dd>`).join('')}
     <dt>Total</dt><dd>${esc(h.total)}</dd></dl>
-    <div class="note">${esc(h.note)}</div></div>`;
+    <div class="note">${esc(h.note)}</div>
+    <div class="pics">${[...new Set(h.rooms.map(r => r.room))].map(room => { const k = /magi/i.test(room) ? 'magi' : /porter/i.test(room) ? 'porter' : ''; if (!k) return ''; const n = h.rooms.filter(r => r.room === room).map(r => r.night.split(',')[0]).join(' and '); return `<figure><img src="images/ohenry-${k}.jpg" alt="${esc(room)}" loading="lazy"><figcaption>${esc(room)} &middot; ${esc(n)}</figcaption></figure>`; }).join('')}</div></div>`;
   const c = L.car;
   $('car').innerHTML = `<div class="card"><div class="meta">Confirmation ${esc(c.conf)}</div><h3>${esc(c.company)} at GSO</h3>
     <p>${esc(c.vehicle)}</p>
     <p><a href="${mapUrl(c.address)}" target="_blank" rel="noopener">${esc(c.address)}</a></p>
     <dl class="kv"><dt>Pick up</dt><dd>${esc(c.pickup)}</dd><dt>Return</dt><dd>${esc(c.ret)}</dd><dt>Under</dt><dd>${esc(c.under)}</dd><dt>Cost</dt><dd>${esc(c.total)}</dd><dt>Delta itinerary</dt><dd>${esc(c.itin)}</dd></dl>
     <div class="note">${esc(c.todo)}</div></div>`;
-  $('dinners').innerHTML = L.dinners.map(d => `<div><div class="eyebrow">${esc(d.day)} &middot; ${esc(d.time)}</div><h3 style="font-size:28px">${esc(d.name)}</h3><p>${esc(d.where)}</p><p style="margin-top:6px"><a style="color:#fff" href="${mapUrl(d.address)}" target="_blank" rel="noopener">Open in Maps</a></p></div>`).join('');
+  $('dinners').innerHTML = L.dinners.map(d => `<div class="dinner-card"><img class="dinner-photo" src="images/dinner-${String(d.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.jpg" alt="${esc(d.name)}" loading="lazy" onerror="this.remove()"><div class="eyebrow">${esc(d.day)} &middot; ${esc(d.time)}</div><h3 style="font-size:28px">${esc(d.name)}</h3><p>${esc(d.where)}</p><p style="margin-top:6px"><a style="color:#fff" href="${mapUrl(d.address)}" target="_blank" rel="noopener">Open in Maps</a></p></div>`).join('');
 }
 
 const target = new Date('2026-10-18T10:30:00-04:00'), home = new Date('2026-10-21T12:14:00-04:00');
