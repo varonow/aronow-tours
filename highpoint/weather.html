@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2B2A28">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="High Point">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>High Point Market — Weather</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css?v=3">
+</head>
+<body>
+<main>
+<header class="page-head"><div class="wrap"><div class="eyebrow">Live forecast</div><h1>Weather</h1><p class="sub">High Point, North Carolina. Updated every time you open this page.</p></div></header>
+<div id="wx"><section class="band"><p class="loading">Checking the skies…</p></section></div>
+</main>
+<script type="module">
+import { start, esc, FOOTER } from './js/app.js?v=2';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('weather.html');
+if (ctx) {
+const LAT = 35.9557, LNG = -80.0053, TZ = 'America/New_York';
+const TRIP = [
+  ['2026-10-18', 'Sun Oct 18', 'Fly in · first day at Market'],
+  ['2026-10-19', 'Mon Oct 19', 'Market'],
+  ['2026-10-20', 'Tue Oct 20', 'Market'],
+  ['2026-10-21', 'Wed Oct 21', 'Fly home'],
+];
+const F = c => Math.round(c * 9 / 5 + 32);
+const icon = c => c === 0 ? '☀️' : c <= 2 ? '⛅' : c <= 3 ? '☁️' : c <= 48 ? '🌫️' : c <= 67 ? '🌧️' : c <= 77 ? '🌨️' : c <= 82 ? '🌦️' : '⛈️';
+const desc = c => c === 0 ? 'Clear skies' : c <= 2 ? 'Partly cloudy' : c <= 3 ? 'Overcast' : c <= 48 ? 'Foggy' : c <= 57 ? 'Light drizzle' : c <= 67 ? 'Rain' : c <= 77 ? 'Snow' : c <= 82 ? 'Passing showers' : 'Thunderstorms';
+const wx = document.getElementById('wx');
+try {
+  const fc = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LNG}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&current=temperature_2m,weathercode,windspeed_10m&windspeed_unit=mph&timezone=${encodeURIComponent(TZ)}&forecast_days=16`).then(r => r.json());
+  const d = fc.daily, c = fc.current;
+  const row = (label, sub, i) => i < 0
+    ? `<div class="wx-row far"><div><div class="d">${label}</div><div class="a">${sub}</div></div><div class="c">Too far out</div></div>`
+    : `<div class="wx-row"><div><div class="d">${label}</div><div class="a">${sub}</div></div><div class="c" style="font-size:28px">${icon(d.weathercode[i])}</div><div class="c"><b>${F(d.temperature_2m_max[i])}°</b></div><div class="c">${F(d.temperature_2m_min[i])}°</div><div class="c">${d.precipitation_probability_max[i] ?? '—'}%</div></div>`;
+  const headRow = `<div class="wx-row head"><div>Day</div><div class="c">Sky</div><div class="c">High</div><div class="c">Low</div><div class="c">Rain</div></div>`;
+  const week = d.time.slice(0, 7).map((t, i) => row(new Date(t + 'T12:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }), desc(d.weathercode[i]), i)).join('');
+  wx.innerHTML = `<section class="band band-paper"><div class="wrap narrow wx-now">
+      <div class="label">Right now in High Point</div><div class="ic">${icon(c.weathercode)}</div>
+      <div class="deg">${F(c.temperature_2m)}°</div>
+      <p class="lede">${desc(c.weathercode)} &middot; wind ${Math.round(c.windspeed_10m)} mph</p>
+      <p>Today: high ${F(d.temperature_2m_max[0])}°, low ${F(d.temperature_2m_min[0])}°, ${d.precipitation_probability_max[0] ?? 0}% chance of rain</p></div></section>
+    <section class="band band-stone"><div class="wrap narrow"><div class="eyebrow">October 18–21</div><h2 class="sec-title">Our days at Market</h2>
+      ${headRow}${TRIP.map(t => row(t[1], t[2], d.time.indexOf(t[0]))).join('')}
+      <p class="muted" style="margin-top:14px">Forecasts reach about two weeks ahead, so our days fill in as the trip gets close. Mid-October in High Point is usually around 70° by day and 50° at night, so bring a layer for the mornings and comfortable shoes for the walking.</p></div></section>
+    <section class="band band-paper"><div class="wrap narrow"><h2 class="sec-title">The next seven days</h2>${headRow}${week}</div></section>`;
+} catch (e) {
+  wx.innerHTML = `<section class="band band-paper"><div class="wrap narrow" style="text-align:center"><p style="font-size:54px">🌤️</p><p class="lede">The live forecast is not available right now. Please check back soon.</p></div></section>`;
+}
+}
+</script>
+</body>
+</html>

@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>High Point Market — Home</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 <main>
@@ -52,11 +52,11 @@
 </div></section>
 </main>
 <script type="module">
-import { start, db, esc, today, mapUrl, logistics, FOOTER } from './js/app.js?v=1';
+import { start, db, esc, today, mapUrl, logistics, FOOTER } from './js/app.js?v=2';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('index.html');
 if (ctx) {
-const { NAV_ITEMS } = await import('./js/nav.js?v=1');
+const { NAV_ITEMS } = await import('./js/nav.js?v=2');
 const $ = id => document.getElementById(id);
 $('tiles').innerHTML = NAV_ITEMS.filter(n => n.href !== 'index.html').map(n =>
   `<a class="tile" href="${n.href}"><span class="em">${n.icon}</span><span class="tl">${n.label}</span><span class="td">${n.desc}</span></a>`).join('');
@@ -69,7 +69,8 @@ else {
   $('flights').innerHTML = `<div class="grid2">` + f.legs.map(l => `<div class="card">
     <div class="meta">${esc(l.day)} &middot; ${esc(f.airline)} ${esc(l.flight)}</div>
     <div class="times"><div class="t"><b>${esc(l.dep)}</b><span>${esc(l.from)} &middot; ${esc(l.fromCity)}</span></div><div class="arrow"></div><div class="t"><b>${esc(l.arr)}</b><span>${esc(l.to)} &middot; ${esc(l.toCity)}</span></div></div>
-    <dl class="kv"><dt>Seats</dt><dd>${esc(l.seats)}, ${esc(l.cabin)}</dd></dl></div>`).join('') + `</div>
+    <dl class="kv"><dt>Seats</dt><dd>${esc(l.seats)}, ${esc(l.cabin)}</dd></dl>
+    <p style="margin-top:14px"><a class="btn ghost small" href="https://flightaware.com/live/flight/${encodeURIComponent(String(l.flight).replace(/\s+/g, '').replace(/^DL/i, 'DAL'))}" target="_blank" rel="noopener">✈️ Check live flight status</a></p></div>`).join('') + `</div>
     <p style="margin-top:18px">Confirmation <span class="conf">${esc(f.conf)}</span> &nbsp;&middot;&nbsp; SkyMiles ${esc(f.skymiles)}</p>`;
   const h = L.hotel;
   $('hotel').innerHTML = `<div class="card"><div class="meta">Reservation ${esc(h.res)}</div><h3>${esc(h.name)}</h3>

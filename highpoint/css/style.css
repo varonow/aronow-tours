@@ -222,3 +222,16 @@ body:not(.ready) main{visibility:hidden}
 .nav-spacer{height:calc(68px + env(safe-area-inset-top, 0px))}
 .tabs{top:calc(68px + env(safe-area-inset-top, 0px))}
 .drawer-header{padding-top:calc(22px + env(safe-area-inset-top, 0px))}
+
+/* weather */
+.wx-now{text-align:center}
+.wx-now .deg{font-family:"Playfair Display",serif;font-size:96px;line-height:1;color:var(--ink)}
+.wx-now .ic{font-size:64px;line-height:1.1}
+.lede{font-size:22px}
+.muted{font-style:italic}
+.wx-row{display:grid;grid-template-columns:1fr 44px 64px 64px 60px;gap:8px;align-items:center;border-top:2px solid var(--stone);padding:12px 0;font-size:19px}
+.band-stone .wx-row{border-top-color:#D9CFBF}
+.wx-row.head{font-family:Jost,sans-serif;font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--brass-ink);border-top:0}
+.wx-row .d{font-weight:600}.wx-row .a{font-size:17px}.wx-row .c{text-align:center}
+.wx-row.far{grid-template-columns:1fr auto}.wx-row.far .c{font-size:16px;font-style:italic}
+@media(max-width:560px){.wx-row{grid-template-columns:1fr 34px 48px 48px 48px;gap:6px;font-size:18px}}

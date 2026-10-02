@@ -1,6 +1,6 @@
 /* High Point Market — shared page start-up: sign-in check and menu. */
-import { db, requireAuth, getCurrentUser } from './supabase.js?v=1';
-import { renderNav } from './nav.js?v=1';
+import { db, requireAuth, getCurrentUser } from './supabase.js?v=2';
+import { renderNav } from './nav.js?v=2';
 export { db };
 
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

@@ -1,10 +1,11 @@
-import { getCurrentUser, signOut } from './supabase.js?v=1';
+import { getCurrentUser, signOut } from './supabase.js?v=2';
 
 export const NAV_ITEMS = [
   { label: 'Home',      desc: 'Countdown, flights, hotel, car',   href: 'index.html',     icon: '\u{1F3E0}' },
   { label: 'Schedule',  desc: 'Every showroom, day by day',       href: 'schedule.html',  icon: '\u{1F5D3}️' },
   { label: 'Buy List',  desc: 'Photos of what we are considering', href: 'buylist.html',  icon: '\u{1F4F8}' },
   { label: 'Map',       desc: 'Where each building is',           href: 'map.html',       icon: '\u{1F4CD}' },
+  { label: 'Weather',   desc: 'Live forecast for High Point',     href: 'weather.html',   icon: '\u2600\uFE0F' },
   { label: 'Checklist', desc: 'Before we go',                     href: 'checklist.html', icon: '✅' },
   { label: 'Contacts',  desc: 'Confirmations and who to call',    href: 'contacts.html',  icon: '\u{1F4DE}' },
 ];

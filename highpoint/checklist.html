@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>High Point Market — Checklist</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 <main>
@@ -33,9 +33,9 @@
 </div></section>
 </main>
 <script type="module">
-import { start, db, esc, today, mapUrl, logistics, FOOTER } from './js/app.js?v=1';
+import { start, db, esc, today, mapUrl, logistics, FOOTER } from './js/app.js?v=2';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
-import { CHECKLIST } from './js/data.js?v=1';
+import { CHECKLIST } from './js/data.js?v=2';
 const ctx = await start('checklist.html');
 if (ctx) {
 const $ = id => document.getElementById(id);
