@@ -27,7 +27,7 @@
   <div class="field"><label for="time">What time?</label><select id="time"></select></div>
   <div class="field"><label for="note">Anything Victoria should know? (optional)</label><input id="note" maxlength="300" placeholder="For example: mornings are best"></div>
   <button class="btn" id="add">Send my request</button><span class="saved" id="msg"></span>
-  <p class="muted" style="margin-top:18px">A request is not a booking yet. Victoria will confirm the final times. There are no lessons or massages on Shabbat (Friday evening through Saturday).</p>
+  <p class="muted" style="margin-top:18px">A request is not a booking yet. Victoria will confirm the final times.</p>
 </div></section>
 <section class="band band-aqua"><div class="wrap narrow">
   <h2 class="sec-title" id="listTitle">Your requests</h2>
@@ -46,7 +46,7 @@ if (ctx) {
 const ACTS = [['massage', '\u{1F486}', 'Massage'], ['tennis', '\u{1F3BE}', 'Tennis lesson'], ['swim', '\u{1F3CA}', 'Swim lesson'], ['basketball', '\u{1F3C0}', 'Basketball lesson']];
 const actName = Object.fromEntries(ACTS.map(a => [a[0], a[1] + ' ' + a[2]]));
 const TIMES = ['8:00am', '9:00am', '10:00am', '11:00am', '12:00pm', '1:00pm', '2:00pm', '3:00pm', '4:00pm', '5:00pm', '6:00pm'];
-const OPEN_DAYS = DAYS.filter(d => d.iso >= '2026-11-23' && d.iso <= '2026-11-27');
+const OPEN_DAYS = DAYS.filter(d => d.iso >= '2026-11-23' && d.iso <= '2026-11-28');
 const $ = id => document.getElementById(id);
 let act = null;
 
