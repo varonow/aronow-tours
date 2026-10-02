@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Weather</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=12">
+<link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
 <main>
@@ -22,7 +22,7 @@
 <div id="wx"><section class="band band-white"><p class="loading">Checking the skies…</p></section></div>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=12';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=13';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('weather.html');
 if (ctx) {

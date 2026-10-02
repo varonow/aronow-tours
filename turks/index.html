@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Home</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=12">
+<link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
 <main>
@@ -57,11 +57,11 @@
 </div></section>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=12';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=13';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('index.html');
 if (ctx) {
-const { NAV_ITEMS } = await import('./js/nav.js?v=12');
+const { NAV_ITEMS } = await import('./js/nav.js?v=13');
 document.getElementById('tiles').innerHTML = NAV_ITEMS.filter(n => n.href !== 'index.html').map(n =>
   `<a class="tile" href="${n.href}"><span class="em">${n.icon}</span><span class="tl">${n.label}</span><span class="td">${n.desc}</span></a>`).join('');
 

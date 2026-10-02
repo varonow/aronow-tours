@@ -13,16 +13,16 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Menus</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=12">
+<link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
 <main>
 <header class="page-head "><div class="wrap"><div class="eyebrow">Kosher throughout</div><h1>The Menus</h1><p class="sub">Breakfast is dairy every day. Lunch is dairy Sunday through Friday and meat on Saturday. Dinner is meat Sunday through Friday and dairy on Saturday night.</p></div></header>
-<div class="tabs" id="tabs"><button class="tab on" data-t="b">🥞 Breakfast</button><button class="tab" data-t="l">🥗 Lunch</button><button class="tab" data-t="d">🍽️ Dinner</button></div>
+<div class="mtabs"><div class="mtabs-in" id="tabs"></div></div>
 <div id="menu"></div>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=12';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=13';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('menus.html');
 if (ctx) {
@@ -69,31 +69,52 @@ const D = {
   kids: ['Sunday through Friday: a rotation of chicken nuggets, mini meatballs, schnitzel strips, hot dogs, and mini burgers, with plain rice, pasta with olive oil, or fries', 'Saturday: cheese pizza and buttered pasta', 'Every night: soft-cooked vegetables (broccoli, cauliflower, soft carrots)'],
 };
 const ul = a => `<ul class="dots">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
-const dayHtml = d => `<div class="day ${d[0] === today ? 'today' : ''}">${d[1] || d[0] === today ? `<div class="kind">${esc([d[1], d[0] === today ? 'Today' : ''].filter(Boolean).join(' · '))}</div>` : ''}<h3>${esc(dayLabel(d[0]))}</h3>
-  <dl>${d[2].map(x => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join('')}</dl></div>`;
-function meal(M, title) {
-  return `<section class="band band-white"><div class="wrap narrow"><h2 class="sec-title">${title}</h2><p class="sec-sub"><b>${esc(M.when)}</b></p>
-    <div class="label">On the table every ${title === 'Dinner' ? 'night' : 'day'}</div>${ul(M.every)}</div></section>
-    <section class="band band-aqua"><div class="wrap narrow"><h2 class="sec-title">${title === 'Dinner' ? 'Night by night' : 'Day by day'}</h2>${M.days.map(dayHtml).join('')}</div></section>
-    <section class="band band-peach"><div class="wrap narrow"><h2 class="sec-title">${esc(M.kidsTitle)}</h2>${ul(M.kids)}</div></section>`;
+const rows = r => `<dl class="dishes">${r.map(x => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join('')}</dl>`;
+const more = (title, list) => `<details class="more"><summary>${esc(title)}</summary>${ul(list)}</details>`;
+const SEP = ' · ';
+// "Welcome dinner · Meat" -> name "Welcome dinner", type "Meat"
+function split(kind, fallback) {
+  const parts = kind.split(SEP);
+  const type = parts.find(x => /^(Dairy|Meat)/.test(x)) || '';
+  const name = parts.filter(x => x !== type).join(SEP) || fallback;
+  return { name, type };
 }
-const VIEWS = {
-  b: () => `<section class="band band-white"><div class="wrap narrow"><h2 class="sec-title">Breakfast</h2><p class="sec-sub"><b>${esc(B.when)}</b></p>
+function breakfastView() {
+  return `<section class="band band-white"><div class="wrap narrow"><div class="eyebrow">Every day</div><h2 class="sec-title">Breakfast</h2><p class="sec-sub"><b>${esc(B.when)}</b></p>
       <div class="label">${B.blocks[0][0]}</div>${ul(B.blocks[0][1])}</div></section>
     <section class="band band-aqua"><div class="wrap narrow"><h2 class="sec-title">${B.blocks[1][0]}</h2>${ul(B.blocks[1][1])}</div></section>
-    <section class="band band-peach"><div class="wrap narrow"><h2 class="sec-title">${B.blocks[2][0]}</h2>${ul(B.blocks[2][1])}<p style="margin-top:16px">${esc(B.foot)}</p></div></section>`,
-  l: () => meal(L, 'Lunch'),
-  d: () => meal(D, 'Dinner'),
-};
-function show(t) {
-  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.t === t));
-  document.getElementById('menu').innerHTML = VIEWS[t]();
-  const t2 = document.querySelector('.day.today'); if (t2) t2.scrollIntoView({ block: 'center' });
+    <section class="band band-peach"><div class="wrap narrow"><h2 class="sec-title">${B.blocks[2][0]}</h2>${ul(B.blocks[2][1])}<p style="margin-top:16px">${esc(B.foot)}</p></div></section>`;
 }
-document.getElementById('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) { show(b.dataset.t); window.scrollTo({ top: 0 }); } });
-const hr = +new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', hour12: false }).format(new Date());
-const during = today >= '2026-11-22' && today <= '2026-11-29';
-if (during && hr >= 14) show('d'); else if (during && hr >= 11) show('l'); else { document.getElementById('menu').innerHTML = ''; show('b'); window.scrollTo({ top: 0 }); }
+function dayView(iso) {
+  const l = L.days.find(d => d[0] === iso), d = D.days.find(x => x[0] === iso);
+  let html = `<section class="band band-white" style="padding-bottom:26px"><div class="wrap narrow"><div class="eyebrow">${iso === today ? 'Today' : 'The menu for'}</div><h2 class="sec-title">${esc(dayLabel(iso))}</h2>
+    <p>Breakfast is the same every day, 7:30 to 10:30am. <a href="#" data-go="b">See breakfast</a></p></div></section>`;
+  if (l) {
+    const k = split(l[1], 'Lunch'), packed = iso === '2026-11-29';
+    html += `<section class="band band-aqua"><div class="wrap narrow"><div class="eyebrow">${packed ? 'Departure day' : 'Around 1:00pm' + (k.type ? SEP + esc(k.type) : '')}</div><h2 class="sec-title">${packed ? 'Lunch' : esc(k.name === 'Lunch' ? 'Lunch' : k.name)}</h2>
+      ${rows(l[2])}${packed ? '' : more('Also on the table at every lunch', L.every) + more('For the kids, around 12:00pm with the nannies', L.kids)}</div></section>`;
+  }
+  if (d) {
+    const k = split(d[1], 'Dinner');
+    html += `<section class="band band-peach"><div class="wrap narrow"><div class="eyebrow">Around 7:30pm${k.type ? SEP + esc(k.type) : ''}</div><h2 class="sec-title">${esc(k.name)}</h2>
+      ${rows(d[2])}${more('Also on the table at every dinner', D.every) + more('For the kids, around 5:30pm with the nannies', D.kids)}</div></section>`;
+  } else {
+    html += `<section class="band band-peach"><div class="wrap narrow"><h2 class="sec-title">Dinner</h2><p>We are on our way home. No dinner at the villa tonight.</p></div></section>`;
+  }
+  return html;
+}
+const tabs = document.getElementById('tabs');
+tabs.innerHTML = `<button class="mtab wide" data-t="b">\u{1F95E} Breakfast, every day</button><div class="mdays">` +
+  DAYS.map(d => { const [wd, , num] = d.short.split(' '); return `<button class="mtab" data-t="${d.iso}" aria-label="${d.label}">${wd}<b>${num}</b></button>`; }).join('') + `</div>`;
+function show(t) {
+  document.querySelectorAll('.mtab').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  document.getElementById('menu').innerHTML = t === 'b' ? breakfastView() : dayView(t);
+}
+document.addEventListener('click', e => {
+  const go = e.target.closest('[data-go]'); if (go) { e.preventDefault(); show(go.dataset.go); document.querySelector('.mtabs').scrollIntoView({ block: 'start' }); return; }
+  const b = e.target.closest('.mtab'); if (b) show(b.dataset.t);
+});
+show(today >= '2026-11-22' && today <= '2026-11-29' ? today : '2026-11-22');
 }
 </script>
 </body>

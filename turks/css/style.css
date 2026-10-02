@@ -249,3 +249,22 @@ figure.photo figcaption{background:var(--ink);color:#fff;font-family:Jost,sans-s
 .zwrap>.map-box,.zwrap>.zoom{border:0;touch-action:auto;max-width:none}
 .zwrap img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
 .zbox+.map-info{border-top:0}
+
+/* menus: breakfast + one tab per day */
+.mtabs{background:var(--white);border-bottom:2px solid var(--teal);padding:12px 10px}
+.mtabs-in{max-width:780px;margin:0 auto}
+.mtab{min-height:60px;border:2px solid var(--teal);background:var(--white);color:var(--ink);font-family:Jost,sans-serif;font-weight:600;font-size:19px;cursor:pointer;padding:4px 2px}
+.mtab.wide{width:100%;margin-bottom:8px}
+.mdays{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.mdays .mtab{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;line-height:1.1;min-height:66px}
+.mdays .mtab b{font-family:"DM Serif Display",serif;font-weight:400;font-size:26px;line-height:1.05}
+.mtab.on{background:var(--teal);color:#fff}
+dl.dishes dt{font-family:Jost,sans-serif;font-weight:600;font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-top:12px}
+dl.dishes dd{font-size:21px}
+details.more{border-top:2px solid var(--teal);margin-top:20px}
+details.more+details.more{margin-top:0}
+details.more summary{min-height:58px;display:flex;align-items:center;cursor:pointer;font-family:Jost,sans-serif;font-weight:600;font-size:19px;color:var(--ink)}
+details.more summary::after{content:"+";margin-left:auto;font-size:30px;line-height:1;color:var(--teal)}
+details.more[open] summary::after{content:"\2212"}
+details.more summary::-webkit-details-marker{display:none}
+details.more ul{margin:4px 0 16px}
