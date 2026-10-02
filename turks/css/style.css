@@ -223,13 +223,6 @@ figure.photo figcaption{background:var(--ink);color:#fff;font-family:Jost,sans-s
 .room-photo{width:100%;margin:0 0 14px;aspect-ratio:3/2;object-fit:cover}
 .map-info img{width:100%;max-height:340px;object-fit:cover;margin-bottom:14px}
 
-/* map shortcut in the top bar */
-.nav-right{display:flex;align-items:center;gap:6px}
-.nav-map{display:flex;align-items:center;gap:6px;min-height:48px;padding:0 10px;font-size:24px;text-decoration:none;border:2px solid var(--teal);background:var(--white)}
-.nav-map span{font-family:Jost,sans-serif;font-weight:600;font-size:17px;color:var(--ink)}
-.nav-user{min-width:0}
-@media(max-width:560px){.nav-user{display:none}}
-
 /* map: rooms view */
 [hidden]{display:none!important}
 .zoom{position:relative;overflow:hidden;aspect-ratio:1.654;border:2px solid var(--teal);background:#fff}
@@ -244,3 +237,12 @@ figure.photo figcaption{background:var(--ink);color:#fff;font-family:Jost,sans-s
 .rbld h3{font-size:25px;color:var(--ink);margin-bottom:6px}
 .rtag{display:inline-block;background:var(--ink);color:#fff;font-family:Jost,sans-serif;font-weight:600;font-size:16px;padding:4px 7px;vertical-align:middle;margin-right:6px}
 .rbld p b{font-family:Jost,sans-serif;font-weight:600;color:var(--teal)}
+.rnote{font-size:17px;font-style:italic}
+
+/* zoomable maps */
+.zbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+.zhint{font-size:17px;font-style:italic}
+.zwrap{overflow:auto;-webkit-overflow-scrolling:touch;max-height:78vh;border:2px solid var(--teal);background:#fff}
+.zwrap.zoomed{cursor:grab}
+.zwrap>.map-box,.zwrap>.zoom{border:0;touch-action:auto;max-width:none}
+.zwrap+.map-info{border-top:0}

@@ -39,7 +39,7 @@
   <div class="zoom" id="zoomE"><div class="zoom-in" style="width:312.5%;height:333.33%;left:-162.5%;top:-103.33%"><img src="images/map.jpg" alt="Close-up of the Emara East side of the estate map"></div></div>
   <div class="rlist" id="listE"></div>
 </div></section>
-<section class="band band-white"><div class="wrap narrow"><p>The two bungalows are W4 and W5. For what is inside each room, see <a href="rooms.html">Rooms</a>.</p></div></section>
+<section class="band band-white"><div class="wrap narrow"><p>For what is inside each room, see <a href="rooms.html">Rooms</a>.</p></div></section>
 </div>
 </main>
 <script type="module">
@@ -60,18 +60,43 @@ function pick(n, scroll) {
   const s = byN[n]; if (!s) return;
   document.querySelectorAll('[data-n]').forEach(b => b.classList.toggle('on', +b.dataset.n === +n));
   info.innerHTML = `${PHOTOS[s.n] ? `<img src="images/${PHOTOS[s.n]}" alt="">` : ''}<div class="label">Number ${s.n} &middot; Emara ${s.h}</div><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p>`;
-  if (scroll) map.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (scroll) { zPlaces.wrap.scrollIntoView({ behavior: 'smooth', block: 'center' }); if (zPlaces.level() === 0) zPlaces.set(1); zPlaces.center(s.x, s.y); }
 }
+
+// ----- Zoom: + / - buttons, then drag to move around -----
+const LEVELS = [1, 1.8, 2.8, 4];
+function zoomable(el) {
+  const wrap = document.createElement('div'); wrap.className = 'zwrap';
+  const bar = document.createElement('div'); bar.className = 'zbar';
+  bar.innerHTML = '<button class="btn small" data-z="1">➕ Zoom in</button><button class="btn ghost small" data-z="-1" disabled>➖ Zoom out</button><span class="zhint">Zoom in, then drag the map to move around</span>';
+  el.parentNode.insertBefore(bar, el); el.parentNode.insertBefore(wrap, el); wrap.appendChild(el);
+  let i = 0;
+  const [bin, bout] = bar.querySelectorAll('button');
+  function set(n, fx = 0.5, fy = 0.5) {
+    const cx = (wrap.scrollLeft + wrap.clientWidth * fx) / wrap.scrollWidth, cy = (wrap.scrollTop + wrap.clientHeight * fy) / wrap.scrollHeight;
+    i = Math.max(0, Math.min(LEVELS.length - 1, n));
+    el.style.width = LEVELS[i] * 100 + '%';
+    wrap.classList.toggle('zoomed', i > 0);
+    wrap.scrollLeft = cx * wrap.scrollWidth - wrap.clientWidth * fx; wrap.scrollTop = cy * wrap.scrollHeight - wrap.clientHeight * fy;
+    bin.disabled = i === LEVELS.length - 1; bout.disabled = i === 0;
+  }
+  bar.addEventListener('click', e => { const b = e.target.closest('[data-z]'); if (b) set(i + +b.dataset.z); });
+  return { wrap, set, level: () => i, center(xPct, yPct) { wrap.scrollLeft = wrap.scrollWidth * xPct / 100 - wrap.clientWidth / 2; wrap.scrollTop = wrap.scrollHeight * yPct / 100 - wrap.clientHeight / 2; } };
+}
+const zPlaces = zoomable(map);
+zoomable(document.getElementById('zoomW'));
+zoomable(document.getElementById('zoomE'));
 
 // ----- Rooms view: where each bedroom is -----
 const BLD = [
-  { h: 'W', key: 'wmain', name: 'West Main House', lab: 'W1–W3', rooms: ['W1', 'W2', 'W3'], at: [[38.8, 46.2]] },
-  { h: 'W', key: 'wbung', name: 'The two bungalows', lab: 'W4 · W5', rooms: ['W4', 'W5'], at: [[31.5, 38.2], [42.7, 38.9]] },
-  { h: 'W', key: 'wtower', name: 'Princess Tower', lab: 'W6', rooms: ['W6'], at: [[32.6, 42.6]] },
-  { h: 'W', key: 'wguest', name: 'West Guest House', lab: 'W7–W9', rooms: ['W7', 'W8', 'W9'], at: [[27.0, 47.6]] },
-  { h: 'E', key: 'emain', name: 'East Main House', lab: 'E1–E5', rooms: ['E1', 'E2', 'E3', 'E4', 'E5'], at: [[71.0, 43.1]] },
-  { h: 'E', key: 'eprince', name: 'Prince’s Room, by the pool', lab: 'E6', rooms: ['E6'], at: [[66.6, 51.0]] },
-  { h: 'E', key: 'eguest', name: 'East Guest House', lab: 'E7 · E8', rooms: ['E7', 'E8'], at: [[61.6, 46.4]] },
+  { h: 'W', key: 'wmain', name: 'West Main House', tag: 'W1–W3', rooms: [['W1', 47.6, 47.8, 'right wing, ocean side'], ['W2', 46.0, 43.8, 'right wing, marina side'], ['W3', 39.6, 43.0, 'beside the living room']] },
+  { h: 'W', key: 'wb4', name: 'Left bungalow', tag: 'W4', rooms: [['W4', 31.5, 38.2]] },
+  { h: 'W', key: 'wb5', name: 'Right bungalow', tag: 'W5', rooms: [['W5', 42.7, 38.9]] },
+  { h: 'W', key: 'wtower', name: 'Princess Tower', tag: 'W6', rooms: [['W6', 32.6, 42.6]] },
+  { h: 'W', key: 'wguest', name: 'West Guest House', tag: 'W7–W9', rooms: [['W7–W9', 27.0, 47.6]], list: ['W7', 'W8', 'W9'] },
+  { h: 'E', key: 'emain', name: 'East Main House', tag: 'E1–E5', rooms: [['E1', 80.6, 38.4, 'main level, right wing'], ['E2', 75.2, 42.2, 'lower level'], ['E3', 78.4, 45.6, 'lower level, ocean side'], ['E4', 81.4, 42.6, 'lower level, marina side'], ['E5', 72.6, 47.6, 'lower level, below the living room, own entrance']] },
+  { h: 'E', key: 'eprince', name: 'Prince’s Room, by the pool', tag: 'E6', rooms: [['E6', 66.6, 51.0]] },
+  { h: 'E', key: 'eguest', name: 'East Guest House', tag: 'E7 · E8', rooms: [['E7 · E8', 61.6, 46.4]], list: ['E7', 'E8'] },
 ];
 const myRooms = new Set([...(ctx.me ? [ctx.me] : []), ...ctx.kids].flatMap(p => p.rooms));
 const who = code => names(ctx.people.filter(p => p.rooms.includes(code)).map(p => p.short));
@@ -79,10 +104,15 @@ for (const h of ['W', 'E']) {
   const zin = document.querySelector('#zoom' + h + ' .zoom-in');
   const list = document.getElementById('list' + h);
   BLD.filter(b => b.h === h).forEach(b => {
-    const mine = b.rooms.some(r => myRooms.has(r));
-    b.at.forEach(([x, y]) => zin.insertAdjacentHTML('beforeend', `<button class="rlab ${mine ? 'mine' : ''}" data-b="${b.key}" style="left:${x}%;top:${y}%">${b.lab}</button>`));
-    list.insertAdjacentHTML('beforeend', `<div class="rbld" id="b-${b.key}"><h3><span class="rtag ${mine ? 'mine' : ''}">${b.lab}</span> ${esc(b.name)}</h3>` +
-      b.rooms.map(r => `<p><b>${r}</b> &nbsp;${esc(who(r)) || '&mdash;'}${myRooms.has(r) ? ' <span class="label">&middot; yours</span>' : ''}</p>`).join('') + `</div>`);
+    const codes = b.list || b.rooms.map(r => r[0]);
+    const note = Object.fromEntries(b.rooms.map(r => [r[0], r[3]]));
+    b.rooms.forEach(([lab, x, y]) => {
+      const mine = (b.list || [lab]).some(r => myRooms.has(r));
+      zin.insertAdjacentHTML('beforeend', `<button class="rlab ${mine ? 'mine' : ''}" data-b="${b.key}" style="left:${x}%;top:${y}%">${lab}</button>`);
+    });
+    const bmine = codes.some(r => myRooms.has(r));
+    list.insertAdjacentHTML('beforeend', `<div class="rbld" id="b-${b.key}"><h3><span class="rtag ${bmine ? 'mine' : ''}">${b.tag}</span> ${esc(b.name)}</h3>` +
+      codes.map(r => `<p><b>${r}</b> &nbsp;${esc(who(r)) || '&mdash;'}${myRooms.has(r) ? ' <span class="label">&middot; yours</span>' : ''}${note[r] ? `<br><span class="rnote">${esc(note[r])}</span>` : ''}</p>`).join('') + `</div>`);
   });
 }
 document.addEventListener('click', e => {

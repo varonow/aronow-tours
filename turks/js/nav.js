@@ -29,7 +29,7 @@ export function renderNav(activePage = '') {
     <nav class="nav"><div class="nav-inner">
       <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu"><span></span><span></span><span></span></button>
       <a href="index.html" class="nav-logo">THANKS &amp; CAICOS</a>
-      <div class="nav-right"><a class="nav-map" href="map.html" aria-label="Estate map">\u{1F5FA}\uFE0F<span>Map</span></a><div class="nav-user">${user || ''}</div></div>
+      <div class="nav-user">${user || ''}</div>
     </div></nav>
     <div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
     <div class="nav-drawer" id="navDrawer">
