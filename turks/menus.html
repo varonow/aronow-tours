@@ -13,16 +13,27 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Menus</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=13">
+<link rel="stylesheet" href="css/style.css?v=14">
 </head>
 <body>
 <main>
 <header class="page-head "><div class="wrap"><div class="eyebrow">Kosher throughout</div><h1>The Menus</h1><p class="sub">Breakfast is dairy every day. Lunch is dairy Sunday through Friday and meat on Saturday. Dinner is meat Sunday through Friday and dairy on Saturday night.</p></div></header>
 <div class="mtabs"><div class="mtabs-in" id="tabs"></div></div>
 <div id="menu"></div>
+<section class="band band-white"><div class="wrap narrow">
+  <h2 class="sec-title">The rhythm of the day</h2>
+  <dl class="kv">
+    <dt>7:00am</dt><dd>Early breakfast for the little ones</dd>
+    <dt>7:30 to 10:30am</dt><dd>Breakfast</dd>
+    <dt>12:00pm</dt><dd>Kids’ lunch with the nannies</dd>
+    <dt>1:00pm</dt><dd>Lunch</dd>
+    <dt>5:30pm</dt><dd>Kids’ dinner with the nannies</dd>
+    <dt>7:30pm</dt><dd>Dinner</dd>
+  </dl>
+</div></section>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=13';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=14';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('menus.html');
 if (ctx) {

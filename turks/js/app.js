@@ -1,6 +1,6 @@
 /* Thanks & Caicos — shared page start-up: sign-in check, menu, and "who am I". */
-import { db, requireAuth } from './supabase.js?v=13';
-import { renderNav } from './nav.js?v=13';
+import { db, requireAuth } from './supabase.js?v=14';
+import { renderNav } from './nav.js?v=14';
 export { db };
 
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

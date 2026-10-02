@@ -1,4 +1,4 @@
-import { getCurrentUser, signOut } from './supabase.js?v=13';
+import { getCurrentUser, signOut } from './supabase.js?v=14';
 
 export const NAV_ITEMS = [
   { label: 'Home',        desc: 'Countdown and your trip',        href: 'index.html',     icon: '\u{1F3E0}' },
@@ -11,7 +11,6 @@ export const NAV_ITEMS = [
   { label: 'Thankful',    desc: 'Your Thanksgiving message',      href: 'thankful.html',  icon: '\u{1F983}' },
   { label: 'Nannies',     desc: 'Who is with which children',     href: 'nannies.html',   icon: '\u{1F9F8}' },
   { label: 'Weather',     desc: 'Live forecast for Turtle Tail',  href: 'weather.html',   icon: '☀️' },
-  { label: 'House rules', desc: 'Rules, Shabbat and good to know', href: 'rules.html',    icon: '\u{1F4CB}' },
   { label: 'Contacts',    desc: 'Who to call',                    href: 'contacts.html',  icon: '\u{1F4DE}' },
 ];
 

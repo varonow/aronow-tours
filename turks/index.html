@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Home</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=13">
+<link rel="stylesheet" href="css/style.css?v=14">
 </head>
 <body>
 <main>
@@ -44,6 +44,17 @@
     <figure><img src="images/gym.jpg" alt="The gym with windows all around" loading="lazy"><figcaption>The gym in the tower</figcaption></figure>
   </div>
 </div></section>
+<section class="band band-white"><div class="wrap narrow">
+  <h2 class="sec-title">Already at the house</h2>
+  <ul class="dots">
+    <li>Two pools, a private beach and a dock.</li>
+    <li>Clear kayaks, paddleboards, snorkel gear, pool floats, beach toys and life vests.</li>
+    <li>A tennis court with a basketball net, a gym, a billiards room, life-size chess, cornhole and board games.</li>
+    <li>Karaoke, and Sonos speakers in the main living areas.</li>
+    <li>A bounce house with a water slide, a bouncy castle and a bubble machine for the kids, from Monday.</li>
+    <li>Air conditioning in every room, WiFi, linens, towels and bath amenities.</li>
+  </ul>
+</div></section>
 <section class="band band-peach"><div class="wrap"><div class="map-teaser">
   <a href="map.html"><img src="images/map.jpg" alt="Illustrated map of Emara Estate" loading="lazy"></a>
   <div><div class="eyebrow">Find your way around</div><h2 class="sec-title">The estate map</h2>
@@ -57,11 +68,11 @@
 </div></section>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=13';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=14';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('index.html');
 if (ctx) {
-const { NAV_ITEMS } = await import('./js/nav.js?v=13');
+const { NAV_ITEMS } = await import('./js/nav.js?v=14');
 document.getElementById('tiles').innerHTML = NAV_ITEMS.filter(n => n.href !== 'index.html').map(n =>
   `<a class="tile" href="${n.href}"><span class="em">${n.icon}</span><span class="tl">${n.label}</span><span class="td">${n.desc}</span></a>`).join('');
 
