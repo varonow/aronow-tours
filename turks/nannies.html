@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Nannies</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Little Angels Childcare · and our own</div><h1>Nannies</h1><p class="sub">Who is looking after which children, when, and how to reach them.</p></div></header>
+<section class="band band-white"><div class="wrap narrow"><div id="list"><p class="loading">Loading…</p></div></div></section>
+<section class="band band-aqua"><div class="wrap narrow">
+  <h2 class="sec-title">What the nannies have been told</h2>
+  <ul class="dots">
+    <li><b>Water safety comes first.</b> They stay very close to the children in and around the pools, the beach and the dock.</li>
+    <li><b>This is a kosher home.</b> All food for the children comes from the family kitchen. No outside food.</li>
+    <li>They check with the kitchen staff before using the villa kitchen.</li>
+    <li>The same nannies stay with the same children all week.</li>
+    <li>Kids eat with the nannies: breakfast from 7:00am, lunch around 12:00pm, dinner around 5:30pm.</li>
+  </ul>
+  <p style="margin-top:16px">All Little Angels nannies are background checked, trained in CPR and first aid, and can swim.</p>
+</div></section>
+</main>
+<script type="module">
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('nannies.html');
+if (ctx) {
+const list = document.getElementById('list');
+async function load() {
+  const { data } = await db.from('turks_nannies').select('*').order('sort');
+  const fams = [];
+  (data || []).forEach(n => { let f = fams.find(x => x.k === n.family); if (!f) fams.push(f = { k: n.family, label: n.family_label, rows: [] }); f.rows.push(n); });
+  list.innerHTML = fams.map(f => `<h2 class="sec-title" style="margin-top:26px">${esc(f.label)}</h2>` + f.rows.map(n => `
+    <div class="card" data-id="${n.id}">
+      <div class="meta">Looking after ${esc(n.kids)}</div>
+      <h3>${n.name ? esc(n.name) : 'Name to come'}</h3>
+      <dl class="kv"><dt>Hours</dt><dd>${esc(n.hours)}</dd>
+      <dt>Phone</dt><dd>${n.phone ? `<a href="tel:${esc(n.phone.replace(/[^+\d]/g, ''))}">${esc(n.phone)}</a>` : 'To come'}</dd>
+      ${n.note ? `<dt>Note</dt><dd>${esc(n.note)}</dd>` : ''}</dl>
+      ${ctx.isAdmin ? `<p style="margin-top:14px"><button class="btn ghost small" data-edit="${n.id}">Edit name and phone</button></p>
+      <div class="edit" style="display:none;margin-top:14px">
+        <div class="field"><label>Name</label><input class="e-name" value="${esc(n.name || '')}"></div>
+        <div class="field"><label>Phone</label><input class="e-phone" type="tel" value="${esc(n.phone || '')}"></div>
+        <button class="btn small" data-save="${n.id}">Save</button><span class="saved"></span></div>` : ''}
+    </div>`).join('')).join('') || '<p class="muted">The nanny list will appear here.</p>';
+}
+document.addEventListener('click', async e => {
+  const ed = e.target.closest('[data-edit]');
+  if (ed) { const c = ed.closest('.card').querySelector('.edit'); c.style.display = c.style.display === 'none' ? '' : 'none'; return; }
+  const sv = e.target.closest('[data-save]'); if (!sv) return;
+  const card = sv.closest('.card');
+  const { error } = await db.from('turks_nannies').update({ name: card.querySelector('.e-name').value.trim() || null, phone: card.querySelector('.e-phone').value.trim() || null }).eq('id', sv.dataset.save);
+  if (error) { const s = card.querySelector('.saved'); s.className = 'saved err'; s.textContent = 'That did not save.'; } else load();
+});
+load();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Home</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<section class="hero">
+  <div class="hero-art" role="img" aria-label="Watercolor beach with four pairs of footprints, one for each generation"></div>
+  <div class="hero-panel">
+    <img class="hero-wm" src="images/wordmark.png" alt="Thanks &amp; Caicos. Four Generations, One Island, Thanksgiving 2026">
+    <p class="hero-welcome" id="welcome">Welcome</p>
+    <p class="hero-where">Emara Estate &middot; Turtle Tail<br>November 22&ndash;29, 2026</p>
+    <div class="rule"></div>
+    <div class="count" id="count"><div><b id="cd">&ndash;</b><span>Days</span></div><div><b id="ch">&ndash;</b><span>Hours</span></div><div><b id="cm">&ndash;</b><span>Min</span></div><div><b id="cs">&ndash;</b><span>Sec</span></div></div>
+    <p class="hero-until" id="until">until we land in Providenciales</p>
+  </div>
+</section>
+<section class="band band-white"><div class="wrap"><div class="strip" id="strip"></div></div></section>
+<section class="band band-aqua"><div class="wrap">
+  <div class="eyebrow" style="text-align:center">Everything for the week</div>
+  <h2 class="sec-title" style="text-align:center;margin-bottom:26px">Where would you like to go?</h2>
+  <div class="tiles" id="tiles"></div>
+</div></section>
+</main>
+<script type="module">
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('index.html');
+if (ctx) {
+const { NAV_ITEMS } = await import('./js/nav.js');
+document.getElementById('tiles').innerHTML = NAV_ITEMS.filter(n => n.href !== 'index.html').map(n =>
+  `<a class="tile" href="${n.href}"><span class="em">${n.icon}</span><span class="tl">${n.label}</span><span class="td">${n.desc}</span></a>`).join('');
+
+const me = ctx.me;
+if (me) document.getElementById('welcome').textContent = 'Welcome, ' + me.short;
+
+let arrive = null;
+if (me) {
+  const { data } = await db.from('turks_travel').select('*').eq('person_id', me.id).eq('leg', 'arrive').maybeSingle();
+  arrive = data;
+}
+const flightHtml = arrive
+  ? `<a href="flights.html"><h3><span>✈️</span>Your flight</h3><p class="big">${esc(arrive.carrier)}${arrive.flight && arrive.carrier !== 'Private jet' ? ' ' + esc(arrive.flight) : ''}</p><p class="sm">${esc(dayLabel(arrive.day))} &middot; departs ${esc(arrive.dep_time)} &middot; lands ${esc(arrive.arr_time)}</p></a>`
+  : `<a href="flights.html"><h3><span>✈️</span>Flights</h3><p class="big">See your flights</p><p class="sm">And who is meeting you at the airport</p></a>`;
+const kidRooms = [...new Set(ctx.kids.filter(k => k.rooms.join() !== (me ? me.rooms.join() : '')).map(k => k.rooms.join(' · ')))];
+const roomHtml = me
+  ? `<a href="rooms.html"><h3><span>\u{1F6CF}️</span>Your room</h3><p class="big">${esc(me.rooms.join(' · '))} &middot; Emara ${esc(me.house)}</p><p class="sm">${kidRooms.length ? 'Your children: ' + esc(kidRooms.join(', ')) : 'See who is staying where'}</p></a>`
+  : `<a href="rooms.html"><h3><span>\u{1F6CF}️</span>Rooms</h3><p class="big">Who is where</p></a>`;
+const thanksHtml = `<a href="thankful.html"><h3><span>\u{1F983}</span>Thanksgiving</h3><p class="big">Thursday, Nov 26</p><p class="sm">${ctx.unsealed ? 'The thankful messages are open. Read them all.' : 'Write your thankful message before dinner'}</p></a>`;
+document.getElementById('strip').innerHTML = flightHtml + roomHtml + thanksHtml;
+
+// Countdown to this person's own landing time (island time = New York time).
+function landing(a) {
+  if (!a) return new Date('2026-11-22T11:00:00-05:00');
+  const m = /^(\d+):(\d+)(am|pm)$/.exec(a.arr_time || '');
+  if (!m) return new Date(a.day + 'T11:00:00-05:00');
+  let h = +m[1] % 12; if (m[3] === 'pm') h += 12;
+  return new Date(`${a.day}T${String(h).padStart(2, '0')}:${m[2]}:00-05:00`);
+}
+const target = landing(arrive);
+const el = id => document.getElementById(id);
+function tick() {
+  const x = target - new Date();
+  if (x <= 0) {
+    const over = new Date() > new Date('2026-11-29T12:00:00-05:00');
+    el('count').style.display = 'none';
+    el('until').textContent = over ? 'Four generations, one island. What a week.' : 'We are here. Welcome to Emara.';
+    return;
+  }
+  el('cd').textContent = Math.floor(x / 864e5); el('ch').textContent = Math.floor(x / 36e5) % 24;
+  el('cm').textContent = Math.floor(x / 6e4) % 60; el('cs').textContent = Math.floor(x / 1e3) % 60;
+}
+tick(); setInterval(tick, 1000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Contacts</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Who to call</div><h1>Contacts</h1><p class="sub">Tap a phone number to call, or an email address to write.</p></div></header>
+<section class="band band-white"><div class="wrap narrow" id="list"><p class="loading">Loading…</p></div></section>
+</main>
+<script type="module">
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('contacts.html');
+if (ctx) {
+const { data } = await db.from('turks_contacts').select('*').order('sort');
+const groups = [];
+(data || []).forEach(c => { let g = groups.find(x => x.k === c.grp); if (!g) groups.push(g = { k: c.grp, rows: [] }); g.rows.push(c); });
+const TITLE = { Family: 'Our planners', Emara: 'Emara Estate', Vendors: 'Who we have booked', Travel: 'Private jet terminals', Emergency: 'In an emergency' };
+document.getElementById('list').innerHTML = groups.map(g => `<h2 class="sec-title" style="margin-top:26px">${esc(TITLE[g.k] || g.k)}</h2>` + g.rows.map(c => `
+  <div class="card"><div class="meta">${esc(c.role || '')}</div><h3>${esc(c.name)}</h3>
+  ${c.note ? `<p>${esc(c.note)}</p>` : ''}
+  <p style="margin-top:12px;display:flex;flex-wrap:wrap;gap:10px">
+    ${c.phone ? `<a class="btn small" href="tel:${esc(c.phone.replace(/[^+\d]/g, ''))}">\u{1F4DE} ${esc(c.phone)}</a>` : ''}
+    ${c.email ? `<a class="btn ghost small" href="mailto:${esc(c.email)}">✉️ ${esc(c.email)}</a>` : ''}
+    ${c.url ? `<a class="btn ghost small" href="${esc(c.url)}" target="_blank" rel="noopener">Open website</a>` : ''}
+  </p></div>`).join('')).join('') || '<p class="muted">Contacts will appear here.</p>';
+}
+</script>
+</body>
+</html>

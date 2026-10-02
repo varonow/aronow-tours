@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Itinerary</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Day by day</div><h1>The Itinerary</h1></div></header>
+<section class="band band-white"><div class="wrap narrow" style="text-align:center">
+  <p style="font-size:64px;line-height:1">🗓️</p>
+  <h2 class="sec-title" style="margin-top:10px">To be announced</h2>
+  <div class="rule"></div>
+  <p class="lede">The week is still being planned. The full day-by-day itinerary will appear here as soon as it is ready.</p>
+  <p style="margin-top:18px">In the meantime, you can see <a href="flights.html">your flights</a>, <a href="rooms.html">your room</a> and <a href="menus.html">the menus</a>, and <a href="signups.html">sign up</a> for a massage or a lesson.</p>
+</div></section>
+</main>
+<script type="module">
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('itinerary.html');
+if (ctx) {
+
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Thankful</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<header class="page-head peach"><div class="wrap"><div class="eyebrow">Thanksgiving · Thursday, November 26</div><h1>What I Am Thankful For</h1><p class="sub">Write your message now. Every message stays sealed until Thanksgiving dinner, when they all open together.</p></div></header>
+<section class="band band-white"><div class="wrap narrow" id="top"><p class="loading">Loading…</p></div></section>
+<section class="band band-aqua" id="adminBand" style="display:none"><div class="wrap narrow">
+  <div class="eyebrow">Only you can see this</div><h2 class="sec-title">Opening time</h2>
+  <p class="sec-sub">Messages open for everyone at this moment. Set it to whenever Thanksgiving dinner will be. You cannot read anyone else’s message before then.</p>
+  <div class="field"><label for="when">Open the messages on (island time, same as New York)</label><input type="datetime-local" id="when"></div>
+  <button class="btn" id="saveWhen">Save opening time</button><span class="saved" id="whenMsg"></span>
+  <h2 class="sec-title" style="margin-top:36px">Who has written</h2>
+  <div class="check" id="check"></div>
+</div></section>
+</main>
+<script type="module">
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('thankful.html');
+if (ctx) {
+const $ = id => document.getElementById(id);
+const { data: setting } = await db.from('turks_settings').select('value').eq('key', 'thanks_unseal_at').maybeSingle();
+const openAt = setting ? new Date(setting.value) : null;
+const whenText = openAt ? openAt.toLocaleString('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'Thanksgiving dinner';
+
+if (ctx.unsealed) {
+  const { data } = await db.from('turks_thanks').select('*');
+  const by = Object.fromEntries((data || []).map(r => [r.person_id, r]));
+  const cards = ctx.people.filter(p => by[p.id]).map(p => `<div class="thanks-card"><h3>${esc(p.name)}</h3><p>${esc(by[p.id].message)}</p></div>`).join('');
+  $('top').innerHTML = `<div class="sealed"><p style="font-size:54px;line-height:1">\u{1F983}</p><h2 class="sec-title">The messages are open</h2><p>Four generations, in their own words, from the oldest to the youngest.</p></div><div style="margin-top:26px">${cards || '<p class="muted">No messages were written.</p>'}</div>`;
+} else {
+  const writers = [ctx.me, ...ctx.littleKids].filter(Boolean);
+  const { data } = await db.from('turks_thanks').select('*');
+  const by = Object.fromEntries((data || []).map(r => [r.person_id, r]));
+  $('top').innerHTML = `<div class="sealed"><div class="label">Sealed until</div><p class="lede" style="font-family:'DM Serif Display',serif;font-size:28px">${esc(whenText)}</p><p>You can read and change your message any time before then. No one else can see it.</p></div>` +
+    writers.map(p => `<div style="margin-top:34px"><h2 class="sec-title">${p.id === ctx.me.id ? 'Your message' : esc(p.short) + '’s message'}</h2>
+      ${p.id === ctx.me.id ? '' : `<p class="sec-sub">Write it for ${esc(p.short)}, in ${esc(p.short)}’s own words if you can.</p>`}
+      <div class="field"><label for="t-${p.id}">${p.id === ctx.me.id ? 'I am thankful for…' : esc(p.short) + ' is thankful for…'}</label>
+      <textarea id="t-${p.id}" maxlength="4000">${esc(by[p.id] ? by[p.id].message : '')}</textarea></div>
+      <button class="btn" data-save="${p.id}">Save ${p.id === ctx.me.id ? 'my' : esc(p.short) + '’s'} message</button><span class="saved" id="m-${p.id}">${by[p.id] ? 'Saved ✓' : ''}</span></div>`).join('') +
+    (writers.length ? '' : '<p class="muted" style="margin-top:20px">We could not match your sign-in to a traveler. Please tell Victoria.</p>');
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-save]'); if (!b) return;
+    const id = b.dataset.save, text = $('t-' + id).value.trim(), m = $('m-' + id);
+    b.disabled = true; m.className = 'saved';
+    const res = text
+      ? await db.from('turks_thanks').upsert({ person_id: id, message: text, updated_by: ctx.me.id, updated_at: new Date().toISOString() })
+      : await db.from('turks_thanks').delete().eq('person_id', id);
+    b.disabled = false;
+    if (res.error) { m.className = 'saved err'; m.textContent = 'That did not save. Please try again.'; }
+    else { m.textContent = text ? 'Saved ✓' : 'Cleared'; if (ctx.isAdmin) checklist(); }
+  });
+}
+
+async function checklist() {
+  const { data: done } = await db.rpc('turks_thanks_done');
+  const set = new Set(done || []);
+  const ppl = ctx.people.filter(p => !p.is_staff);
+  $('check').innerHTML = ppl.map(p => `<div>${set.has(p.id) ? '✅' : '⬜'} ${esc(p.name)}</div>`).join('');
+}
+if (ctx.isAdmin) {
+  $('adminBand').style.display = '';
+  if (openAt) {
+    const f = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(openAt);
+    const g = t => f.find(x => x.type === t).value;
+    $('when').value = `${g('year')}-${g('month')}-${g('day')}T${g('hour') === '24' ? '00' : g('hour')}:${g('minute')}`;
+  }
+  $('saveWhen').addEventListener('click', async () => {
+    const v = $('when').value; if (!v) return;
+    const { error } = await db.from('turks_settings').update({ value: v + ':00-05:00' }).eq('key', 'thanks_unseal_at');
+    $('whenMsg').className = error ? 'saved err' : 'saved';
+    $('whenMsg').textContent = error ? 'That did not save.' : 'Saved ✓ Reloading…';
+    if (!error) setTimeout(() => location.reload(), 900);
+  });
+  checklist();
+}
+}
+</script>
+</body>
+</html>

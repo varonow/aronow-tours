@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Estate map</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Eight acres on Turtle Tail</div><h1>The Estate</h1><p class="sub">Tap any number on the map, or any name in the list, to see what it is.</p></div></header>
+<section class="band band-white"><div class="wrap">
+  <div class="map-box" id="map"><img src="images/map.jpg" alt="Illustrated map of Emara Estate with numbered places" width="1532" height="988"></div>
+  <div class="map-info" id="info"><div class="label">Emara Estate</div><h3>Tap a number</h3><p>Emara East is on the right of the map and Emara West on the left. The beach sits between them.</p></div>
+</div></section>
+<section class="band band-aqua"><div class="wrap"><div class="eyebrow">Turquoise tags</div><h2 class="sec-title">Emara East</h2><div class="legend" id="legE"></div></div></section>
+<section class="band band-peach"><div class="wrap"><div class="eyebrow">Coral tags</div><h2 class="sec-title">Emara West</h2><div class="legend" id="legW"></div></div></section>
+</main>
+<script type="module">
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('map.html');
+if (ctx) {
+const SPOTS = [{"n": 1, "x": 19.97, "y": 23.08, "t": "Gate", "h": "East", "d": "The gated entrance to the estate, with security on duty around the clock."}, {"n": 2, "x": 68.54, "y": 33.2, "t": "Purple Driveway", "h": "East", "d": "The purple-painted road Prince built. It leads up to the East house."}, {"n": 3, "x": 46.48, "y": 26.11, "t": "Pond Patio", "h": "East", "d": "A quiet patio beside the pond."}, {"n": 4, "x": 71.02, "y": 43.12, "t": "East Main House", "h": "East", "d": "The East main house, once Prince’s own. Rooms E1 through E5 are here."}, {"n": 5, "x": 67.1, "y": 50.0, "t": "Prince’s Room", "h": "East", "d": "The bedroom Prince designed for himself, set slightly apart from the main house, with a vaulted ceiling, wood beams and its own terrace. This is room E6."}, {"n": 6, "x": 63.05, "y": 47.17, "t": "East Guest House", "h": "East", "d": "Rooms E7 and E8. E7 opens straight toward the beach."}, {"n": 7, "x": 62.27, "y": 24.09, "t": "Tennis Court with Basketball Net", "h": "East", "d": "A full-size tennis court with a basketball net. Tennis and basketball lessons happen here."}, {"n": 8, "x": 69.84, "y": 51.21, "t": "Outdoor Pool", "h": "East", "d": "The East house pool."}, {"n": 9, "x": 68.8, "y": 55.06, "t": "Poolside Firepit", "h": "East", "d": "A firepit beside the East pool."}, {"n": 10, "x": 76.37, "y": 72.87, "t": "Treehouse Palapa", "h": "East", "d": "A treehouse with bench seating. One of the estate’s outdoor dining spots."}, {"n": 11, "x": 80.42, "y": 75.71, "t": "BBQ Palapa", "h": "East", "d": "The barbecue palapa."}, {"n": 12, "x": 52.35, "y": 63.77, "t": "Beach Gazebo", "h": "East", "d": "A shaded gazebo right at the beach."}, {"n": 13, "x": 58.88, "y": 67.41, "t": "Entertainment Platform with Firepit", "h": "East", "d": "The beachside platform with lounge seats, a stand-up bar and a firepit."}, {"n": 14, "x": 54.7, "y": 76.52, "t": "Private Beach", "h": "East", "d": "Emara’s own white sand beach. Clear kayaks, paddleboards, snorkel gear, beach toys and life vests are here to use."}, {"n": 15, "x": 78.85, "y": 85.22, "t": "Prince’s Lookout Spot", "h": "East", "d": "Prince watched the sunset from here every day. Worth the walk for the calm of the water."}, {"n": 16, "x": 73.24, "y": 9.11, "t": "Yacht Dock", "h": "East", "d": "The marina dock, more than 200 feet long."}, {"n": 17, "x": 59.79, "y": 97.98, "t": "Iron Shore Peninsula", "h": "East", "d": "The rocky point at the tip of the property, Prince’s favorite place to look out."}, {"n": 18, "x": 43.99, "y": 57.09, "t": "Life Size Chess", "h": "East", "d": "A life-size chess board."}, {"n": 19, "x": 38.12, "y": 45.75, "t": "West Main House", "h": "West", "d": "The West main house. Rooms W1, W2 and W3 are here, along with the social kitchen and living room."}, {"n": 20, "x": 28.59, "y": 46.56, "t": "West Guest House", "h": "West", "d": "Rooms W7, W8 and W9. W7 has a small kitchen; W8 and W9 are upstairs."}, {"n": 21, "x": 32.11, "y": 38.87, "t": "Bungalows", "h": "West", "d": "Two standalone bungalows facing the marina: rooms W4 and W5."}, {"n": 22, "x": 32.11, "y": 43.12, "t": "Princess Tower + Gym", "h": "West", "d": "Room W6 is in the tower, and so is the gym, with views all around of the ocean and marina."}, {"n": 23, "x": 37.99, "y": 52.43, "t": "3-tier Infinity Pool with Swim Up Bar", "h": "West", "d": "The three-tier infinity pool overlooking the ocean, with a swim-up bar and three built-in sun loungers."}, {"n": 24, "x": 24.67, "y": 49.6, "t": "Cliffside Banquet Terrace", "h": "West", "d": "The terrace on the cliff, set up for big dinners."}, {"n": 25, "x": 48.04, "y": 61.54, "t": "Beach Lounges", "h": "West", "d": "Lounge chairs down by the water."}, {"n": 26, "x": 32.25, "y": 51.01, "t": "Breakfast Palapa", "h": "West", "d": "A shaded palapa for breakfast outdoors."}, {"n": 27, "x": 32.51, "y": 57.89, "t": "Ocean Facing Multi Use Platform", "h": "West", "d": "An open platform facing the ocean. Good for yoga."}, {"n": 28, "x": 51.31, "y": 45.75, "t": "Palapa with Firepit", "h": "West", "d": "A palapa with its own firepit, between the two houses."}, {"n": 29, "x": 41.78, "y": 53.24, "t": "Pool Bar Palapa", "h": "West", "d": "The bar beside the infinity pool."}, {"n": 30, "x": 45.04, "y": 60.32, "t": "Bayside Firepit", "h": "West", "d": "A firepit by the bay."}, {"n": 21, "x": 42.69, "y": 38.87, "dup": true}];
+const real = SPOTS.filter(s => !s.dup);
+const byN = Object.fromEntries(real.map(s => [s.n, s]));
+const map = document.getElementById('map'), info = document.getElementById('info');
+map.insertAdjacentHTML('beforeend', SPOTS.map(s => `<button class="spot" data-n="${s.n}" style="left:${s.x}%;top:${s.y}%" aria-label="${s.n}: ${esc(byN[s.n].t)}"></button>`).join(''));
+const leg = h => real.filter(s => s.h === h).map(s => `<button data-n="${s.n}"><b>${s.n}</b><span>${esc(s.t)}</span></button>`).join('');
+document.getElementById('legE').innerHTML = leg('East');
+document.getElementById('legW').innerHTML = leg('West');
+function pick(n, scroll) {
+  const s = byN[n]; if (!s) return;
+  document.querySelectorAll('[data-n]').forEach(b => b.classList.toggle('on', +b.dataset.n === +n));
+  info.innerHTML = `<div class="label">Number ${s.n} &middot; Emara ${s.h}</div><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p>`;
+  if (scroll) map.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) pick(b.dataset.n, !!b.closest('.legend')); });
+}
+</script>
+</body>
+</html>

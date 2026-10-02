@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Flights</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Flights and airport rides</div><h1>Getting There &amp; Back</h1><p class="sub">You see the flights for your own family. Cars and vans are arranged for every arrival and departure.</p></div></header>
+<section class="band band-white"><div class="wrap narrow">
+  <div class="eyebrow">Getting there</div><h2 class="sec-title">Arriving</h2>
+  <div id="arrive"><p class="loading">Loading your flights…</p></div>
+</div></section>
+<section class="band band-aqua"><div class="wrap narrow">
+  <div class="eyebrow">Sunday, November 29</div><h2 class="sec-title">Going home</h2>
+  <div id="depart"></div>
+</div></section>
+<section class="band band-white"><div class="wrap narrow">
+  <h2 class="sec-title">Good to know</h2>
+  <ul class="dots">
+    <li>Everyone needs a valid passport, babies included.</li>
+    <li>Turks and Caicos keeps the same time as New York.</li>
+    <li>A driver from Mr. VIP meets every flight. You do not need to arrange a taxi.</li>
+    <li>Tag your bags with your room before you leave home. See <a href="rooms.html">Rooms</a>.</li>
+  </ul>
+</div></section>
+</main>
+<script type="module">
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('flights.html');
+if (ctx) {
+const { data: rows } = await db.from('turks_travel').select('*').order('day').order('dep_time');
+function cards(leg) {
+  const g = {};
+  (rows || []).filter(r => r.leg === leg).forEach(r => {
+    const k = [r.day, r.carrier, r.flight, r.to_place, r.confirmation || '', ctx.isAdmin ? (ctx.byId[r.person_id] || {}).family : ''].join('|');
+    (g[k] = g[k] || { r, ppl: [] }).ppl.push(ctx.byId[r.person_id]);
+  });
+  const list = Object.values(g);
+  list.forEach(x => x.ppl.sort((a, b) => a.sort - b.sort));
+  list.sort((a, b) => a.r.day.localeCompare(b.r.day) || a.ppl[0].sort - b.ppl[0].sort);
+  if (!list.length) return '<p class="muted">No flights on file for you yet. Ask Victoria.</p>';
+  return list.map(({ r, ppl }) => {
+    ppl.sort((a, b) => a.sort - b.sort);
+    const jet = r.carrier === 'Private jet';
+    return `<div class="card">
+      <div class="meta">${esc(dayLabel(r.day))}</div>
+      <h3>${jet ? '✈️ Private jet' : '✈️ ' + esc(r.carrier) + ' ' + esc(r.flight || '')}</h3>
+      ${jet ? `<p>${esc(r.flight)}</p>` : ''}
+      <div class="times"><div class="t"><b>${esc(r.dep_time)}</b><span>${esc(r.from_place)}</span></div><div class="arrow"></div><div class="t"><b>${esc(r.arr_time)}</b><span>${esc(r.to_place)}</span></div></div>
+      <dl class="kv">
+        <dt>Who</dt><dd>${esc(names(ppl.map(p => p.name)))}</dd>
+        <dt>${jet ? 'Trip code' : 'Confirmation'}</dt><dd>${r.confirmation ? `<span class="conf">${esc(r.confirmation)}</span>` : 'Not on file yet'}</dd>
+        <dt>\u{1F690} Ride</dt><dd>${esc(r.transfer || '')}</dd>
+        ${r.note ? `<dt>Note</dt><dd>${esc(r.note)}</dd>` : ''}
+      </dl>
+      ${r.track_url ? `<p style="margin-top:14px"><a class="btn ghost small" href="${esc(r.track_url)}" target="_blank" rel="noopener">Check live flight status</a></p>` : ''}
+    </div>`;
+  }).join('');
+}
+document.getElementById('arrive').innerHTML = cards('arrive');
+document.getElementById('depart').innerHTML = cards('depart');
+}
+</script>
+</body>
+</html>

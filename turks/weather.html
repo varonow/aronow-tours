@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Weather</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Live forecast</div><h1>The Weather</h1><p class="sub">Turtle Tail, Providenciales. Updated every time you open this page.</p></div></header>
+<div id="wx"><section class="band band-white"><p class="loading">Checking the skies…</p></section></div>
+</main>
+<script type="module">
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('weather.html');
+if (ctx) {
+const LAT = 21.756, LNG = -72.214, TZ = 'America/Grand_Turk';
+const TRIP = [
+  ['2026-11-22', 'Sun Nov 22', 'Arrival day · welcome dinner'],
+  ['2026-11-23', 'Mon Nov 23', 'Barbecue night'],
+  ['2026-11-24', 'Tue Nov 24', 'Hibachi night'],
+  ['2026-11-25', 'Wed Nov 25', 'Light and fresh night'],
+  ['2026-11-26', 'Thu Nov 26', 'Thanksgiving'],
+  ['2026-11-27', 'Fri Nov 27', 'Shabbat dinner'],
+  ['2026-11-28', 'Sat Nov 28', 'Shabbat · pizza night after Havdalah'],
+  ['2026-11-29', 'Sun Nov 29', 'Going home'],
+];
+const F = c => Math.round(c * 9 / 5 + 32);
+const icon = c => c === 0 ? '☀️' : c <= 2 ? '⛅' : c <= 3 ? '☁️' : c <= 48 ? '\u{1F32B}️' : c <= 67 ? '\u{1F327}️' : c <= 82 ? '\u{1F326}️' : '⛈️';
+const desc = c => c === 0 ? 'Clear skies' : c <= 2 ? 'Partly cloudy' : c <= 3 ? 'Overcast' : c <= 48 ? 'Foggy' : c <= 57 ? 'Light drizzle' : c <= 67 ? 'Rain' : c <= 82 ? 'Passing showers' : 'Thunderstorms';
+const sea = h => h < 0.5 ? 'Calm, easy water' : h < 1 ? 'A light swell' : h < 1.5 ? 'A moderate swell' : 'Rough today';
+const wx = document.getElementById('wx');
+try {
+  const [fc, marine] = await Promise.all([
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LNG}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunset&current=temperature_2m,weathercode,windspeed_10m&windspeed_unit=mph&timezone=${encodeURIComponent(TZ)}&forecast_days=16`).then(r => r.json()),
+    fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${LAT}&longitude=${LNG}&daily=wave_height_max&hourly=sea_surface_temperature&timezone=${encodeURIComponent(TZ)}&forecast_days=3`).then(r => r.json()).catch(() => null),
+  ]);
+  const d = fc.daily, c = fc.current;
+  const row = (label, sub, i) => i < 0
+    ? `<div class="wx-row far"><div><div class="d">${label}</div><div class="a">${sub}</div></div><div class="c">Too far out</div></div>`
+    : `<div class="wx-row"><div><div class="d">${label}</div><div class="a">${sub}</div></div><div class="c" style="font-size:28px">${icon(d.weathercode[i])}</div><div class="c"><b>${F(d.temperature_2m_max[i])}°</b></div><div class="c">${F(d.temperature_2m_min[i])}°</div><div class="c">${d.precipitation_probability_max[i] ?? '—'}%</div></div>`;
+  const headRow = `<div class="wx-row head"><div>Day</div><div class="c">Sky</div><div class="c">High</div><div class="c">Low</div><div class="c">Rain</div></div>`;
+  let seaHtml = '';
+  if (marine && marine.daily) {
+    const wv = (marine.daily.wave_height_max || [])[0];
+    const st = ((marine.hourly || {}).sea_surface_temperature || []).find(x => x != null);
+    seaHtml = `<section class="band band-aqua"><div class="wrap narrow"><h2 class="sec-title" style="text-align:center">The water today</h2>
+      <div class="wx-two"><div><b>${st != null ? F(st) + '°F' : '—'}</b>Sea temperature</div><div><b>${wv != null ? (wv * 3.281).toFixed(1) + ' ft' : '—'}</b>${wv != null ? sea(wv) : 'Wave height'}</div></div></div></section>`;
+  }
+  const week = d.time.slice(0, 7).map((t, i) => row(new Date(t + 'T12:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }), desc(d.weathercode[i]), i)).join('');
+  wx.innerHTML = `<section class="band band-white"><div class="wrap narrow wx-now">
+      <div class="label">Right now at Emara</div><div class="ic">${icon(c.weathercode)}</div>
+      <div class="deg">${F(c.temperature_2m)}°</div>
+      <p class="lede">${desc(c.weathercode)} &middot; wind ${Math.round(c.windspeed_10m)} mph</p>
+      <p>Today: high ${F(d.temperature_2m_max[0])}°, low ${F(d.temperature_2m_min[0])}°, ${d.precipitation_probability_max[0] ?? 0}% chance of rain</p></div></section>
+    ${seaHtml}
+    <section class="band band-peach"><div class="wrap narrow"><div class="eyebrow">November 22–29</div><h2 class="sec-title">Our week</h2>
+      ${headRow}${TRIP.map(t => row(t[1], t[2], d.time.indexOf(t[0]))).join('')}
+      <p class="muted" style="margin-top:14px">Forecasts reach about two weeks ahead, so our days fill in as the trip gets close. Late November here is usually in the low 80s by day and the mid 70s at night, with warm water and the odd passing shower.</p></div></section>
+    <section class="band band-white"><div class="wrap narrow"><h2 class="sec-title">The next seven days</h2>${headRow}${week}</div></section>`;
+} catch (e) {
+  wx.innerHTML = `<section class="band band-white"><div class="wrap narrow" style="text-align:center"><p style="font-size:54px">\u{1F324}️</p><p class="lede">The live forecast is not available right now. Please check back soon.</p><p>Late November on Providenciales is usually in the low 80s by day and the mid 70s at night.</p></div></section>`;
+}
+}
+</script>
+</body>
+</html>
