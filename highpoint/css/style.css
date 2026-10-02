@@ -216,3 +216,9 @@ ul.dots li{margin-bottom:6px}
 footer{background:var(--ink);color:#fff;text-align:center;padding:30px 20px 36px;font-family:Jost,sans-serif;font-weight:500;font-size:15px;letter-spacing:.14em;text-transform:uppercase}
 footer .f-name{font-family:"Playfair Display",serif;font-size:26px;letter-spacing:.06em;text-transform:none;margin-bottom:4px}
 body:not(.ready) main{visibility:hidden}
+
+/* Keep the top bar clear of the iPhone status area (clock, notch, battery) */
+.nav{height:calc(68px + env(safe-area-inset-top, 0px));padding-top:env(safe-area-inset-top, 0px)}
+.nav-spacer{height:calc(68px + env(safe-area-inset-top, 0px))}
+.tabs{top:calc(68px + env(safe-area-inset-top, 0px))}
+.drawer-header{padding-top:calc(22px + env(safe-area-inset-top, 0px))}

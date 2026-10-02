@@ -178,3 +178,9 @@ body {
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
+/* Keep the top bar clear of the iPhone status area (clock, notch, battery) */
+.nav-bar { height: calc(56px + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+html body { padding-top: calc(56px + env(safe-area-inset-top, 0px)); }
+.nav-dropdown { top: calc(56px + env(safe-area-inset-top, 0px)); }
+#floating-signout { top: calc(18px + env(safe-area-inset-top, 0px)); }
+@media (max-width: 600px) { #floating-signout { top: calc(10px + env(safe-area-inset-top, 0px)); } }

@@ -291,3 +291,7 @@
   .nav-logo-text { display: none; }
   .nav-user span { display: none; }
 }
+/* Keep the top bar clear of the iPhone status area (clock, notch, battery) */
+.nav { height: calc(64px + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+.nav-spacer { height: calc(64px + env(safe-area-inset-top, 0px)); }
+.drawer-header { padding-top: calc(20px + env(safe-area-inset-top, 0px)); }

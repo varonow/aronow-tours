@@ -13,8 +13,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Marshall's Way — Packing List</title>
 <link rel="icon" type="image/png" href="images/logo.png">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/nav.css?v=2">
 <style>
 
   /* HEADER */
@@ -235,7 +235,7 @@
   /* STICKY TABS */
   .day-tabs-wrap {
     background: var(--white);
-    position: sticky; top: 64px; z-index: 100;
+    position: sticky; top: calc(64px + env(safe-area-inset-top, 0px)); z-index: 100;
     border-bottom: 2px solid var(--sand-dark);
     box-shadow: 0 2px 12px rgba(26,51,80,0.08);
   }
@@ -266,7 +266,7 @@
 
   /* SCROLL PROGRESS */
   .scroll-progress {
-    position: fixed; top: 64px; left: 0; height: 3px;
+    position: fixed; top: calc(64px + env(safe-area-inset-top, 0px)); left: 0; height: 3px;
     background: linear-gradient(90deg, var(--terracotta), var(--gold));
     z-index: 200; transition: width 0.1s; width: 0%;
   }

@@ -20,7 +20,7 @@
     background:radial-gradient(1100px 600px at 50% -8%, #17324e 0%, rgba(23,50,78,0) 58%),linear-gradient(160deg,#0a1826 0%,#0D1F33 48%,#0a1420 100%);
     min-height:100dvh;padding:0 22px 64px;
   }
-  .topbar{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:22px 0 8px}
+  .topbar{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:calc(22px + env(safe-area-inset-top, 0px)) 0 8px}
   .brandmini{display:flex;align-items:center;gap:11px}
   .brandmini svg{width:34px;height:34px;display:block}
   .brandmini .txt{font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}

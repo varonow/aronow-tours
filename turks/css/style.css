@@ -268,3 +268,11 @@ details.more summary::after{content:"+";margin-left:auto;font-size:30px;line-hei
 details.more[open] summary::after{content:"\2212"}
 details.more summary::-webkit-details-marker{display:none}
 details.more ul{margin:4px 0 16px}
+
+/* iPhone home-screen app: keep the top bar clear of the clock, notch and battery */
+:root{--safe-top:env(safe-area-inset-top,0px)}
+.nav{height:calc(68px + var(--safe-top));padding-top:var(--safe-top)}
+.nav-spacer{height:calc(68px + var(--safe-top))}
+.tabs{top:calc(68px + var(--safe-top))}
+.drawer-header{padding-top:calc(22px + var(--safe-top))}
+.nav-drawer{padding-bottom:env(safe-area-inset-bottom,0px)}
