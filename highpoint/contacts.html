@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2B2A28">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="High Point">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>High Point Market — Contacts</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+<main>
+<header class="page-head"><div class="wrap"><div class="eyebrow">Confirmations and who to call</div><h1>Contacts</h1><p class="sub">Tap a phone number to call, or an address to open it in Maps.</p></div></header>
+<section class="band"><div class="wrap narrow" id="list"><p class="loading">Loading…</p></div></section>
+</main>
+<script type="module">
+import { start, db, esc, today, mapUrl, logistics, FOOTER } from './js/app.js?v=1';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('contacts.html');
+if (ctx) {
+const L = await logistics();
+const TITLE = { Us: 'The two of us', Booked: 'What is booked', Dinners: 'Dinner reservations' };
+const groups = [];
+((L && L.contacts) || []).forEach(c => { let g = groups.find(x => x.k === c.grp); if (!g) groups.push(g = { k: c.grp, rows: [] }); g.rows.push(c); });
+document.getElementById('list').innerHTML = groups.map((g, i) => `<h2 class="sec-title" style="margin-top:${i ? 30 : 0}px;margin-bottom:14px">${esc(TITLE[g.k] || g.k)}</h2>` + g.rows.map(c => `
+  <div class="card"><div class="meta">${esc(c.role || '')}</div><h3>${esc(c.name)}</h3>
+  ${c.note ? `<p>${esc(c.note)}</p>` : ''}
+  ${c.address ? `<p><a href="${mapUrl(c.address)}" target="_blank" rel="noopener">${esc(c.address)}</a></p>` : ''}
+  ${c.phone || c.email ? `<p style="margin-top:12px;display:flex;flex-wrap:wrap;gap:10px">
+    ${c.phone ? `<a class="btn small" href="tel:${esc(c.phone.replace(/[^+\d]/g, ''))}">📞 ${esc(c.phone)}</a>` : ''}
+    ${c.email ? `<a class="btn ghost small" href="mailto:${esc(c.email)}">✉️ ${esc(c.email)}</a>` : ''}</p>` : ''}
+  </div>`).join('')).join('') || '<p class="err">Could not load the contacts. Please refresh.</p>';
+}
+</script>
+</body>
+</html>

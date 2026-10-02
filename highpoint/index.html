@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2B2A28">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="High Point">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>High Point Market — Home</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+<main>
+<section class="hero">
+  <div class="eyebrow">Fall 2026 &middot; Sourcing trip</div>
+  <h1>High Point Market</h1>
+  <p class="hero-welcome" id="welcome">Welcome</p>
+  <p class="hero-where">Sunday, October 18 to Wednesday, October 21</p>
+  <div class="rule"></div>
+  <div class="count" id="count"><div><b id="cd">&ndash;</b><span>Days</span></div><div><b id="ch">&ndash;</b><span>Hours</span></div><div><b id="cm">&ndash;</b><span>Min</span></div><div><b id="cs">&ndash;</b><span>Sec</span></div></div>
+  <p class="hero-until" id="until">until wheels up at LaGuardia</p>
+</section>
+<section class="band band-paper"><div class="wrap narrow" style="text-align:center">
+  <div class="eyebrow">What we are there for</div>
+  <h2 class="sec-title">Floors for 207. Lighting and furniture for 203 and 207.</h2>
+  <p>One area of town per day. Walk the core, drive the scattered stops. Danielle has the appointments under DDD Design, and the badges are secured.</p>
+  <p style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><a class="btn" href="schedule.html">🗓️ See the schedule</a><a class="btn ghost" href="buylist.html">📸 Open the Buy List</a></p>
+</div></section>
+<section class="band band-stone"><div class="wrap">
+  <div class="eyebrow">Getting there and back</div><h2 class="sec-title">Flights</h2>
+  <div id="flights"><p class="loading">Loading…</p></div>
+</div></section>
+<section class="band band-paper"><div class="wrap">
+  <div class="grid2">
+    <div><div class="eyebrow">Where we are staying</div><h2 class="sec-title">Hotel</h2><div id="hotel"></div></div>
+    <div><div class="eyebrow">Getting around</div><h2 class="sec-title">Rental car</h2><div id="car"></div></div>
+  </div>
+</div></section>
+<section class="band band-ink"><div class="wrap">
+  <div class="eyebrow">All booked, party of two</div><h2 class="sec-title">Dinners</h2>
+  <div class="grid2" id="dinners" style="margin-top:14px"></div>
+</div></section>
+<section class="band band-stone"><div class="wrap">
+  <h2 class="sec-title" style="text-align:center;margin-bottom:22px">Where would you like to go?</h2>
+  <div class="tiles" id="tiles"></div>
+</div></section>
+</main>
+<script type="module">
+import { start, db, esc, today, mapUrl, logistics, FOOTER } from './js/app.js?v=1';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('index.html');
+if (ctx) {
+const { NAV_ITEMS } = await import('./js/nav.js?v=1');
+const $ = id => document.getElementById(id);
+$('tiles').innerHTML = NAV_ITEMS.filter(n => n.href !== 'index.html').map(n =>
+  `<a class="tile" href="${n.href}"><span class="em">${n.icon}</span><span class="tl">${n.label}</span><span class="td">${n.desc}</span></a>`).join('');
+$('welcome').textContent = 'Welcome, ' + ctx.name;
+
+const L = await logistics();
+if (!L) { $('flights').innerHTML = '<p class="err">Could not load the trip details. Please refresh.</p>'; }
+else {
+  const f = L.flights;
+  $('flights').innerHTML = `<div class="grid2">` + f.legs.map(l => `<div class="card">
+    <div class="meta">${esc(l.day)} &middot; ${esc(f.airline)} ${esc(l.flight)}</div>
+    <div class="times"><div class="t"><b>${esc(l.dep)}</b><span>${esc(l.from)} &middot; ${esc(l.fromCity)}</span></div><div class="arrow"></div><div class="t"><b>${esc(l.arr)}</b><span>${esc(l.to)} &middot; ${esc(l.toCity)}</span></div></div>
+    <dl class="kv"><dt>Seats</dt><dd>${esc(l.seats)}, ${esc(l.cabin)}</dd></dl></div>`).join('') + `</div>
+    <p style="margin-top:18px">Confirmation <span class="conf">${esc(f.conf)}</span> &nbsp;&middot;&nbsp; SkyMiles ${esc(f.skymiles)}</p>`;
+  const h = L.hotel;
+  $('hotel').innerHTML = `<div class="card"><div class="meta">Reservation ${esc(h.res)}</div><h3>${esc(h.name)}</h3>
+    <p><a href="${mapUrl(h.name + ', ' + h.address)}" target="_blank" rel="noopener">${esc(h.address)}</a></p>
+    <dl class="kv"><dt>Check in</dt><dd>${esc(h.checkin)}</dd><dt>Check out</dt><dd>${esc(h.checkout)}</dd><dt>Guests</dt><dd>${esc(h.guests)}</dd>
+    ${h.rooms.map(r => `<dt>${esc(r.night.split(',')[0])}</dt><dd>${esc(r.room)}, ${esc(r.rate)}</dd>`).join('')}
+    <dt>Total</dt><dd>${esc(h.total)}</dd></dl>
+    <div class="note">${esc(h.note)}</div></div>`;
+  const c = L.car;
+  $('car').innerHTML = `<div class="card"><div class="meta">Confirmation ${esc(c.conf)}</div><h3>${esc(c.company)} at GSO</h3>
+    <p>${esc(c.vehicle)}</p>
+    <p><a href="${mapUrl(c.address)}" target="_blank" rel="noopener">${esc(c.address)}</a></p>
+    <dl class="kv"><dt>Pick up</dt><dd>${esc(c.pickup)}</dd><dt>Return</dt><dd>${esc(c.ret)}</dd><dt>Under</dt><dd>${esc(c.under)}</dd><dt>Cost</dt><dd>${esc(c.total)}</dd><dt>Delta itinerary</dt><dd>${esc(c.itin)}</dd></dl>
+    <div class="note">${esc(c.todo)}</div></div>`;
+  $('dinners').innerHTML = L.dinners.map(d => `<div><div class="eyebrow">${esc(d.day)} &middot; ${esc(d.time)}</div><h3 style="font-size:28px">${esc(d.name)}</h3><p>${esc(d.where)}</p><p style="margin-top:6px"><a style="color:#fff" href="${mapUrl(d.address)}" target="_blank" rel="noopener">Open in Maps</a></p></div>`).join('');
+}
+
+const target = new Date('2026-10-18T10:30:00-04:00'), home = new Date('2026-10-21T12:14:00-04:00');
+function tick() {
+  const x = target - new Date();
+  if (x <= 0) { $('count').style.display = 'none'; $('until').textContent = new Date() > home ? 'Home again. On to the orders.' : 'We are at Market. Happy hunting.'; return; }
+  $('cd').textContent = Math.floor(x / 864e5); $('ch').textContent = Math.floor(x / 36e5) % 24;
+  $('cm').textContent = Math.floor(x / 6e4) % 60; $('cs').textContent = Math.floor(x / 1e3) % 60;
+}
+tick(); setInterval(tick, 1000);
+}
+</script>
+</body>
+</html>

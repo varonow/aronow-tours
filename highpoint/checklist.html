@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2B2A28">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="High Point">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>High Point Market — Checklist</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+<main>
+<header class="page-head"><div class="wrap"><div class="eyebrow">Before we go</div><h1>Checklist</h1><p class="sub">Tick things off as they are done. You both see the same list.</p></div></header>
+<section class="band"><div class="wrap narrow">
+  <div class="label" id="prog">&nbsp;</div><div class="bar"><i id="bar"></i></div>
+  <div id="list" style="margin-top:6px"><p class="loading">Loading…</p></div>
+</div></section>
+<section class="band band-paper"><div class="wrap narrow">
+  <div class="eyebrow">For Guild, Walker and Unique Kitchens &amp; Baths</div>
+  <h2 class="sec-title">Ask each 207 millworker</h2>
+  <ul class="dots" style="margin-top:10px"><li>Do you install in New York City?</li><li>What is your lead time?</li><li>Will you work from our drawings?</li></ul>
+</div></section>
+<section class="band band-stone"><div class="wrap narrow">
+  <h2 class="sec-title">On the show floor</h2>
+  <ul class="dots" style="margin-top:10px"><li>Photograph the price tag with every piece you like, then add it to the <a href="buylist.html">Buy List</a>.</li><li>A free Market shuttle loops between the buildings.</li><li>One area of town per day. Walk the core, drive the scattered stops.</li></ul>
+</div></section>
+</main>
+<script type="module">
+import { start, db, esc, today, mapUrl, logistics, FOOTER } from './js/app.js?v=1';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+import { CHECKLIST } from './js/data.js?v=1';
+const ctx = await start('checklist.html');
+if (ctx) {
+const $ = id => document.getElementById(id);
+let state = {};
+const all = CHECKLIST.flatMap(g => g.items);
+function draw() {
+  $('list').innerHTML = CHECKLIST.map(g => `<h2 class="sec-title" style="margin-top:30px">${esc(g.grp)}</h2>` + g.items.map(([k, t]) => {
+    const s = state[k]; const on = s && s.done;
+    return `<label class="chk ${on ? 'done' : ''}"><input type="checkbox" data-k="${k}" ${on ? 'checked' : ''}><span><span class="chk-t">${esc(t)}</span>${on && s.by_name ? `<span class="chk-by">Done by ${esc(s.by_name)}</span>` : ''}</span></label>`;
+  }).join('')).join('');
+  const n = all.filter(([k]) => state[k] && state[k].done).length;
+  $('prog').textContent = n + ' of ' + all.length + ' done'; $('bar').style.width = (100 * n / all.length) + '%';
+}
+async function load() {
+  const { data, error } = await db.from('highpoint_checks').select('*');
+  if (error) { $('list').innerHTML = '<p class="err">Could not load the checklist. Please refresh.</p>'; return; }
+  state = Object.fromEntries((data || []).map(r => [r.key, r])); draw();
+}
+$('list').addEventListener('change', async e => {
+  const k = e.target.dataset.k; if (!k) return;
+  const row = { key: k, done: e.target.checked, by_name: ctx.name, updated_at: new Date().toISOString() };
+  const prev = state[k]; state[k] = row; draw();
+  const { error } = await db.from('highpoint_checks').upsert(row);
+  if (error) { state[k] = prev; draw(); $('prog').innerHTML = '<span class="err">That did not save. Please try again.</span>'; }
+});
+load();
+}
+</script>
+</body>
+</html>

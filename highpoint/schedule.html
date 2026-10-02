@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#2B2A28">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="High Point">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>High Point Market — Schedule</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css?v=1">
+</head>
+<body>
+<main>
+<header class="page-head"><div class="wrap"><div class="eyebrow">Every showroom, in walking order</div><h1>Schedule</h1><p class="sub">Tap an address to open it in Maps. Tap &ldquo;Add to Buy List&rdquo; when something is worth a photo.</p></div></header>
+<div class="tabs" id="tabs"></div>
+<section class="band"><div class="wrap narrow" id="day"></div></section>
+<section class="band band-paper"><div class="wrap narrow">
+  <h2 class="sec-title">What the labels mean</h2>
+  <div class="key">
+    <span><b style="color:var(--ok)">✓ Booked / Confirmed</b> An appointment is set.</span>
+    <span><b style="color:var(--brass-ink)">To book</b> Needs an appointment before we go.</span>
+    <span><b style="color:var(--brass-ink)">Email ahead</b> Write to them before Market.</span>
+    <span><b>Heads-up</b> Let them know we are coming.</span>
+    <span><b>Walk-in</b> No appointment needed.</span>
+  </div>
+  <p style="margin-top:18px">A free Market shuttle loops between the buildings. Photograph the price tag with every piece you like.</p>
+</div></section>
+</main>
+<script type="module">
+import { start, db, esc, today, mapUrl, logistics, FOOTER } from './js/app.js?v=1';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+import { DAYS, PLAN } from './js/data.js?v=1';
+const ctx = await start('schedule.html');
+if (ctx) {
+const L = await logistics();
+const $ = id => document.getElementById(id);
+const t = today();
+let cur = Math.max(0, DAYS.findIndex(d => d.iso === t));
+const want = new URLSearchParams(location.search).get('day');
+if (want && DAYS.some(d => d.iso === want)) cur = DAYS.findIndex(d => d.iso === want);
+const FULL = { Sun: 'Sunday', Mon: 'Monday', Tue: 'Tuesday' };
+
+function ven(v) {
+  const addr = v.addr ? `<a href="${mapUrl(v.name + ', ' + v.addr)}" target="_blank" rel="noopener">${esc(v.space)}</a>` : esc(v.space);
+  return `<div class="ven s-${v.plan}">
+    <div class="ven-top"><h3>${esc(v.name)}</h3>${v.time ? `<span class="ven-time">${esc(v.time)}</span>` : ''}</div>
+    <div class="ven-space">${addr}</div>
+    <p class="ven-what">${esc(v.what)}</p>
+    <div class="ven-foot"><span class="ven-plan">${v.plan === 'booked' || v.plan === 'confirmed' ? '✓ ' : ''}${PLAN[v.plan]}${v.time && v.plan === 'book' ? ' for ' + esc(v.time) : ''}${v.quick ? ' &middot; ' + esc(v.quick) : ''}</span>
+    <a class="ven-add" href="buylist.html?add=${encodeURIComponent(v.name)}">📸 Add to Buy List</a></div></div>`;
+}
+function draw() {
+  const d = DAYS[cur];
+  $('tabs').innerHTML = DAYS.map((x, i) => `<button class="tab ${i === cur ? 'on' : ''}" data-i="${i}">${x.tab}<b>${x.num}</b></button>`).join('');
+  const din = L && L.dinners.find(x => x.iso === d.iso);
+  $('day').innerHTML = `<div class="eyebrow">${esc(d.label)}</div><h2 class="sec-title">${esc(d.title)}</h2><p style="margin-bottom:30px">${esc(d.intro)}</p>` +
+    d.stops.map(s => `<div class="stop"><div class="stop-head">
+      <div class="stop-time">${s.car ? '🚗 By car &middot; ' : ''}${esc(s.time)}</div><h2>${esc(s.name)}</h2>
+      <div class="stop-addr"><a href="${mapUrl(s.addr)}" target="_blank" rel="noopener">${esc(s.addr.replace(', High Point, NC', ''))}</a></div>
+      ${s.note ? `<p class="stop-note">${esc(s.note)}</p>` : ''}</div>
+      <div style="margin-top:14px">${s.vendors.map(ven).join('')}</div></div>`).join('') +
+    (din ? `<div class="dinner"><div class="label">Dinner &middot; ${esc(din.time)}</div><h3>${esc(din.name)}</h3><p>${esc(din.where)}</p><p style="margin-top:6px"><a href="${mapUrl(din.address)}" target="_blank" rel="noopener">Open in Maps</a></p></div>` : '') +
+    `<p style="margin-top:26px"><a class="btn ghost" href="map.html?day=${d.iso}">📍 See ${FULL[d.tab]} on the map</a></p>`;
+}
+$('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; cur = +b.dataset.i; draw(); window.scrollTo({ top: $('tabs').offsetTop - 68 }); });
+draw();
+}
+</script>
+</body>
+</html>
