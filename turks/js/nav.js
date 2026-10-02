@@ -2,13 +2,13 @@ import { getCurrentUser, signOut } from './supabase.js';
 
 export const NAV_ITEMS = [
   { label: 'Home',        desc: 'Countdown and your trip',        href: 'index.html',     icon: '\u{1F3E0}' },
+  { label: 'Estate map',  desc: 'Find your way around Emara',     href: 'map.html',       icon: '\u{1F5FA}️' },
   { label: 'Itinerary',   desc: 'Day by day',                     href: 'itinerary.html', icon: '\u{1F5D3}️' },
   { label: 'Rooms',       desc: 'Who is staying where',           href: 'rooms.html',     icon: '\u{1F6CF}️' },
   { label: 'Flights',     desc: 'Your flights and airport rides', href: 'flights.html',   icon: '✈️' },
   { label: 'Menus',       desc: 'Breakfast, lunch and dinner',    href: 'menus.html',     icon: '\u{1F37D}️' },
   { label: 'Sign-ups',    desc: 'Massage, tennis, swim, basketball', href: 'signups.html', icon: '\u{1F4DD}' },
   { label: 'Thankful',    desc: 'Your Thanksgiving message',      href: 'thankful.html',  icon: '\u{1F983}' },
-  { label: 'Estate map',  desc: 'Find your way around Emara',     href: 'map.html',       icon: '\u{1F5FA}️' },
   { label: 'Nannies',     desc: 'Who is with which children',     href: 'nannies.html',   icon: '\u{1F9F8}' },
   { label: 'Weather',     desc: 'Live forecast for Turtle Tail',  href: 'weather.html',   icon: '☀️' },
   { label: 'House rules', desc: 'Rules, Shabbat and good to know', href: 'rules.html',    icon: '\u{1F4CB}' },
@@ -29,7 +29,7 @@ export function renderNav(activePage = '') {
     <nav class="nav"><div class="nav-inner">
       <button class="nav-hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu"><span></span><span></span><span></span></button>
       <a href="index.html" class="nav-logo">THANKS &amp; CAICOS</a>
-      <div class="nav-user">${user || ''}</div>
+      <div class="nav-right"><a class="nav-map" href="map.html" aria-label="Estate map">\u{1F5FA}\uFE0F<span>Map</span></a><div class="nav-user">${user || ''}</div></div>
     </div></nav>
     <div class="nav-overlay" id="navOverlay" onclick="closeDrawer()"></div>
     <div class="nav-drawer" id="navDrawer">

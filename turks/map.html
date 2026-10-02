@@ -19,12 +19,28 @@
 <main>
 <header class="page-head "><div class="wrap"><div class="eyebrow">Eight acres on Turtle Tail</div><h1>The Estate</h1><p class="sub">Tap any number on the map, or any name in the list, to see what it is.</p></div></header>
 <figure class="photo"><img src="images/estate-aerial.jpg" alt="Emara Estate from the air" style="object-position:center" loading="lazy"><figcaption>Emara Estate, Turtle Tail</figcaption></figure>
+<div class="tabs" id="mtabs" style="grid-template-columns:1fr 1fr"><button class="tab on" data-v="places">📍 Places</button><button class="tab" data-v="rooms">🛏️ Rooms</button></div>
+<div id="viewPlaces">
 <section class="band band-white"><div class="wrap">
   <div class="map-box" id="map"><img src="images/map.jpg" alt="Illustrated map of Emara Estate with numbered places" width="1532" height="988"></div>
   <div class="map-info" id="info"><div class="label">Emara Estate</div><h3>Tap a number</h3><p>Emara East is on the right of the map and Emara West on the left. The beach sits between them.</p></div>
 </div></section>
 <section class="band band-aqua"><div class="wrap"><div class="eyebrow">Turquoise tags</div><h2 class="sec-title">Emara East</h2><div class="legend" id="legE"></div></div></section>
 <section class="band band-peach"><div class="wrap"><div class="eyebrow">Coral tags</div><h2 class="sec-title">Emara West</h2><div class="legend" id="legW"></div></div></section>
+</div>
+<div id="viewRooms" hidden>
+<section class="band band-white"><div class="wrap">
+  <div class="eyebrow">Coral tags</div><h2 class="sec-title">Emara West rooms</h2>
+  <div class="zoom" id="zoomW"><div class="zoom-in" style="width:312.5%;height:333.33%;left:-56.25%;top:-93.33%"><img src="images/map.jpg" alt="Close-up of the Emara West side of the estate map"></div></div>
+  <div class="rlist" id="listW"></div>
+</div></section>
+<section class="band band-aqua"><div class="wrap">
+  <div class="eyebrow">Turquoise tags</div><h2 class="sec-title">Emara East rooms</h2>
+  <div class="zoom" id="zoomE"><div class="zoom-in" style="width:312.5%;height:333.33%;left:-162.5%;top:-103.33%"><img src="images/map.jpg" alt="Close-up of the Emara East side of the estate map"></div></div>
+  <div class="rlist" id="listE"></div>
+</div></section>
+<section class="band band-white"><div class="wrap narrow"><p>The two bungalows are W4 and W5. For what is inside each room, see <a href="rooms.html">Rooms</a>.</p></div></section>
+</div>
 </main>
 <script type="module">
 import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js';
@@ -46,6 +62,43 @@ function pick(n, scroll) {
   info.innerHTML = `${PHOTOS[s.n] ? `<img src="images/${PHOTOS[s.n]}" alt="">` : ''}<div class="label">Number ${s.n} &middot; Emara ${s.h}</div><h3>${esc(s.t)}</h3><p>${esc(s.d)}</p>`;
   if (scroll) map.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// ----- Rooms view: where each bedroom is -----
+const BLD = [
+  { h: 'W', key: 'wmain', name: 'West Main House', lab: 'W1–W3', rooms: ['W1', 'W2', 'W3'], at: [[38.8, 46.2]] },
+  { h: 'W', key: 'wbung', name: 'The two bungalows', lab: 'W4 · W5', rooms: ['W4', 'W5'], at: [[31.5, 38.2], [42.7, 38.9]] },
+  { h: 'W', key: 'wtower', name: 'Princess Tower', lab: 'W6', rooms: ['W6'], at: [[32.6, 42.6]] },
+  { h: 'W', key: 'wguest', name: 'West Guest House', lab: 'W7–W9', rooms: ['W7', 'W8', 'W9'], at: [[27.0, 47.6]] },
+  { h: 'E', key: 'emain', name: 'East Main House', lab: 'E1–E5', rooms: ['E1', 'E2', 'E3', 'E4', 'E5'], at: [[71.0, 43.1]] },
+  { h: 'E', key: 'eprince', name: 'Prince’s Room, by the pool', lab: 'E6', rooms: ['E6'], at: [[66.6, 51.0]] },
+  { h: 'E', key: 'eguest', name: 'East Guest House', lab: 'E7 · E8', rooms: ['E7', 'E8'], at: [[61.6, 46.4]] },
+];
+const myRooms = new Set([...(ctx.me ? [ctx.me] : []), ...ctx.kids].flatMap(p => p.rooms));
+const who = code => names(ctx.people.filter(p => p.rooms.includes(code)).map(p => p.short));
+for (const h of ['W', 'E']) {
+  const zin = document.querySelector('#zoom' + h + ' .zoom-in');
+  const list = document.getElementById('list' + h);
+  BLD.filter(b => b.h === h).forEach(b => {
+    const mine = b.rooms.some(r => myRooms.has(r));
+    b.at.forEach(([x, y]) => zin.insertAdjacentHTML('beforeend', `<button class="rlab ${mine ? 'mine' : ''}" data-b="${b.key}" style="left:${x}%;top:${y}%">${b.lab}</button>`));
+    list.insertAdjacentHTML('beforeend', `<div class="rbld" id="b-${b.key}"><h3><span class="rtag ${mine ? 'mine' : ''}">${b.lab}</span> ${esc(b.name)}</h3>` +
+      b.rooms.map(r => `<p><b>${r}</b> &nbsp;${esc(who(r)) || '&mdash;'}${myRooms.has(r) ? ' <span class="label">&middot; yours</span>' : ''}</p>`).join('') + `</div>`);
+  });
+}
+document.addEventListener('click', e => {
+  const l = e.target.closest('.rlab');
+  if (l) {
+    document.querySelectorAll('.rbld').forEach(x => x.classList.remove('on'));
+    const t = document.getElementById('b-' + l.dataset.b); t.classList.add('on'); t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  const tab = e.target.closest('#mtabs .tab');
+  if (tab) {
+    document.querySelectorAll('#mtabs .tab').forEach(t => t.classList.toggle('on', t === tab));
+    document.getElementById('viewPlaces').hidden = tab.dataset.v !== 'places';
+    document.getElementById('viewRooms').hidden = tab.dataset.v !== 'rooms';
+  }
+});
+if (location.hash === '#rooms') document.querySelector('#mtabs [data-v="rooms"]').click();
 document.addEventListener('click', e => { const b = e.target.closest('[data-n]'); if (b) pick(b.dataset.n, !!b.closest('.legend')); });
 }
 </script>

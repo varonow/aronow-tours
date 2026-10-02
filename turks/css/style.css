@@ -222,3 +222,25 @@ figure.photo figcaption{background:var(--ink);color:#fff;font-family:Jost,sans-s
 @media(min-width:820px){.map-teaser{grid-template-columns:1.2fr 1fr}}
 .room-photo{width:100%;margin:0 0 14px;aspect-ratio:3/2;object-fit:cover}
 .map-info img{width:100%;max-height:340px;object-fit:cover;margin-bottom:14px}
+
+/* map shortcut in the top bar */
+.nav-right{display:flex;align-items:center;gap:6px}
+.nav-map{display:flex;align-items:center;gap:6px;min-height:48px;padding:0 10px;font-size:24px;text-decoration:none;border:2px solid var(--teal);background:var(--white)}
+.nav-map span{font-family:Jost,sans-serif;font-weight:600;font-size:17px;color:var(--ink)}
+.nav-user{min-width:0}
+@media(max-width:560px){.nav-user{display:none}}
+
+/* map: rooms view */
+[hidden]{display:none!important}
+.zoom{position:relative;overflow:hidden;aspect-ratio:1.654;border:2px solid var(--teal);background:#fff}
+.zoom-in{position:absolute}
+.zoom-in img{width:100%;height:100%}
+.rlab{position:absolute;transform:translate(-50%,-50%);background:var(--ink);color:#fff;border:2px solid #fff;font-family:Jost,sans-serif;font-weight:600;font-size:clamp(14px,2.2vw,22px);line-height:1;padding:5px 7px;white-space:nowrap;cursor:pointer}
+.rlab.mine,.rtag.mine{background:var(--coral-ink)}
+.rlist{display:grid;gap:0 26px;margin-top:18px}
+@media(min-width:760px){.rlist{grid-template-columns:1fr 1fr}}
+.rbld{border-top:3px solid var(--coral);padding:14px 8px 16px}
+.rbld.on{background:var(--peach)}
+.rbld h3{font-size:25px;color:var(--ink);margin-bottom:6px}
+.rtag{display:inline-block;background:var(--ink);color:#fff;font-family:Jost,sans-serif;font-weight:600;font-size:16px;padding:4px 7px;vertical-align:middle;margin-right:6px}
+.rbld p b{font-family:Jost,sans-serif;font-weight:600;color:var(--teal)}
