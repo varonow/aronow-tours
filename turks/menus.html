@@ -69,7 +69,7 @@ const D = {
   kids: ['Sunday through Friday: a rotation of chicken nuggets, mini meatballs, schnitzel strips, hot dogs, and mini burgers, with plain rice, pasta with olive oil, or fries', 'Saturday: cheese pizza and buttered pasta', 'Every night: soft-cooked vegetables (broccoli, cauliflower, soft carrots)'],
 };
 const ul = a => `<ul class="dots">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
-const dayHtml = d => `<div class="day ${d[0] === today ? 'today' : ''}"><div class="kind">${esc(d[1])}${d[0] === today ? ' · Today' : ''}</div><h3>${esc(dayLabel(d[0]))}</h3>
+const dayHtml = d => `<div class="day ${d[0] === today ? 'today' : ''}">${d[1] || d[0] === today ? `<div class="kind">${esc([d[1], d[0] === today ? 'Today' : ''].filter(Boolean).join(' · '))}</div>` : ''}<h3>${esc(dayLabel(d[0]))}</h3>
   <dl>${d[2].map(x => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join('')}</dl></div>`;
 function meal(M, title) {
   return `<section class="band band-white"><div class="wrap narrow"><h2 class="sec-title">${title}</h2><p class="sec-sub"><b>${esc(M.when)}</b></p>
@@ -87,7 +87,7 @@ const VIEWS = {
 };
 function show(t) {
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.t === t));
-  document.getElementById('menu').innerHTML = VIEWS[t]() + `<section class="band band-white"><div class="wrap narrow"><div class="note"><b>Kosher notes.</b> Dairy and meat meals are prepared and served with separate dishes and utensils. Fish is always on its own platter with its own utensils. Desserts on meat nights are parve.</div></div></section>`;
+  document.getElementById('menu').innerHTML = VIEWS[t]();
   const t2 = document.querySelector('.day.today'); if (t2) t2.scrollIntoView({ block: 'center' });
 }
 document.getElementById('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) { show(b.dataset.t); window.scrollTo({ top: 0 }); } });
