@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Lora:ital,wght@0,500;0,600;1,500&family=Jost:wght@500;600&display=swap');
 :root{
-  --turq:#1FC3C3; --teal:#0E7C86; --ink:#0A4F58; --ink-2:#093E45;
-  --aqua:#DDF5F2; --peach:#F8E0D0; --white:#FFFFFF;
-  --coral:#C8553D; --coral-ink:#8E3423;
-  --line:#BFDEDB; --shadow:0 6px 24px rgba(10,79,88,.12);
+  --turq:#5CC3D8; --teal:#0F6E8C; --ink:#0B3C55; --ink-2:#082C40;
+  --aqua:#DDF1F6; --peach:#FFE9CC; --white:#FFFFFF;
+  --coral:#F28C28; --coral-ink:#9A4E05;
+  --line:#BCDDE6; --shadow:0 6px 24px rgba(11,60,85,.12);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -26,7 +26,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .nav-logo{font-family:"DM Serif Display",serif;font-size:21px;letter-spacing:.06em;color:var(--teal);text-decoration:none;white-space:nowrap}
 .nav-user{font-family:Jost,sans-serif;font-weight:600;font-size:18px;min-width:56px;text-align:right;padding-right:8px}
 .nav-spacer{height:68px}
-.nav-overlay{position:fixed;inset:0;background:rgba(9,62,69,.55);z-index:1001;opacity:0;pointer-events:none;transition:opacity .25s}
+.nav-overlay{position:fixed;inset:0;background:rgba(8,44,64,.55);z-index:1001;opacity:0;pointer-events:none;transition:opacity .25s}
 .nav-overlay.open{opacity:1;pointer-events:all}
 .nav-drawer{position:fixed;top:0;left:-360px;width:min(340px,88vw);height:100dvh;background:var(--white);z-index:1002;transition:left .3s ease;display:flex;flex-direction:column;border-right:2px solid var(--teal)}
 .nav-drawer.open{left:0}
@@ -120,7 +120,7 @@ ul.dots li{margin-bottom:6px}
 .room-mine{font-family:Jost,sans-serif;font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral-ink)}
 .room-detail{grid-column:1/-1;background:var(--white);border:2px solid var(--teal);padding:18px;margin-top:8px}
 .room-detail h3{font-size:26px;color:var(--ink)}
-.house-west .room-code{color:var(--coral)}
+.house-west .room-code{color:var(--coral-ink)}
 
 /* forms */
 .field{margin-bottom:18px}
@@ -153,13 +153,13 @@ ul.dots li{margin-bottom:6px}
 .map-box{position:relative;border:2px solid var(--teal);background:#fff;overflow:hidden;touch-action:pan-y}
 .map-box img{width:100%}
 .spot{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:0;background:transparent;cursor:pointer}
-.spot.on{box-shadow:0 0 0 4px var(--coral),0 0 0 8px rgba(255,255,255,.9);background:rgba(200,85,61,.18)}
+.spot.on{box-shadow:0 0 0 4px var(--coral),0 0 0 8px rgba(255,255,255,.9);background:rgba(242,140,40,.25)}
 .map-info{border:2px solid var(--teal);border-top:0;background:var(--white);padding:18px 20px;min-height:120px}
 .map-info h3{font-size:28px;color:var(--ink)}
 .legend{display:grid;gap:0 26px}
 @media(min-width:760px){.legend{grid-template-columns:1fr 1fr}}
 .legend button{display:flex;gap:14px;align-items:center;width:100%;min-height:54px;background:none;border:0;border-top:2px solid var(--line);text-align:left;cursor:pointer;font-size:20px;padding:6px 4px}
-.legend button b{font-family:"DM Serif Display",serif;font-weight:400;font-size:24px;color:var(--coral);width:34px;flex-shrink:0}
+.legend button b{font-family:"DM Serif Display",serif;font-weight:400;font-size:24px;color:var(--coral-ink);width:34px;flex-shrink:0}
 .legend button.on{background:var(--white)}
 
 /* weather */
@@ -201,3 +201,9 @@ body:not(.ready) main{visibility:hidden}
 details.room-more{grid-column:1/-1}
 details.room-more summary{font-family:Jost,sans-serif;font-weight:600;font-size:18px;min-height:48px;display:flex;align-items:center;cursor:pointer;color:var(--teal)}
 details.room-more .room-detail{margin-top:0}
+
+/* Mango Sunset: full-strength ocean band */
+.band-bright{background:var(--turq)}
+.band-bright .sec-title,.band-bright .eyebrow{color:var(--ink)}
+.tile{border-color:var(--white)}
+.band-aqua .tile,.band-white .tile{border-color:var(--teal)}
