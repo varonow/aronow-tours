@@ -72,6 +72,7 @@ export function renderNav(activePage = '') {
         ${drawerItems}
       </nav>
       <div class="drawer-footer">
+        <a class="drawer-signout drawer-hub" href="../index.html">🧭 &nbsp; All Aronow Tours trips</a>
         <button class="drawer-signout" onclick="handleSignOut()">
           🚪 &nbsp; Sign Out
         </button>

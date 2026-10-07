@@ -50,7 +50,7 @@ function injectNav() {
           <span></span><span></span><span></span>
         </button>
       </div>
-      <div class="nav-dropdown" id="navDropdown"><div class="nav-dropdown-inner">${linksHTML}</div></div>
+      <div class="nav-dropdown" id="navDropdown"><div class="nav-dropdown-inner">${linksHTML}<a href="../index.html" class="nav-hub-link" onclick="setTimeout(closeMenu,50)" style="border-top:1px solid rgba(201,168,76,.35);margin-top:6px;padding-top:12px">🧭 All Aronow Tours trips</a></div></div>
       <div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
     </div>`;
   document.body.insertAdjacentHTML('afterbegin', navHTML);
