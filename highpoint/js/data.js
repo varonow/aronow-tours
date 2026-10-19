@@ -6,6 +6,7 @@ export const PLAN = {
   confirmed: 'Confirmed',
   book:      'To book',
   email:     'Email ahead',
+  call:      'Call ahead',
   headsup:   'Heads-up',
   walkin:    'Walk-in',
 };
@@ -30,9 +31,9 @@ export const DAYS = [
   {
     iso: '2026-10-19', tab: 'Mon', num: '19', label: 'Monday, October 19',
     title: 'Lighting day',
-    intro: 'IHFC, then Showplace, Commerce & Design, and the Hamilton and Wrenn loop. All on foot.',
+    intro: 'IHFC, a quick walk east to South Centennial for Noble Structures and Furniture City Glass, then Showplace, the Radio Building, Commerce & Design, 220 Elm, and the Hamilton and Wrenn loop. All on foot. Visual Comfort at 1:45 and Made Goods at 4:00 stay put.',
     stops: [
-      { id: 'ihfc', name: 'IHFC', addr: '210 E Commerce Ave, High Point, NC', time: '9:00 to 12:30', note: 'Floor 1 first, then work up.', pin: [35.95568, -80.00398], vendors: [
+      { id: 'ihfc', name: 'IHFC', addr: '210 E Commerce Ave, High Point, NC', time: '9:00 to 12:00', note: 'Floor 1 first, then work up. Wrap up by noon to fit the added stops.', pin: [35.95568, -80.00398], vendors: [
         { name: 'Lavagnoli Marmi', space: 'IH305, Floor 1', what: 'Italian marble and stone surfaces, and furniture.', plan: 'headsup' },
         { name: 'Roll & Hill', space: 'IH205, Floor 1', what: 'Made-to-order modern lighting from Brooklyn.', plan: 'walkin' },
         { name: 'Oi Soi Oi Copenhagen', space: 'IH209, Floor 1', what: 'Hand-woven bamboo and rattan pendants.', plan: 'walkin' },
@@ -45,17 +46,28 @@ export const DAYS = [
         { name: 'Kalco / Allegri', space: 'H232, Floor 2', what: 'Transitional lighting, and Allegri Italian crystal.', plan: 'walkin' },
         { name: 'Rhea Designs', space: 'D423', what: 'Chandeliers, pendants, sconces and flush mounts.', plan: 'walkin' },
       ] },
-      { id: 'showplace', name: 'Showplace', addr: '211 E Commerce Ave, High Point, NC', time: '12:30 to 1:15', pin: [35.95584, -80.00402], vendors: [
+      { id: 'centennial', name: 'South Centennial Street', addr: '313 S Centennial St, High Point, NC', time: '12:00 to 12:45', note: 'About a 5-minute walk east of IHFC. The two are a block apart. If the morning runs long, Noble Structures is also in 313.Space, where you are going tomorrow at 1:00.', vendors: [
+        { name: 'Noble Structures Global', space: '313.Space #224 (A24), Floor 2', addr: '313 S Centennial St, High Point, NC', pin: [35.95395, -79.99976], what: 'A fabrication studio for custom metalwork, wood and glass: bespoke doors, windows and façades, glass structures, stairs and balustrades, and furniture. Sales: 336-491-1736, office@noblestructuresglobal.com.', plan: 'walkin' },
+        { name: 'Furniture City Glass & Mirror Co.', space: '195 S Centennial St', addr: '195 S Centennial St, High Point, NC', pin: [35.9549, -80.0001], approx: true, what: 'A local glass and mirror company, not a Market showroom: framed and frameless shower enclosures, and custom mirror including beveled and antique. Open Monday to Thursday 8:00 to 5:00. Call 336-841-5333 before walking over.', plan: 'call' },
+      ] },
+      { id: 'showplace', name: 'Showplace', addr: '211 E Commerce Ave, High Point, NC', time: '12:45 to 1:15', pin: [35.95584, -80.00402], vendors: [
         { name: 'Four Hands', space: '#4101, Floor 4', what: 'Modern-rustic furniture, lighting and decor.', plan: 'walkin' },
       ] },
-      { id: 'cd', name: 'Commerce & Design', addr: '201 W Commerce Ave, High Point, NC', time: '1:45 to 3:15', pin: [35.95527, -80.00699], vendors: [
+      { id: 'radio', name: 'Radio Building', addr: '164 S Main St, High Point, NC', time: '1:20 to 1:40', note: 'At the corner of Main and Commerce, a minute from Commerce & Design.', pin: [35.9553, -80.0063], vendors: [
+        { name: 'Orfeo Quagliata Studio', space: 'Back Mezzanine, Floor 2', what: 'Glass studio: hand-blown crystal and fused glass lighting, furniture, vessels and sculptural pieces.', plan: 'walkin' },
+      ] },
+      { id: 'cd', name: 'Commerce & Design', addr: '201 W Commerce Ave, High Point, NC', time: '1:45 to 2:30', pin: [35.95527, -80.00699], vendors: [
         { time: '1:45', name: 'Visual Comfort & Co.', space: '2A / 2G, Floor 2', what: 'Designer lighting, including Kelly Wearstler alabaster. Look for hallway flush mounts, and primary and entry floor lighting.', plan: 'book' },
         { name: 'Bethel International', space: '4C, Floor 4', what: 'Modern LED and crystal statement lighting.', plan: 'headsup' },
       ] },
-      { id: 'casaitalia', name: 'Casa Italia', addr: '130 W Commerce Ave, High Point, NC', time: 'Before 3:15', pin: [35.9556, -80.00581], vendors: [
+      { id: 'casaitalia', name: 'Casa Italia', addr: '130 W Commerce Ave, High Point, NC', time: '2:30 to 2:45, quick look', pin: [35.9556, -80.00581], vendors: [
         { name: 'Casa Italia', space: 'Whole building', what: 'A building of Italian brands: Natuzzi, Calligaris, Connubia.', plan: 'walkin' },
       ] },
-      { id: 'hamilton', name: 'Hamilton Street and Bank on Wrenn', addr: 'N Hamilton St, High Point, NC', time: '3:15 to 5:45', note: 'A walking loop. Each showroom has its own address.', vendors: [
+      { id: 'elm-mon', name: '220 Elm', addr: '220 N Elm St, High Point, NC', time: '2:50 to 3:20', note: 'Both showrooms are on Level 3.', pin: [35.95862, -80.00897], vendors: [
+        { name: 'GLASSÍSIMO', space: '#322, Level 3', what: 'Hand-painted art glass built into finely made furniture. Phone 210-319-5480.', plan: 'walkin' },
+        { name: 'Alf DaFrè', space: '#304, Level 3', what: 'Modern Italian bedroom, living and dining. On Sunday\'s list if you did not get to it.', plan: 'headsup', quick: 'If time' },
+      ] },
+      { id: 'hamilton', name: 'Hamilton Street and Bank on Wrenn', addr: 'N Hamilton St, High Point, NC', time: '3:25 to 5:45', note: 'A walking loop. Each showroom has its own address.', vendors: [
         { name: 'Eichholtz', space: '129 S Hamilton', addr: '129 S Hamilton St, High Point, NC', pin: [35.95765, -80.00296], what: 'Glam Dutch luxury furniture, lighting and accessories.', plan: 'walkin' },
         { name: 'Bernhardt', space: '101 N Hamilton', addr: '101 N Hamilton St, High Point, NC', pin: [35.9589, -80.00359], what: 'Upholstery, casegoods and dining.', plan: 'walkin', quick: 'Skip if short on time' },
         { time: '4:00', name: 'Made Goods', space: '203 N Wrenn', addr: '203 N Wrenn St, High Point, NC', pin: [35.95866, -80.00524], what: '30,000 square feet of furniture, lighting and decor in stone, shagreen, mirror and natural fiber. No New York showroom, and the best fit for 207. An appointment is required.', plan: 'book' },
