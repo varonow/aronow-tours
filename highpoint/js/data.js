@@ -80,13 +80,19 @@ export const DAYS = [
   {
     iso: '2026-10-20', tab: 'Tue', num: '20', label: 'Tuesday, October 20',
     title: 'Lighting, and the three we missed',
-    intro: 'No set times today. 313.Space is done. Still to see: the lighting at Market Square, then GLASSÍSIMO, My Italian Interior and Eloa. Everything under "If there is time" is optional. Dinner is in tonight; Cibo Trattoria is canceled.',
+    intro: 'No set times today. 313.Space and Market Square are done. Still to see, in walking order: Visual Comfort, Four Hands, GLASSÍSIMO, My Italian Interior and Eloa. Everything under "If there is time" is optional. Dinner is in tonight.',
     stops: [
-      { id: 'marketsq', name: 'Market Square', addr: '200 W Commerce Ave, High Point, NC', time: 'Lighting', pin: [35.95543, -80.00705], vendors: [
+      { id: 'marketsq', name: 'Market Square', addr: '200 W Commerce Ave, High Point, NC', time: 'Done', note: 'Seen on Tuesday.', pin: [35.95543, -80.00705], vendors: [
         { name: 'Hudson Valley Lighting / Mitzi', space: 'M70 to M99, Mezzanine', what: 'Decorative lighting; Mitzi is the lower-priced line. Confirm the Mitzi Reva for the girls\' room.', plan: 'walkin' },
         { name: 'Hinkley', space: '#143, Floor 1', what: 'Indoor and outdoor residential lighting, for the 207 backyard.', plan: 'walkin', quick: 'Quick look' },
         { name: 'Varaluz', space: '#290, Floor 1', what: 'Decorative lighting in recycled materials.', plan: 'walkin', quick: 'Quick look' },
         { name: 'Akari Lanterns', space: 'Suites M-6042', what: 'Paper-and-bamboo lanterns in the Noguchi style.', plan: 'walkin', quick: 'Quick look' },
+      ] },
+      { id: 'cd-tue', name: 'Commerce & Design', addr: '201 W Commerce Ave, High Point, NC', time: 'Next', note: 'Across the street from Market Square.', pin: [35.95527, -80.00699], vendors: [
+        { name: 'Visual Comfort & Co.', space: '2A / 2G, Floor 2', what: 'Designer lighting, including Kelly Wearstler alabaster. Look for hallway flush mounts, and primary and entry floor lighting.', plan: 'walkin' },
+      ] },
+      { id: 'showplace-tue', name: 'Showplace', addr: '211 E Commerce Ave, High Point, NC', time: 'Then', note: 'A few minutes east on Commerce.', pin: [35.95584, -80.00402], vendors: [
+        { name: 'Four Hands', space: '#4101, Floor 4', what: 'Modern-rustic furniture, lighting and decor. Trade account is open.', plan: 'walkin' },
       ] },
       { id: 'elm-tue', name: '220 Elm', addr: '220 N Elm St, High Point, NC', time: 'Missed Monday', pin: [35.95862, -80.00897], vendors: [
         { name: 'GLASSÍSIMO', space: '#322, Level 3', what: 'Hand-painted art glass built into finely made furniture. Phone 210-319-5480.', plan: 'walkin' },
