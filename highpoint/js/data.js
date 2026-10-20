@@ -71,48 +71,53 @@ export const DAYS = [
         { name: 'Eichholtz', space: '129 S Hamilton', addr: '129 S Hamilton St, High Point, NC', pin: [35.95765, -80.00296], what: 'Glam Dutch luxury furniture, lighting and accessories.', plan: 'walkin' },
         { name: 'Bernhardt', space: '101 N Hamilton', addr: '101 N Hamilton St, High Point, NC', pin: [35.9589, -80.00359], what: 'Upholstery, casegoods and dining.', plan: 'walkin', quick: 'Skip if short on time' },
         { time: '4:00', name: 'Made Goods', space: '203 N Wrenn', addr: '203 N Wrenn St, High Point, NC', pin: [35.95866, -80.00524], what: '30,000 square feet of furniture, lighting and decor in stone, shagreen, mirror and natural fiber. No New York showroom, and the best fit for 207. An appointment is required.', plan: 'book' },
-        { name: 'Gabby', space: '333 N Hamilton', addr: '333 N Hamilton St, High Point, NC', pin: [35.9612, -80.0047], approx: true, what: 'Furniture, lighting and decor, plus some vintage.', plan: 'walkin' },
+        { name: 'Gabby', space: '333 N Hamilton', addr: '333 N Hamilton St, High Point, NC', pin: [35.96143, -80.00674], what: 'Furniture, lighting and decor, plus some vintage.', plan: 'walkin' },
         { name: 'My Italian Interior', space: '317 N Main', addr: '317 N Main St, High Point, NC', pin: [35.95961, -80.00742], what: 'Imported Italian furniture.', plan: 'walkin' },
-        { name: 'Eloa', space: '518 N Hamilton, Floor 2', addr: '518 N Hamilton St, High Point, NC', pin: [35.9632, -80.0057], approx: true, what: 'Mouth-blown glass pendants from Berlin.', plan: 'headsup' },
+        { name: 'Eloa', space: '518 N Hamilton, Floor 2', addr: '518 N Hamilton St, High Point, NC', pin: [35.96345, -80.00925], approx: true, what: 'Mouth-blown glass pendants from Berlin.', plan: 'headsup' },
       ] },
     ],
   },
   {
     iso: '2026-10-20', tab: 'Tue', num: '20', label: 'Tuesday, October 20',
-    title: 'West Commerce, then by car',
-    intro: 'Antiques and Market Square on foot in the morning. After lunch, take the SUV to 313.Space, Russell Avenue, the rug appointment on Mill Avenue, and MLK Drive.',
+    title: 'Lighting, and the three we missed',
+    intro: 'No set times today. Start with the lighting at Market Square, walk to GLASSÍSIMO, My Italian Interior and Eloa, then drive to 313.Space for the rest of the lighting. Everything under "If there is time" is optional. Dinner at Cibo Trattoria is 7:30 in Winston-Salem, so leave by 6:45.',
     stops: [
-      { id: 'adc', name: 'Antique & Design Center', addr: '316 W Commerce Ave, High Point, NC', time: '9:00 to 10:30', pin: [35.95481, -80.00804], vendors: [
-        { name: 'Antique & Design Center', space: 'Whole building', what: 'More than 70 dealers of vintage and antiques for designers.', plan: 'walkin' },
-      ] },
-      { id: 'marketsq', name: 'Market Square and Suites', addr: '200 W Commerce Ave, High Point, NC', time: '10:30 to 12:30', pin: [35.95543, -80.00705], vendors: [
+      { id: 'marketsq', name: 'Market Square', addr: '200 W Commerce Ave, High Point, NC', time: 'Lighting', pin: [35.95543, -80.00705], vendors: [
         { name: 'Hudson Valley Lighting / Mitzi', space: 'M70 to M99, Mezzanine', what: 'Decorative lighting; Mitzi is the lower-priced line. Confirm the Mitzi Reva for the girls\' room.', plan: 'walkin' },
         { name: 'Hinkley', space: '#143, Floor 1', what: 'Indoor and outdoor residential lighting, for the 207 backyard.', plan: 'walkin', quick: 'Quick look' },
         { name: 'Varaluz', space: '#290, Floor 1', what: 'Decorative lighting in recycled materials.', plan: 'walkin', quick: 'Quick look' },
-        { name: 'Art and Forge Hardware', space: 'Suites G-6026', what: 'Solid brass and bronze cabinet and decorative hardware.', plan: 'walkin' },
         { name: 'Akari Lanterns', space: 'Suites M-6042', what: 'Paper-and-bamboo lanterns in the Noguchi style.', plan: 'walkin', quick: 'Quick look' },
-        { name: 'Vahallan', space: 'Suites G-4009', what: 'Hand-painted wallcoverings and panels.', plan: 'walkin' },
-        { name: 'Guild Cabinetry', space: 'Suites G-6058', what: 'Custom cabinetry for designers, for the 207 millwork. Ask the three millwork questions.', plan: 'walkin', quick: 'Walk-through, 15 minutes' },
-        { name: 'Walker Woodworking', space: 'Suites G-7017, Salon', what: 'Custom cabinetry and millwork made in North Carolina, for the 207 millwork. Ask the three millwork questions.', plan: 'walkin', quick: 'Walk-through, 15 minutes' },
       ] },
-      { id: 'space313', name: '313.Space', addr: '313 S Centennial St, High Point, NC', time: '1:00 to 3:30', car: true, pin: [35.95395, -79.99976], vendors: [
+      { id: 'radio', name: 'Radio Building', addr: '164 S Main St, High Point, NC', time: 'Call first', note: 'Not found on Monday. The Market directory still lists them at "Radio Building - Back Mezzanine, Floor 2." The building\'s anchor showroom is Taracea, which also has a mezzanine, so ask at Taracea\'s front desk. Building office: 336-883-0525. Market Advisor: 336-869-1000.', pin: [35.9553, -80.0063], vendors: [
+        { name: 'Orfeo Quagliata Studio', space: 'Back Mezzanine, Floor 2', what: 'Glass studio from Mexico City: hand-blown crystal and fused glass lighting, furniture, vessels and sculptural pieces.', plan: 'call' },
+      ] },
+      { id: 'elm-tue', name: '220 Elm', addr: '220 N Elm St, High Point, NC', time: 'Missed Monday', pin: [35.95862, -80.00897], vendors: [
+        { name: 'GLASSÍSIMO', space: '#322, Level 3', what: 'Hand-painted art glass built into finely made furniture. Phone 210-319-5480.', plan: 'walkin' },
+      ] },
+      { id: 'myitalian', name: 'My Italian Interior', addr: '317 N Main St, High Point, NC', time: 'Missed Monday', pin: [35.95961, -80.00742], vendors: [
+        { name: 'My Italian Interior', space: '317 N Main', what: 'Imported Italian furniture.', plan: 'walkin' },
+      ] },
+      { id: 'eloa', name: 'Eloa', addr: '518 N Hamilton St, High Point, NC', time: 'Missed Monday', pin: [35.96345, -80.00925], vendors: [
+        { name: 'Eloa', space: '518 N Hamilton, Floor 2', addr: '518 N Hamilton St, High Point, NC', pin: [35.96345, -80.00925], approx: true, what: 'Mouth-blown glass pendants from Berlin.', plan: 'headsup' },
+      ] },
+      { id: 'space313', name: '313.Space', addr: '313 S Centennial St, High Point, NC', time: 'Lighting', car: true, note: 'Drive over. The lighting first; the rest of the building is under "If there is time".', pin: [35.95395, -79.99976], vendors: [
         { name: 'Schwung', space: 'Ground floor', what: 'Architectural modern brass lighting from the Netherlands.', plan: 'headsup' },
-        { name: 'Collected by Schwung', space: 'Ground floor', what: 'Schwung\'s antiques and vintage.', plan: 'walkin' },
         { name: 'Beacon Custom Lighting', space: 'M26', what: 'One-off custom handblown Bohemian glass and crystal, trade only. Glam for 207, and a statement piece for the 203 entry or library.', plan: 'email' },
-        { name: 'Darrell Dean Antiques', space: '#210', what: 'Antiques and decorative arts, known for mirrors.', plan: 'walkin' },
-        { name: 'The Mill USA', space: 'M10 to M11', what: 'Handwoven Namibian wool rugs and throws. Possibly for the cellar.', plan: 'walkin' },
-        { name: 'Asia Minor Carpets (booth)', space: 'M24', what: 'A preview before the Mill Avenue appointment.', plan: 'walkin', quick: 'Quick look' },
         { name: 'Pooky', space: 'M16 to M17, Floor 2', what: 'Colorful lamps and shades from the UK, for the kids\' floor.', plan: 'walkin' },
-        { name: 'MORY Homes', space: 'M12, Floor 2', what: 'Seattle joinery tables and shelving, plus Kasmo glass pendants.', plan: 'walkin', quick: 'Quick look' },
-        { name: 'Unique Kitchens & Baths', space: 'A03, Floor 2', what: 'Cabinetry and vanities with designer-collaboration lines, for the 207 millwork. Ask the three millwork questions.', plan: 'walkin', quick: 'Walk-through, 15 minutes' },
+        { name: 'MORY Homes', space: 'M12, Floor 2', what: 'Kasmo glass pendants, plus Seattle joinery tables and shelving.', plan: 'walkin', quick: 'Quick look' },
       ] },
-      { id: 'russell', name: '214 Modern Vintage', addr: '314 W Russell Ave, High Point, NC', time: 'Before 3:30', car: true, pin: [35.95194, -80.00909], vendors: [
-        { name: '214 Modern Vintage', space: 'Floor 1', what: 'Mid-century furniture and art.', plan: 'walkin' },
-      ] },
-      { id: 'asiaminor', name: 'Asia Minor Carpets', addr: '1014 Mill Ave, High Point, NC', time: '3:45 to 4:30', car: true, pin: [35.93612, -80.00897], vendors: [
-        { time: '3:45', name: 'Asia Minor Carpets', space: 'Main showroom', what: 'The main rug stop: the 203 living room rug, the stair runner, and carpets. Trade only. Bring the room and stair dimensions.', plan: 'book' },
-      ] },
-      { id: 'mlk', name: 'MLK Jr Drive', addr: 'E Martin Luther King Jr Dr, High Point, NC', time: '4:45 to 5:30', car: true, vendors: [
+      { id: 'iftime', name: 'If there is time', addr: 'Several buildings, High Point, NC', time: 'Optional', car: true, note: 'The rest of Tuesday\'s original list.', vendors: [
+        { name: 'Asia Minor Carpets', space: '1014 Mill Ave', addr: '1014 Mill Ave, High Point, NC', pin: [35.93612, -80.00897], what: 'The main rug stop: the 203 living room rug, the stair runner, and carpets. Trade only. If you booked the 3:45, it still stands. Bring the room and stair dimensions.', plan: 'book' },
+        { name: 'Collected by Schwung', space: '313.Space, ground floor', addr: '313 S Centennial St, High Point, NC', pin: [35.95395, -79.99976], what: 'Schwung\'s antiques and vintage.', plan: 'walkin' },
+        { name: 'Darrell Dean Antiques', space: '313.Space #210', addr: '313 S Centennial St, High Point, NC', pin: [35.95395, -79.99976], what: 'Antiques and decorative arts, known for mirrors.', plan: 'walkin' },
+        { name: 'The Mill USA', space: '313.Space M10 to M11', addr: '313 S Centennial St, High Point, NC', pin: [35.95395, -79.99976], what: 'Handwoven Namibian wool rugs and throws. Possibly for the cellar.', plan: 'walkin' },
+        { name: 'Unique Kitchens & Baths', space: '313.Space A03, Floor 2', addr: '313 S Centennial St, High Point, NC', pin: [35.95395, -79.99976], what: 'Cabinetry and vanities, for the 207 millwork. Ask the three millwork questions.', plan: 'walkin' },
+        { name: 'Antique & Design Center', space: '316 W Commerce', addr: '316 W Commerce Ave, High Point, NC', pin: [35.95481, -80.00804], what: 'More than 70 dealers of vintage and antiques for designers.', plan: 'walkin' },
+        { name: 'Art and Forge Hardware', space: 'Market Square Suites G-6026', addr: '200 W Commerce Ave, High Point, NC', pin: [35.95543, -80.00705], what: 'Solid brass and bronze cabinet and decorative hardware.', plan: 'walkin' },
+        { name: 'Vahallan', space: 'Market Square Suites G-4009', addr: '200 W Commerce Ave, High Point, NC', pin: [35.95543, -80.00705], what: 'Hand-painted wallcoverings and panels.', plan: 'walkin' },
+        { name: 'Guild Cabinetry', space: 'Market Square Suites G-6058', addr: '200 W Commerce Ave, High Point, NC', pin: [35.95543, -80.00705], what: 'Custom cabinetry for designers, for the 207 millwork.', plan: 'walkin' },
+        { name: 'Walker Woodworking', space: 'Market Square Suites G-7017', addr: '200 W Commerce Ave, High Point, NC', pin: [35.95543, -80.00705], what: 'Custom cabinetry and millwork made in North Carolina, for the 207 millwork.', plan: 'walkin' },
+        { name: '214 Modern Vintage', space: '314 W Russell Ave', addr: '314 W Russell Ave, High Point, NC', pin: [35.95194, -80.00909], what: 'Mid-century furniture and art.', plan: 'walkin' },
         { name: 'Mr. Brown London', space: '114 to 116 E MLK', addr: '114 E Martin Luther King Jr Dr, High Point, NC', pin: [35.95869, -80.00621], what: 'Mid-century and Art Deco luxury.', plan: 'walkin' },
         { name: 'Abner Henry', space: '214 E MLK', addr: '214 E Martin Luther King Jr Dr, High Point, NC', pin: [35.95921, -80.00532], what: 'Handcrafted Amish hardwood furniture.', plan: 'walkin' },
       ] },
@@ -121,11 +126,13 @@ export const DAYS = [
 ];
 
 // Every vendor, for the Buy List picker.
-export const VENDORS = DAYS.flatMap(d => d.stops.flatMap(s => s.vendors.map(v => ({
+const ALL_VENDORS = DAYS.flatMap(d => d.stops.flatMap(s => s.vendors.map(v => ({
   name: v.name,
   where: v.name === s.name ? s.addr.replace(', High Point, NC', '') : (v.addr ? v.space : s.name + ', ' + v.space),
   day: d.tab,
 }))));
+// A showroom moved to a later day appears once, under its latest day.
+export const VENDORS = ALL_VENDORS.filter((v, i) => !ALL_VENDORS.slice(i + 1).some(w => w.name === v.name));
 
 export const CHECKLIST = [
   { grp: 'To set up before we go', items: [
