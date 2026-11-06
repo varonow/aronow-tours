@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Need to Know &middot; Rachcation</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { min-height: 100%; background: #fafafa; }
+    body { font-family: 'DM Sans', sans-serif; }
+    .shell { width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* NAV */
+    .nav { background: #FFE600; padding: 12px 20px; position: sticky; top: 0; z-index: 100; }
+    .nav-inner { width: 100%; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .nav-logo { height: 34px; }
+    .hamburger { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2.5px; background: #ea338d; border-radius: 2px; }
+
+    /* MENU */
+    .menu-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 199; display: none; }
+    .menu-backdrop.open { display: block; }
+    .menu-overlay { position: fixed; top: 0; right: -100%; width: 300px; max-width: 85vw; height: 100%;
+      background: #fff; z-index: 200; transition: right .3s ease; box-shadow: -4px 0 24px rgba(0,0,0,.12);
+      display: flex; flex-direction: column; }
+    .menu-overlay.open { right: 0; }
+    .menu-header { background: #FFE600; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .menu-header-logo { height: 30px; }
+    .menu-close { background: none; border: none; font-size: 22px; color: #ea338d; cursor: pointer; font-weight: 700; line-height: 1; }
+    .menu-items { flex: 1; overflow-y: auto; padding: 8px 0; }
+    .menu-item { display: flex; align-items: center; gap: 14px; padding: 13px 20px; border-bottom: 1px solid #f5f5f5; text-decoration: none; }
+    .menu-item:hover { background: #fafafa; }
+    .menu-item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .menu-item-text { font-size: 14px; color: #222; font-weight: 500; }
+    .menu-signout { margin: 16px 20px; background: none; border: 1.5px solid #ea338d; color: #ea338d;
+      border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; width: calc(100% - 40px); }
+    .menu-signout:hover { background: #ea338d; color: #fff; }
+
+    .ic-pink { background: #FFE4F0; } .ic-blue { background: #E4F4FF; }
+    .ic-yellow { background: #FFFBE4; } .ic-green { background: #E4FFE9; }
+    .ic-purple { background: #F4E4FF; } .ic-peach { background: #FFE9E4; }
+    .ic-teal { background: #E4FFF9; } .ic-red { background: #FFE4E4; }
+
+    /* HEADER */
+    .page-header { background: #89CFF0; padding: 28px 20px 32px; text-align: center; position: relative; overflow: hidden; }
+    .header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
+    .hdr-bf { position: absolute; z-index: 1; }
+    .hb1 { top: 12px; left: 6%; transform: rotate(-18deg); opacity: .8; }
+    .hb2 { top: 16px; right: 6%; transform: rotate(15deg); opacity: .7; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: #ea338d; letter-spacing: 3px; line-height: 1; }
+    .page-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: #1a5f7a; font-weight: 700; margin-top: 6px; }
+
+    /* BODY */
+    .body { flex: 1; padding: 24px 16px 48px; max-width: 640px; margin: 0 auto; width: 100%; }
+    .loading { text-align: center; padding: 50px 20px; color: #aaa; font-size: 14px; }
+    .section-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 10px; margin-top: 28px; }
+    .section-label:first-child { margin-top: 0; }
+
+    .card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; padding: 20px; margin-bottom: 12px; }
+    .card p { font-size: 14px; color: #555; line-height: 1.8; }
+    .card p + p { margin-top: 12px; }
+    .card strong { color: #ea338d; }
+
+    /* ROWS */
+    .rows { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; overflow: hidden; }
+    .row { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #f5f5f5; text-decoration: none; }
+    .row:last-child { border-bottom: none; }
+    a.row:hover { background: #fafafa; }
+    .row-icon { font-size: 16px; flex-shrink: 0; width: 22px; text-align: center; }
+    .row-text { flex: 1; }
+    .row-name { font-size: 14px; color: #222; font-weight: 600; display: block; margin-bottom: 3px; }
+    .row-detail { font-size: 12.5px; color: #777; display: block; line-height: 1.6; }
+    .row-arrow { font-size: 12px; color: #ea338d; font-weight: 600; flex-shrink: 0; align-self: center; }
+
+    /* CALLOUT */
+    .callout { background: #FFFBE4; border: 1.5px solid #FFE600; border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
+    .callout-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: #ea338d; letter-spacing: 1.5px; margin-bottom: 8px; }
+    .callout-text { font-size: 13.5px; color: #7a5c00; line-height: 1.8; }
+    .callout-text strong { color: #5c4500; }
+
+    .blue-note { background: #E4F4FF; border: 1.5px solid #89CFF0; border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; }
+    .blue-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: #1a5f7a; letter-spacing: 1.5px; margin-bottom: 8px; }
+    .blue-text { font-size: 13.5px; color: #1a5f7a; line-height: 1.8; }
+
+    .back-link { display: block; text-align: center; margin-top: 28px; font-size: 14px; color: #ea338d; text-decoration: none; font-weight: 600; }
+
+    @media (min-width: 860px) {
+      .page-header { padding: 44px 24px 48px; }
+      .page-title { font-size: 54px; }
+      .page-sub { font-size: 18px; }
+      .body { padding: 34px 24px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="butterfly" viewBox="0 0 64 64">
+    <path fill="none" stroke="#ea338d" stroke-linecap="round" d="M31.766,26.099 C31.766,26.099 36.637,9.739 41.411,6"/>
+    <path fill="none" stroke="#ea338d" stroke-linecap="round" d="M19.766,26.099 C19.766,26.099 24.637,9.739 29.411,6" transform="matrix(-1 0 0 1 49.176 0)"/>
+    <circle cx="42.266" cy="5.5" r="1.5" fill="#ea338d"/>
+    <circle cx="19.266" cy="5.5" r="1.5" fill="#ea338d"/>
+    <path fill="#FFE600" d="M30.766,31.961 C30.766,31.961 42.593,16.687 49.466,17.005 C56.338,17.323 54.398,38.589 52.583,40.844 C50.768,43.1 43.278,45.637 43.278,45.637 C43.278,45.637 48.994,47.944 48.994,52.924 C48.994,57.904 43.913,63.524 37.82,57.277 C31.726,51.03 31.313,44.849 31.313,44.849"/>
+    <path fill="#FFE600" d="M7,31.961 C7,31.961 18.827,16.687 25.7,17.005 C32.573,17.323 30.632,38.589 28.817,40.844 C27.002,43.1 19.512,45.637 19.512,45.637 C19.512,45.637 25.228,47.944 25.228,52.924 C25.228,57.904 20.148,63.524 14.054,57.277 C7.96,51.03 7.547,44.849 7.547,44.849" transform="matrix(-1 0 0 1 37.532 0)"/>
+    <circle cx="30.766" cy="27" r="2" fill="#ea338d"/>
+    <ellipse cx="30.766" cy="39" fill="#ea338d" rx="2" ry="11"/>
+  </symbol>
+</svg>
+
+<div class="shell">
+
+  <div class="menu-backdrop" id="menu-backdrop" onclick="closeMenu()"></div>
+
+  <div class="menu-overlay" id="menu-overlay">
+    <div class="menu-header">
+      <img src="images/logo_pink_transparent.png" alt="Rachcation" class="menu-header-logo">
+      <button class="menu-close" onclick="closeMenu()">&#10005;</button>
+    </div>
+    <div class="menu-items">
+      <a href="index.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-home"></div><span class="menu-item-text">Home</span></a>
+      <a href="itinerary.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-cal"></div><span class="menu-item-text">Itinerary</span></a>
+      <a href="hotel.html" class="menu-item" id="menu-hotel"><div class="menu-item-icon ic-blue" id="m-hotel"></div><span class="menu-item-text">Hotel Info</span></a>
+      <a href="whattowear.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-dress"></div><span class="menu-item-text">What to Wear</span></a>
+      <a href="needtoknow.html" class="menu-item"><div class="menu-item-icon ic-green" id="m-info"></div><span class="menu-item-text">Need to Know</span></a>
+      <a href="photos.html" class="menu-item"><div class="menu-item-icon ic-peach" id="m-cam"></div><span class="menu-item-text">Photo Album</span></a>
+      <a href="playlist.html" class="menu-item"><div class="menu-item-icon ic-purple" id="m-music"></div><span class="menu-item-text">The Playlist</span></a>
+      <a href="letters.html" class="menu-item"><div class="menu-item-icon ic-teal" id="m-env"></div><span class="menu-item-text">Letters to Rachel</span></a>
+      <a href="../index.html" class="menu-item"><div class="menu-item-icon ic-blue" style="font-size:18px">&#129517;</div><span class="menu-item-text">All Aronow Tours trips</span></a>
+    </div>
+    <button class="menu-signout" onclick="signOut()">Sign Out</button>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <img src="images/logo_pink_transparent.png" alt="Rachcation" class="nav-logo">
+      <button class="hamburger" onclick="openMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <svg class="hdr-bf hb1" width="38" height="38"><use href="#butterfly"/></svg>
+    <svg class="hdr-bf hb2" width="30" height="30"><use href="#butterfly"/></svg>
+    <div class="header-inner">
+      <div class="page-title">NEED TO KNOW</div>
+      <div class="page-sub">The practical bits</div>
+    </div>
+  </div>
+
+  <div class="body" id="page-body">
+    <div class="loading">Loading&hellip;</div>
+  </div>
+
+</div>
+
+<script src="js/supabase.js?v=1"></script>
+<script src="js/icons.js?v=1"></script>
+<script>
+  const $ = id => document.getElementById(id)
+  const show = id => { const el = $(id); if (el) el.style.display = 'flex' }
+  const GIFT_OPEN = new Date('2026-10-15T00:00:00-04:00')
+  const RACHEL    = 'rachel@harari.biz'
+
+  async function init() {
+    const session = await requireAuth()
+    if (!session) return
+    const guest = await getGuest()
+    if (!guest) return
+
+    renderIcon('home','m-home');   renderIcon('calendar','m-cal')
+    renderIcon('hotel','m-hotel'); renderIcon('dress','m-dress')
+    renderIcon('info','m-info');   renderIcon('camera','m-cam')
+    renderIcon('music','m-music'); renderIcon('envelope','m-env')
+    renderIcon('gift','m-gift');   renderIcon('settings','m-set')
+
+    if (guest.is_admin)   show('menu-admin')
+    if (guest.hotel_stay) show('menu-hotel')
+    if (new Date() >= GIFT_OPEN && guest.email !== RACHEL) show('menu-gift')
+
+    const hasDinner = guest.attending_dinner
+    let html = ''
+
+    /* ── Everything's paid ── */
+    html +=
+      '<div class="card"><p>' +
+        'Everything is <strong>booked, paid for, and handled</strong>. ' +
+        'Show up, bring yourself, and let the rest happen.' +
+      '</p></div>'
+
+    /* ── Before you come ── */
+    html +=
+      '<div class="section-label">Before You Come</div>' +
+      '<div class="card"><p>' +
+        'Three things to do between now and November. ' +
+        'All of it goes into the trip &mdash; and none of it works without you.' +
+      '</p></div>' +
+      '<div class="rows">' +
+        '<a class="row" href="letters.html">' +
+          '<span class="row-icon">&#9997;&#65039;</span>' +
+          '<span class="row-text">' +
+            '<span class="row-name">Write her a letter</span>' +
+            '<span class="row-detail">Anything you want to say to her about turning forty. ' +
+              'She can\'t see them until the trip, and you can keep editing yours until then.</span>' +
+          '</span>' +
+          '<span class="row-arrow">Write &rarr;</span>' +
+        '</a>' +
+        '<a class="row" href="playlist.html">' +
+          '<span class="row-icon">&#127925;</span>' +
+          '<span class="row-text">' +
+            '<span class="row-name">Add songs to the playlist</span>' +
+            '<span class="row-detail">90s, early 2000s, or anything that makes you think of Rachel. ' +
+              'Add as many as you like.</span>' +
+          '</span>' +
+          '<span class="row-arrow">Add &rarr;</span>' +
+        '</a>' +
+        '<a class="row" href="photos.html">' +
+          '<span class="row-icon">&#128248;</span>' +
+          '<span class="row-text">' +
+            '<span class="row-name">Upload photos of her</span>' +
+            '<span class="row-detail">Go through your camera roll. Old ones, terrible ones, ' +
+              'ones she\'s forgotten. Captions make them so much better.</span>' +
+          '</span>' +
+          '<span class="row-arrow">Upload &rarr;</span>' +
+        '</a>' +
+      '</div>'
+
+    /* ── Parking ── */
+    html +=
+      '<div class="section-label">Driving In</div>' +
+      '<div class="rows">' +
+        '<a class="row" href="https://maps.google.com/?q=Icon+Parking+51+W+22nd+St+New+York+NY" target="_blank" rel="noopener">' +
+          '<span class="row-icon">&#128663;</span>' +
+          '<span class="row-text">' +
+            '<span class="row-name">Icon Parking &mdash; 51 W 22nd St</span>' +
+            '<span class="row-detail">Preferred hotel rate: <strong>$50 for 24 hours</strong> with a voucher from ' +
+              'the Hotel Chelsea front desk. Around the corner from the hotel.</span>' +
+          '</span>' +
+          '<span class="row-arrow">Map &rarr;</span>' +
+        '</a>' +
+        '<a class="row" href="tel:+16462307263">' +
+          '<span class="row-icon">&#128222;</span>' +
+          '<span class="row-text">' +
+            '<span class="row-name">(646) 230-7263</span>' +
+            '<span class="row-detail">The garage, if you need them</span>' +
+          '</span>' +
+          '<span class="row-arrow">Call &rarr;</span>' +
+        '</a>' +
+      '</div>'
+
+    /* ── Getting around ── */
+    html +=
+      '<div class="section-label">Getting Around</div>' +
+      '<div class="card">' +
+        '<p>Everything we\'re doing is in Chelsea or a few blocks from it. ' +
+        'Most of it is <strong>walkable in ten minutes or less</strong> from the hotel &mdash; ' +
+        'the furthest is a short cab ride if the weather turns.</p>' +
+        '<p>The 1, C and E stop at 23rd Street, right by the hotel. ' +
+        'The F and M are a couple of blocks east on 6th Avenue.</p>' +
+      '</div>'
+
+    /* ── Weather ── */
+    html +=
+      '<div class="section-label">The Weather</div>' +
+      '<div class="blue-note">' +
+        '<div class="blue-title">EARLY NOVEMBER IN NEW YORK</div>' +
+        '<div class="blue-text">' +
+          'Expect somewhere in the 50s during the day and colder once the sun goes down &mdash; ' +
+          'and it goes down early, just before 5. We\'ll be outside for a good stretch Tuesday afternoon.' +
+          '<br><br>' +
+          'Bring a proper coat. Check the forecast the day before and adjust.' +
+        '</div>' +
+      '</div>'
+
+    /* ── Bring ── */
+    html +=
+      '<div class="section-label">Worth Bringing</div>' +
+      '<div class="rows">' +
+        '<div class="row">' +
+          '<span class="row-icon">&#128241;</span>' +
+          '<span class="row-text">' +
+            '<span class="row-name">A charged phone</span>' +
+            '<span class="row-detail">You\'ll want the battery Tuesday afternoon. There\'s a charger in your bag &mdash; use it.</span>' +
+          '</span>' +
+        '</div>' +
+        '<div class="row">' +
+          '<span class="row-icon">&#129406;</span>' +
+          '<span class="row-text">' +
+            '<span class="row-name">Shoes that can take a beating</span>' +
+            '<span class="row-detail">See What to Wear. This matters more than you think.</span>' +
+          '</span>' +
+        '</div>' +
+        '<div class="row">' +
+          '<span class="row-icon">&#128176;</span>' +
+          '<span class="row-text">' +
+            '<span class="row-name">A little cash</span>' +
+            '<span class="row-detail">Meals are covered. Cash is just for anything you pick up along the way.</span>' +
+          '</span>' +
+        '</div>' +
+      '</div>'
+
+    /* ── Drinks at dinner ── */
+    if (hasDinner) {
+      html +=
+        '<div class="section-label">Tuesday Dinner</div>' +
+        '<div class="callout">' +
+          '<div class="callout-title">DRINKS</div>' +
+          '<div class="callout-text">' +
+            'We\'re doing <strong>wine and sake only</strong> at dinner. ' +
+            'If you only drink kosher wine, please bring a bottle.' +
+          '</div>' +
+        '</div>'
+    }
+
+    html += '<a href="index.html" class="back-link">&larr; Back to Home</a>'
+    $('page-body').innerHTML = html
+  }
+
+  function openMenu()  { $('menu-overlay').classList.add('open');    $('menu-backdrop').classList.add('open') }
+  function closeMenu() { $('menu-overlay').classList.remove('open'); $('menu-backdrop').classList.remove('open') }
+
+  init()
+</script>
+
+</body>
+</html>

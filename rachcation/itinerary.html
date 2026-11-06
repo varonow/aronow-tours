@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Itinerary &middot; Rachcation</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { min-height: 100%; background: #fafafa; }
+    body { font-family: 'DM Sans', sans-serif; }
+    .shell { width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* NAV */
+    .nav { background: #FFE600; padding: 12px 20px; position: sticky; top: 0; z-index: 100; }
+    .nav-inner { width: 100%; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .nav-logo { height: 34px; }
+    .hamburger { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2.5px; background: #ea338d; border-radius: 2px; }
+
+    /* MENU */
+    .menu-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 199; display: none; }
+    .menu-backdrop.open { display: block; }
+    .menu-overlay { position: fixed; top: 0; right: -100%; width: 300px; max-width: 85vw; height: 100%;
+      background: #fff; z-index: 200; transition: right .3s ease; box-shadow: -4px 0 24px rgba(0,0,0,.12);
+      display: flex; flex-direction: column; }
+    .menu-overlay.open { right: 0; }
+    .menu-header { background: #FFE600; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .menu-header-logo { height: 30px; }
+    .menu-close { background: none; border: none; font-size: 22px; color: #ea338d; cursor: pointer; font-weight: 700; line-height: 1; }
+    .menu-items { flex: 1; overflow-y: auto; padding: 8px 0; }
+    .menu-item { display: flex; align-items: center; gap: 14px; padding: 13px 20px; border-bottom: 1px solid #f5f5f5; text-decoration: none; }
+    .menu-item:hover { background: #fafafa; }
+    .menu-item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .menu-item-text { font-size: 14px; color: #222; font-weight: 500; }
+    .menu-signout { margin: 16px 20px; background: none; border: 1.5px solid #ea338d; color: #ea338d;
+      border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; width: calc(100% - 40px); }
+    .menu-signout:hover { background: #ea338d; color: #fff; }
+
+    .ic-pink { background: #FFE4F0; } .ic-blue { background: #E4F4FF; }
+    .ic-yellow { background: #FFFBE4; } .ic-green { background: #E4FFE9; }
+    .ic-purple { background: #F4E4FF; } .ic-peach { background: #FFE9E4; }
+    .ic-teal { background: #E4FFF9; } .ic-red { background: #FFE4E4; }
+
+    /* HEADER */
+    .page-header { background: #89CFF0; padding: 28px 20px 32px; text-align: center; position: relative; overflow: hidden; }
+    .header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
+    .hdr-bf { position: absolute; z-index: 1; }
+    .hb1 { top: 12px; left: 6%; transform: rotate(-18deg); opacity: .8; }
+    .hb2 { top: 16px; right: 6%; transform: rotate(15deg); opacity: .7; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: #ea338d; letter-spacing: 3px; line-height: 1; }
+    .page-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: #1a5f7a; font-weight: 700; margin-top: 6px; }
+
+    /* BODY */
+    .body { flex: 1; padding: 24px 16px 48px; max-width: 700px; margin: 0 auto; width: 100%; }
+    .loading { text-align: center; padding: 50px 20px; color: #aaa; font-size: 14px; }
+
+    /* DAY */
+    .day-label { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: #ea338d; letter-spacing: 2px; margin-bottom: 4px; margin-top: 28px; }
+    .day-label:first-child { margin-top: 0; }
+    .day-date { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 14px; }
+
+    /* EVENT */
+    .event { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; margin-bottom: 10px; overflow: hidden; transition: border-color .2s; }
+    .event.open { border-color: #FFE600; }
+    .event-head { display: flex; align-items: center; gap: 14px; padding: 16px; cursor: pointer; }
+    .event-head:hover { background: #fcfcfc; }
+    .event-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .event-main { flex: 1; min-width: 0; }
+    .event-time { font-family: 'Bebas Neue', sans-serif; font-size: 15px; color: #ea338d; letter-spacing: 1px; }
+    .event-name { font-size: 15px; font-weight: 600; color: #222; margin-top: 1px; }
+    .event-place { font-size: 12px; color: #999; margin-top: 2px; }
+    .event-chev { font-size: 20px; color: #ccc; flex-shrink: 0; transition: transform .25s; }
+    .event.open .event-chev { transform: rotate(90deg); }
+
+    .event-body { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+    .event.open .event-body { max-height: 700px; }
+    .event-inner { padding: 0 16px 18px; }
+    .event-divider { height: 1px; background: #f2f2f2; margin-bottom: 14px; }
+    .event-desc { font-size: 14px; color: #555; line-height: 1.75; margin-bottom: 14px; }
+    .event-note { background: #FFFBE4; border: 1px solid #FFE600; border-radius: 10px;
+      padding: 12px 14px; font-size: 13px; color: #7a5c00; line-height: 1.6; margin-bottom: 14px; }
+    .event-note strong { color: #5c4500; }
+
+    .addr-link { display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+      background: #fafafa; border-radius: 10px; text-decoration: none; border: 1px solid #f0f0f0; }
+    .addr-link:hover { background: #f5f5f5; }
+    .addr-pin { font-size: 15px; flex-shrink: 0; }
+    .addr-text { flex: 1; }
+    .addr-name { font-size: 13px; color: #222; font-weight: 600; display: block; margin-bottom: 2px; }
+    .addr-street { font-size: 12px; color: #999; display: block; }
+    .addr-arrow { font-size: 12px; color: #ea338d; font-weight: 600; flex-shrink: 0; }
+
+    .back-link { display: block; text-align: center; margin-top: 28px; font-size: 14px; color: #ea338d; text-decoration: none; font-weight: 600; }
+    .empty { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; padding: 32px; text-align: center; }
+    .empty p { font-size: 15px; color: #555; line-height: 1.7; }
+
+    @media (min-width: 860px) {
+      .page-header { padding: 44px 24px 48px; }
+      .page-title { font-size: 54px; }
+      .page-sub { font-size: 18px; }
+      .body { padding: 34px 24px 60px; }
+      .day-label { font-size: 30px; }
+      .event-name { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="butterfly" viewBox="0 0 64 64">
+    <path fill="none" stroke="#ea338d" stroke-linecap="round" d="M31.766,26.099 C31.766,26.099 36.637,9.739 41.411,6"/>
+    <path fill="none" stroke="#ea338d" stroke-linecap="round" d="M19.766,26.099 C19.766,26.099 24.637,9.739 29.411,6" transform="matrix(-1 0 0 1 49.176 0)"/>
+    <circle cx="42.266" cy="5.5" r="1.5" fill="#ea338d"/>
+    <circle cx="19.266" cy="5.5" r="1.5" fill="#ea338d"/>
+    <path fill="#FFE600" d="M30.766,31.961 C30.766,31.961 42.593,16.687 49.466,17.005 C56.338,17.323 54.398,38.589 52.583,40.844 C50.768,43.1 43.278,45.637 43.278,45.637 C43.278,45.637 48.994,47.944 48.994,52.924 C48.994,57.904 43.913,63.524 37.82,57.277 C31.726,51.03 31.313,44.849 31.313,44.849"/>
+    <path fill="#FFE600" d="M7,31.961 C7,31.961 18.827,16.687 25.7,17.005 C32.573,17.323 30.632,38.589 28.817,40.844 C27.002,43.1 19.512,45.637 19.512,45.637 C19.512,45.637 25.228,47.944 25.228,52.924 C25.228,57.904 20.148,63.524 14.054,57.277 C7.96,51.03 7.547,44.849 7.547,44.849" transform="matrix(-1 0 0 1 37.532 0)"/>
+    <circle cx="30.766" cy="27" r="2" fill="#ea338d"/>
+    <ellipse cx="30.766" cy="39" fill="#ea338d" rx="2" ry="11"/>
+  </symbol>
+</svg>
+
+<div class="shell">
+
+  <div class="menu-backdrop" id="menu-backdrop" onclick="closeMenu()"></div>
+
+  <div class="menu-overlay" id="menu-overlay">
+    <div class="menu-header">
+      <img src="images/logo_pink_transparent.png" alt="Rachcation" class="menu-header-logo">
+      <button class="menu-close" onclick="closeMenu()">&#10005;</button>
+    </div>
+    <div class="menu-items">
+      <a href="index.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-home"></div><span class="menu-item-text">Home</span></a>
+      <a href="itinerary.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-cal"></div><span class="menu-item-text">Itinerary</span></a>
+      <a href="hotel.html" class="menu-item" id="menu-hotel"><div class="menu-item-icon ic-blue" id="m-hotel"></div><span class="menu-item-text">Hotel Info</span></a>
+      <a href="whattowear.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-dress"></div><span class="menu-item-text">What to Wear</span></a>
+      <a href="needtoknow.html" class="menu-item"><div class="menu-item-icon ic-green" id="m-info"></div><span class="menu-item-text">Need to Know</span></a>
+      <a href="photos.html" class="menu-item"><div class="menu-item-icon ic-peach" id="m-cam"></div><span class="menu-item-text">Photo Album</span></a>
+      <a href="playlist.html" class="menu-item"><div class="menu-item-icon ic-purple" id="m-music"></div><span class="menu-item-text">The Playlist</span></a>
+      <a href="letters.html" class="menu-item"><div class="menu-item-icon ic-teal" id="m-env"></div><span class="menu-item-text">Letters to Rachel</span></a>
+      <a href="../index.html" class="menu-item"><div class="menu-item-icon ic-blue" style="font-size:18px">&#129517;</div><span class="menu-item-text">All Aronow Tours trips</span></a>
+    </div>
+    <button class="menu-signout" onclick="signOut()">Sign Out</button>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <img src="images/logo_pink_transparent.png" alt="Rachcation" class="nav-logo">
+      <button class="hamburger" onclick="openMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <svg class="hdr-bf hb1" width="38" height="38"><use href="#butterfly"/></svg>
+    <svg class="hdr-bf hb2" width="30" height="30"><use href="#butterfly"/></svg>
+    <div class="header-inner">
+      <div class="page-title">THE ITINERARY</div>
+      <div class="page-sub">Two days in New York, in order</div>
+    </div>
+  </div>
+
+  <div class="body" id="page-body">
+    <div class="loading">Loading&hellip;</div>
+  </div>
+
+</div>
+
+<script src="js/supabase.js?v=1"></script>
+<script src="js/icons.js?v=1"></script>
+<script>
+  const $ = id => document.getElementById(id)
+  const show = id => { const el = $(id); if (el) el.style.display = 'flex' }
+
+  const GIFT_OPEN = new Date('2026-10-15T00:00:00-04:00')
+  const RACHEL    = 'rachel@harari.biz'
+
+  const EVENTS = [
+    {
+      day: 'tuesday',
+      flag: 'attending_brunch',
+      time: '11:00 AM &ndash; 2:00 PM',
+      name: 'Welcome Brunch',
+      place: 'Caf&eacute; Chelsea Wine Room',
+      icon: 'calendar', tint: 'ic-pink',
+      desc: 'The whole thing starts here. Our own room, three hours, and a few things on the agenda nobody told you about. Rachel\'s in charge &mdash; be on your best behavior.',
+      note: 'Get there on time so we can start together. Pens will be provided.',
+      addrName: 'Caf&eacute; Chelsea, Hotel Chelsea',
+      addrStreet: '222 W 23rd St, New York, NY',
+      map: 'Cafe+Chelsea+222+W+23rd+St+New+York+NY'
+    },
+    {
+      day: 'tuesday',
+      flag: 'attending_hunt',
+      time: '2:30 PM &ndash; 4:30 PM',
+      name: 'High Line Hijinks',
+      place: 'Something competitive is about to happen',
+      icon: 'camera', tint: 'ic-peach',
+      desc: 'You\'ll be split into teams. You\'ll be sent out into the Meatpacking District. There will be a winner, and there will be everybody else. That\'s all you get.',
+      note: '<strong>Charge your phone before you leave the hotel.</strong> Wear shoes you can move in. We\'ll be outside, so check the weather.',
+      addrName: 'The High Line &mdash; 13th St entrance',
+      addrStreet: 'W 13th St &amp; 9th Ave, New York, NY',
+      map: 'High+Line+13th+Street+and+9th+Avenue+New+York+NY'
+    },
+    {
+      day: 'tuesday',
+      flag: 'attending_dinner',
+      time: '5:30 PM &ndash; 8:00 PM',
+      name: 'Birthday Dinner',
+      place: "Grandma's Home",
+      icon: 'gift', tint: 'ic-yellow',
+      desc: 'The big one. Two round tables, one private room, and the actual reason we all came. Forty looks good on her.',
+      note: 'Just show up. Everything else is handled.',
+      addrName: "Grandma's Home",
+      addrStreet: '56 W 22nd St, New York, NY',
+      map: 'Grandmas+Home+56+W+22nd+St+New+York+NY'
+    },
+    {
+      day: 'tuesday',
+      flag: 'attending_improv',
+      time: '8:30 PM &ndash; 10:00 PM',
+      name: 'Cre8ive Studios',
+      place: 'Trust the process',
+      icon: 'music', tint: 'ic-purple',
+      desc: 'Second floor, 29th Street, ninety minutes. You will not be sitting down and you will not be checking your phone. Whatever you\'re picturing right now, it\'s not that.',
+      note: 'No skill required. Just show up willing.',
+      addrName: 'Cre8ive Studios &mdash; 2nd floor',
+      addrStreet: '134 W 29th St, New York, NY',
+      map: 'Cre8ive+Studios+134+W+29th+St+New+York+NY'
+    },
+    {
+      day: 'wednesday',
+      flag: 'hotel_stay',
+      time: '11:00 AM',
+      name: 'Checkout',
+      place: 'Hotel Chelsea',
+      icon: 'hotel', tint: 'ic-blue',
+      desc: 'Out of the room by 11. We\'ll sort out somewhere to stash bags for the rest of the day &mdash; don\'t drag a suitcase across town.',
+      addrName: 'Hotel Chelsea',
+      addrStreet: '222 W 23rd St, New York, NY',
+      map: 'Hotel+Chelsea+222+W+23rd+St+New+York+NY'
+    },
+    {
+      day: 'wednesday',
+      flag: 'attending_dance',
+      time: '12:00 PM &ndash; 1:30 PM',
+      name: 'Pearl Studios',
+      place: 'Not telling you what this is',
+      icon: 'music', tint: 'ic-purple',
+      desc: 'Ninety minutes in a studio on 8th Avenue. That\'s all you\'re getting. Show up in the right outfit and find out with everyone else.',
+      note: '<strong>Wear your black tee, black leggings, and sneakers.</strong> That\'s the whole dress code.',
+      addrName: 'Pearl Studios',
+      addrStreet: '500 8th Ave, New York, NY',
+      map: 'Pearl+Studios+500+8th+Ave+New+York+NY'
+    },
+    {
+      day: 'wednesday',
+      flag: 'attending_lunch',
+      time: '~2:00 PM',
+      name: 'Farewell Lunch',
+      place: 'Le Zie',
+      icon: 'calendar', tint: 'ic-pink',
+      desc: 'Italian, private room, one more dessert with candles in it. Then we hug everyone twice and go home.',
+      note: 'Come straight from the studio &mdash; no time to change, and honestly, why would you.',
+      addrName: 'Le Zie &mdash; La Galleria',
+      addrStreet: '172 7th Ave, New York, NY',
+      map: 'Le+Zie+172+7th+Ave+New+York+NY'
+    }
+  ]
+
+  async function init() {
+    const session = await requireAuth()
+    if (!session) return
+    const guest = await getGuest()
+    if (!guest) return
+
+    renderIcon('home','m-home');   renderIcon('calendar','m-cal')
+    renderIcon('hotel','m-hotel'); renderIcon('dress','m-dress')
+    renderIcon('info','m-info');   renderIcon('camera','m-cam')
+    renderIcon('music','m-music'); renderIcon('envelope','m-env')
+    renderIcon('gift','m-gift');   renderIcon('settings','m-set')
+
+    if (guest.is_admin)   show('menu-admin')
+    if (guest.hotel_stay) show('menu-hotel')
+    if (new Date() >= GIFT_OPEN && guest.email !== RACHEL) show('menu-gift')
+
+    const mine = EVENTS.filter(e => guest[e.flag] === true)
+    const body = $('page-body')
+
+    if (mine.length === 0) {
+      body.innerHTML =
+        '<div class="empty"><p>Nothing on your schedule yet.<br>If that looks wrong, text Victoria.</p>' +
+        '<a href="index.html" class="back-link">&larr; Back to Home</a></div>'
+      return
+    }
+
+    let html = ''
+    let lastDay = null
+
+    mine.forEach((e, i) => {
+      if (e.day !== lastDay) {
+        html += e.day === 'tuesday'
+          ? '<div class="day-label">TUESDAY</div><div class="day-date">November 3</div>'
+          : '<div class="day-label">WEDNESDAY</div><div class="day-date">November 4</div>'
+        lastDay = e.day
+      }
+
+      html +=
+        '<div class="event" id="ev-' + i + '">' +
+          '<div class="event-head" onclick="toggle(' + i + ')">' +
+            '<div class="event-icon ' + e.tint + '" id="evi-' + i + '"></div>' +
+            '<div class="event-main">' +
+              '<div class="event-time">' + e.time + '</div>' +
+              '<div class="event-name">' + e.name + '</div>' +
+              '<div class="event-place">' + e.place + '</div>' +
+            '</div>' +
+            '<div class="event-chev">&rsaquo;</div>' +
+          '</div>' +
+          '<div class="event-body"><div class="event-inner">' +
+            '<div class="event-divider"></div>' +
+            '<p class="event-desc">' + e.desc + '</p>' +
+            (e.note ? '<div class="event-note">' + e.note + '</div>' : '') +
+            '<a class="addr-link" target="_blank" rel="noopener" ' +
+               'href="https://maps.google.com/?q=' + e.map + '">' +
+              '<span class="addr-pin">&#128205;</span>' +
+              '<span class="addr-text">' +
+                '<span class="addr-name">' + e.addrName + '</span>' +
+                '<span class="addr-street" style="display:block">' + e.addrStreet + '</span>' +
+              '</span>' +
+              '<span class="addr-arrow">Directions &rarr;</span>' +
+            '</a>' +
+          '</div></div>' +
+        '</div>'
+    })
+
+    html += '<a href="index.html" class="back-link">&larr; Back to Home</a>'
+    body.innerHTML = html
+
+    mine.forEach((e, i) => renderIcon(e.icon, 'evi-' + i))
+  }
+
+  function toggle(i) {
+    const el = $('ev-' + i)
+    if (!el) return
+    const wasOpen = el.classList.contains('open')
+    document.querySelectorAll('.event').forEach(x => x.classList.remove('open'))
+    if (!wasOpen) el.classList.add('open')
+  }
+
+  function openMenu()  { $('menu-overlay').classList.add('open');    $('menu-backdrop').classList.add('open') }
+  function closeMenu() { $('menu-overlay').classList.remove('open'); $('menu-backdrop').classList.remove('open') }
+
+  init()
+</script>
+
+</body>
+</html>

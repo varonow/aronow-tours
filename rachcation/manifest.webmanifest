@@ -1,0 +1,11 @@
+{
+  "name": "Rachcation",
+  "short_name": "Rachcation",
+  "description": "Rachel's 40th in New York City, Nov 3–4, 2026",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#89CFF0",
+  "theme_color": "#FFE600",
+  "icons": [{ "src": "favicon.png", "sizes": "512x512", "type": "image/png" }]
+}

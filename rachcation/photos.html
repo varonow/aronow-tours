@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Album &middot; Rachcation</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { min-height: 100%; background: #fafafa; }
+    body { font-family: 'DM Sans', sans-serif; }
+    .shell { width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* NAV */
+    .nav { background: #FFE600; padding: 12px 20px; position: sticky; top: 0; z-index: 100; }
+    .nav-inner { width: 100%; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .nav-logo { height: 34px; }
+    .hamburger { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2.5px; background: #ea338d; border-radius: 2px; }
+
+    /* MENU */
+    .menu-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 199; display: none; }
+    .menu-backdrop.open { display: block; }
+    .menu-overlay { position: fixed; top: 0; right: -100%; width: 300px; max-width: 85vw; height: 100%;
+      background: #fff; z-index: 200; transition: right .3s ease; box-shadow: -4px 0 24px rgba(0,0,0,.12);
+      display: flex; flex-direction: column; }
+    .menu-overlay.open { right: 0; }
+    .menu-header { background: #FFE600; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .menu-header-logo { height: 30px; }
+    .menu-close { background: none; border: none; font-size: 22px; color: #ea338d; cursor: pointer; font-weight: 700; line-height: 1; }
+    .menu-items { flex: 1; overflow-y: auto; padding: 8px 0; }
+    .menu-item { display: flex; align-items: center; gap: 14px; padding: 13px 20px; border-bottom: 1px solid #f5f5f5; text-decoration: none; }
+    .menu-item:hover { background: #fafafa; }
+    .menu-item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .menu-item-text { font-size: 14px; color: #222; font-weight: 500; }
+    .menu-signout { margin: 16px 20px; background: none; border: 1.5px solid #ea338d; color: #ea338d;
+      border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; width: calc(100% - 40px); }
+    .menu-signout:hover { background: #ea338d; color: #fff; }
+
+    .ic-pink { background: #FFE4F0; } .ic-blue { background: #E4F4FF; }
+    .ic-yellow { background: #FFFBE4; } .ic-green { background: #E4FFE9; }
+    .ic-purple { background: #F4E4FF; } .ic-peach { background: #FFE9E4; }
+    .ic-teal { background: #E4FFF9; } .ic-red { background: #FFE4E4; }
+
+    /* HEADER */
+    .page-header { background: #89CFF0; padding: 28px 20px 32px; text-align: center; position: relative; overflow: hidden; }
+    .header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 2; }
+    .hdr-bf { position: absolute; z-index: 1; }
+    .hb1 { top: 12px; left: 6%; transform: rotate(-18deg); opacity: .8; }
+    .hb2 { top: 16px; right: 6%; transform: rotate(15deg); opacity: .7; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: #ea338d; letter-spacing: 3px; line-height: 1; }
+    .page-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: #1a5f7a; font-weight: 700; margin-top: 6px; }
+
+    /* BODY */
+    .body { flex: 1; padding: 24px 16px 48px; max-width: 900px; margin: 0 auto; width: 100%; }
+    .loading { text-align: center; padding: 50px 20px; color: #aaa; font-size: 14px; }
+    .section-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-bottom: 12px; margin-top: 28px; }
+
+    .card { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; padding: 20px; margin-bottom: 14px; }
+    .intro { font-size: 14px; color: #555; line-height: 1.8; }
+    .intro strong { color: #ea338d; }
+
+    /* UPLOAD */
+    .upload-zone {
+      border: 2px dashed #FFE600; background: #FFFBE4; border-radius: 16px;
+      padding: 30px 20px; text-align: center; cursor: pointer; transition: background .2s;
+      margin-bottom: 14px;
+    }
+    .upload-zone:hover { background: #fff8d0; }
+    .upload-zone.busy { opacity: .6; pointer-events: none; }
+    .uz-icon { font-size: 30px; margin-bottom: 8px; }
+    .uz-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #ea338d; letter-spacing: 1.5px; }
+    .uz-sub { font-size: 12.5px; color: #a08800; margin-top: 5px; line-height: 1.6; }
+    #file-input { display: none; }
+
+    .progress { background: #fff; border: 1px solid #ebebeb; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+    .progress-text { font-size: 13px; color: #666; margin-bottom: 8px; }
+    .progress-bar { height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #ea338d; width: 0%; transition: width .3s; }
+
+    /* GRID */
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .photo {
+      background: #fff; border: 1px solid #ebebeb; border-radius: 14px;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .photo-img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #f5f5f5; cursor: pointer; display: block; }
+    .photo-body { padding: 11px 13px; flex: 1; display: flex; flex-direction: column; }
+    .photo-caption { font-size: 13px; color: #444; line-height: 1.55; flex: 1; }
+    .photo-caption.none { color: #ccc; font-style: italic; }
+    .photo-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 9px; }
+    .photo-who { font-size: 11px; color: #bbb; }
+    .photo-del { background: none; border: none; color: #ddd; font-size: 17px; cursor: pointer; padding: 0 3px; line-height: 1; }
+    .photo-del:hover { color: #ea338d; }
+
+    .empty { background: #fff; border: 1px solid #ebebeb; border-radius: 16px; padding: 40px 24px; text-align: center; }
+    .empty p { font-size: 14px; color: #999; line-height: 1.8; }
+
+    /* CAPTION MODAL */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 300; display: none;
+      align-items: center; justify-content: center; padding: 20px; }
+    .modal-bg.open { display: flex; }
+    .modal { background: #fff; border-radius: 20px; padding: 24px; max-width: 420px; width: 100%; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #ea338d; letter-spacing: 1.5px; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: #999; margin-bottom: 16px; line-height: 1.6; }
+    .modal-preview { width: 100%; max-height: 200px; object-fit: contain; border-radius: 12px; margin-bottom: 16px; background: #f5f5f5; }
+    .modal-input { width: 100%; padding: 13px 15px; border: 1.5px solid #ebebeb; border-radius: 12px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif; color: #333; outline: none; }
+    .modal-input:focus { border-color: #ea338d; }
+    .modal-btns { display: flex; gap: 9px; margin-top: 14px; }
+    .modal-btn { flex: 1; padding: 13px; border: none; border-radius: 12px; font-size: 14px;
+      font-weight: 700; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+    .mb-save { background: #FFE600; color: #ea338d; }
+    .mb-skip { background: #f5f5f5; color: #888; }
+
+    /* LIGHTBOX */
+    .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 400; display: none;
+      align-items: center; justify-content: center; flex-direction: column; padding: 24px; }
+    .lightbox.open { display: flex; }
+    .lb-img { max-width: 100%; max-height: 76vh; object-fit: contain; border-radius: 8px; }
+    .lb-cap { color: #fff; font-size: 15px; text-align: center; margin-top: 18px; max-width: 560px; line-height: 1.7; }
+    .lb-who { color: #888; font-size: 12.5px; margin-top: 7px; }
+    .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.12); border: none; color: #fff;
+              font-size: 34px; width: 46px; height: 64px; border-radius: 10px; cursor: pointer; line-height: 1; z-index: 2; }
+    .lb-prev { left: 10px; } .lb-next { right: 10px; }
+    .lb-dl { color: #FFE600; font-size: 13px; font-weight: 600; margin-top: 12px; text-decoration: none; }
+    .grid-more { display:block; margin: 18px auto 0; background:#FFE600; color:#ea338d; border:none; border-radius:12px;
+                 padding: 13px 22px; font-weight:700; font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; }
+    .lb-close { position: absolute; top: 18px; right: 22px; color: #fff; font-size: 30px;
+      background: none; border: none; cursor: pointer; line-height: 1; }
+
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(90px);
+      background: #ea338d; color: #fff; padding: 13px 24px; border-radius: 30px; font-size: 14px;
+      font-weight: 600; z-index: 500; transition: transform .3s; box-shadow: 0 6px 24px rgba(234,51,141,.35); }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    .back-link { display: block; text-align: center; margin-top: 28px; font-size: 14px; color: #ea338d; text-decoration: none; font-weight: 600; }
+
+    @media (min-width: 700px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 860px) {
+      .page-header { padding: 44px 24px 48px; }
+      .page-title { font-size: 54px; }
+      .page-sub { font-size: 18px; }
+      .body { padding: 34px 24px 60px; }
+      .grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="butterfly" viewBox="0 0 64 64">
+    <path fill="none" stroke="#ea338d" stroke-linecap="round" d="M31.766,26.099 C31.766,26.099 36.637,9.739 41.411,6"/>
+    <path fill="none" stroke="#ea338d" stroke-linecap="round" d="M19.766,26.099 C19.766,26.099 24.637,9.739 29.411,6" transform="matrix(-1 0 0 1 49.176 0)"/>
+    <circle cx="42.266" cy="5.5" r="1.5" fill="#ea338d"/>
+    <circle cx="19.266" cy="5.5" r="1.5" fill="#ea338d"/>
+    <path fill="#FFE600" d="M30.766,31.961 C30.766,31.961 42.593,16.687 49.466,17.005 C56.338,17.323 54.398,38.589 52.583,40.844 C50.768,43.1 43.278,45.637 43.278,45.637 C43.278,45.637 48.994,47.944 48.994,52.924 C48.994,57.904 43.913,63.524 37.82,57.277 C31.726,51.03 31.313,44.849 31.313,44.849"/>
+    <path fill="#FFE600" d="M7,31.961 C7,31.961 18.827,16.687 25.7,17.005 C32.573,17.323 30.632,38.589 28.817,40.844 C27.002,43.1 19.512,45.637 19.512,45.637 C19.512,45.637 25.228,47.944 25.228,52.924 C25.228,57.904 20.148,63.524 14.054,57.277 C7.96,51.03 7.547,44.849 7.547,44.849" transform="matrix(-1 0 0 1 37.532 0)"/>
+    <circle cx="30.766" cy="27" r="2" fill="#ea338d"/>
+    <ellipse cx="30.766" cy="39" fill="#ea338d" rx="2" ry="11"/>
+  </symbol>
+</svg>
+
+<div class="shell">
+
+  <div class="menu-backdrop" id="menu-backdrop" onclick="closeMenu()"></div>
+
+  <div class="menu-overlay" id="menu-overlay">
+    <div class="menu-header">
+      <img src="images/logo_pink_transparent.png" alt="Rachcation" class="menu-header-logo">
+      <button class="menu-close" onclick="closeMenu()">&#10005;</button>
+    </div>
+    <div class="menu-items">
+      <a href="index.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-home"></div><span class="menu-item-text">Home</span></a>
+      <a href="itinerary.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-cal"></div><span class="menu-item-text">Itinerary</span></a>
+      <a href="hotel.html" class="menu-item" id="menu-hotel"><div class="menu-item-icon ic-blue" id="m-hotel"></div><span class="menu-item-text">Hotel Info</span></a>
+      <a href="whattowear.html" class="menu-item"><div class="menu-item-icon ic-pink" id="m-dress"></div><span class="menu-item-text">What to Wear</span></a>
+      <a href="needtoknow.html" class="menu-item"><div class="menu-item-icon ic-green" id="m-info"></div><span class="menu-item-text">Need to Know</span></a>
+      <a href="photos.html" class="menu-item"><div class="menu-item-icon ic-peach" id="m-cam"></div><span class="menu-item-text">Photo Album</span></a>
+      <a href="playlist.html" class="menu-item"><div class="menu-item-icon ic-purple" id="m-music"></div><span class="menu-item-text">The Playlist</span></a>
+      <a href="letters.html" class="menu-item"><div class="menu-item-icon ic-teal" id="m-env"></div><span class="menu-item-text">Letters to Rachel</span></a>
+      <a href="../index.html" class="menu-item"><div class="menu-item-icon ic-blue" style="font-size:18px">&#129517;</div><span class="menu-item-text">All Aronow Tours trips</span></a>
+    </div>
+    <button class="menu-signout" onclick="signOut()">Sign Out</button>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <img src="images/logo_pink_transparent.png" alt="Rachcation" class="nav-logo">
+      <button class="hamburger" onclick="openMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <svg class="hdr-bf hb1" width="38" height="38"><use href="#butterfly"/></svg>
+    <svg class="hdr-bf hb2" width="30" height="30"><use href="#butterfly"/></svg>
+    <div class="header-inner">
+      <div class="page-title">PHOTO ALBUM</div>
+      <div class="page-sub">Throwbacks and the two days in New York</div>
+    </div>
+  </div>
+
+  <div class="body" id="page-body">
+    <div class="loading">Loading&hellip;</div>
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">&times;</button>
+  <button class="lb-nav lb-prev" onclick="event.stopPropagation();step(-1)" aria-label="Previous">&lsaquo;</button>
+  <img class="lb-img" id="lb-img" alt="" onclick="event.stopPropagation()">
+  <button class="lb-nav lb-next" onclick="event.stopPropagation();step(1)" aria-label="Next">&rsaquo;</button>
+  <div class="lb-cap" id="lb-cap"></div>
+  <div class="lb-who" id="lb-who"></div>
+  <a class="lb-dl" id="lb-dl" href="#" onclick="event.stopPropagation();downloadOriginal();return false">Download full size</a>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/supabase.js?v=1"></script>
+<script src="js/icons.js?v=1"></script>
+<script>
+  const $ = id => document.getElementById(id)
+  const RACHEL = 'rachel@harari.biz'
+  const PAGE = 60
+
+  let PHOTOS = []
+  let NAMES = {}
+  let URLS = {}
+  let shown = 0
+  let current = -1
+
+  async function init() {
+    const session = await requireAuth()
+    if (!session) return
+    const guest = await getGuest()
+    if (!guest) return
+
+    renderIcon('home','m-home');   renderIcon('calendar','m-cal')
+    renderIcon('hotel','m-hotel'); renderIcon('dress','m-dress')
+    renderIcon('info','m-info');   renderIcon('camera','m-cam')
+    renderIcon('music','m-music'); renderIcon('envelope','m-env')
+
+    const [ph, gs] = await Promise.all([
+      supabaseClient.from('rach_photos').select('*').order('uploaded_at', { ascending: false }),
+      supabaseClient.from('rach_guests').select('id, name')
+    ])
+    PHOTOS = ph.data || []
+    ;(gs.data || []).forEach(g => { NAMES[g.id] = g.name })
+    URLS = await signedUrls(PHOTOS.map(p => p.thumb_path).concat(PHOTOS.map(p => p.web_path)))
+
+    $('page-body').innerHTML =
+      '<div class="card"><p class="intro">' +
+        (guest.email === RACHEL
+          ? 'Everyone went digging through their camera rolls for you &mdash; old favourites, plus everything from the two days. Tap any photo to see it large.'
+          : 'Everything everyone added &mdash; throwbacks of Rachel, embarrassing ones, ones she&rsquo;d forgotten about, and the photos from the two days. ' +
+            'Tap any photo to see it large and download the full-size original.') +
+      '</p></div>' +
+      '<div class="section-label">The Album (' + PHOTOS.length + ')</div>' +
+      '<div class="grid" id="grid"></div>' +
+      '<button class="grid-more" id="more" onclick="more()">Show more photos</button>' +
+      '<a href="index.html" class="back-link">&larr; Back to Home</a>'
+    more()
+  }
+
+  function more() {
+    const next = PHOTOS.slice(shown, shown + PAGE)
+    $('grid').insertAdjacentHTML('beforeend', next.map((p, k) => card(p, shown + k)).join(''))
+    shown += next.length
+    $('more').style.display = shown < PHOTOS.length ? 'block' : 'none'
+    if (shown < PHOTOS.length) $('more').textContent = 'Show more photos (' + (PHOTOS.length - shown) + ' left)'
+  }
+
+  function card(p, i) {
+    const who = NAMES[p.guest_id] ? NAMES[p.guest_id].split(' ')[0] : ''
+    return '<div class="photo">' +
+      '<img class="photo-img" src="' + esc(URLS[p.thumb_path] || '') + '" alt="" loading="lazy" onclick="openLightbox(' + i + ')">' +
+      '<div class="photo-body">' +
+        '<div class="photo-caption ' + (p.caption ? '' : 'none') + '">' + (p.caption ? esc(p.caption) : 'No caption') + '</div>' +
+        '<div class="photo-foot"><span class="photo-who">' + (who ? 'Added by ' + esc(who) : '') + '</span></div>' +
+      '</div>' +
+    '</div>'
+  }
+
+  function openLightbox(i) {
+    const p = PHOTOS[i]
+    if (!p) return
+    current = i
+    $('lb-img').src = URLS[p.web_path] || URLS[p.thumb_path] || ''
+    $('lb-cap').textContent = p.caption || ''
+    $('lb-who').textContent = NAMES[p.guest_id] ? 'Added by ' + NAMES[p.guest_id] : ''
+    $('lightbox').classList.add('open')
+  }
+  function step(d) { if (current < 0) return; openLightbox((current + d + PHOTOS.length) % PHOTOS.length) }
+  function closeLightbox() { $('lightbox').classList.remove('open'); current = -1 }
+
+  async function downloadOriginal() {
+    const p = PHOTOS[current]
+    if (!p) return
+    const name = 'rachcation-' + String(current + 1).padStart(3, '0') + '.' + (p.storage_path.split('.').pop() || 'jpg')
+    const { data } = await supabaseClient.storage.from(PHOTO_BUCKET).createSignedUrl(p.storage_path, 600, { download: name })
+    if (data && data.signedUrl) window.location.href = data.signedUrl
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+  }
+
+  document.addEventListener('keydown', e => {
+    if (!$('lightbox').classList.contains('open')) return
+    if (e.key === 'Escape') closeLightbox()
+    if (e.key === 'ArrowLeft') step(-1)
+    if (e.key === 'ArrowRight') step(1)
+  })
+
+  function openMenu()  { $('menu-overlay').classList.add('open');    $('menu-backdrop').classList.add('open') }
+  function closeMenu() { $('menu-overlay').classList.remove('open'); $('menu-backdrop').classList.remove('open') }
+
+  init()
+</script>
+
+</body>
+</html>
