@@ -283,3 +283,4 @@ details.more ul{margin:4px 0 16px}
 .slot-time{flex:0 0 92px;font-family:Jost,sans-serif;font-weight:600;font-size:20px;color:var(--coral-ink)}
 .slot-who{font-weight:600;font-size:21px}
 .slot-note{display:block;font-weight:500;font-style:italic;font-size:18px}
+.nm{white-space:nowrap}

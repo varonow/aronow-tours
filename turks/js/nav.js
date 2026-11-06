@@ -1,4 +1,4 @@
-import { getCurrentUser, signOut } from './supabase.js?v=17';
+import { getCurrentUser, signOut } from './supabase.js?v=18';
 
 export const NAV_ITEMS = [
   { label: 'Home',        desc: 'Countdown and your trip',        href: 'index.html',     icon: '\u{1F3E0}' },

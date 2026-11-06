@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Itinerary</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=17">
+<link rel="stylesheet" href="css/style.css?v=18">
 </head>
 <body>
 <main>
@@ -34,11 +34,12 @@
 </div></section>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=17';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=18';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('itinerary.html');
 if (ctx) {
 const $ = id => document.getElementById(id);
+const whoHtml = w => String(w).split(' & ').map(n => `<span class="nm">${esc(n)}</span>`).join(' &amp; ');
 const fmt = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`; };
 const WHAT = { tennis: '\u{1F3BE} Tennis with Reinaldo', massage: '\u{1F486}\u200D\u2640\uFE0F Massage with Thai Bliss' };
 const family = [ctx.me, ...ctx.kids].filter(Boolean);
@@ -53,7 +54,7 @@ else if (!rows.length) $('mine').innerHTML = '<p>Nothing booked for you yet.</p>
 else $('mine').innerHTML = [...new Set(rows.map(r => r.day))].map(d => `<div class="day${d === today ? ' today' : ''}">
   <h3>${esc(dayLabel(d))}${d === today ? ' <span class="kind">Today</span>' : ''}</h3>
   ${rows.filter(r => r.day === d).map(r => `<div class="slot"><div class="slot-time">${fmt(r.start_time)}</div>
-    <div class="slot-who">${WHAT[r.kind]}<span class="slot-note">${esc(r.who)}${r.detail ? ' · ' + esc(r.detail) : ''}</span></div></div>`).join('')}
+    <div class="slot-who">${WHAT[r.kind]}<span class="slot-note">${whoHtml(r.who)}${r.detail ? ' · ' + esc(r.detail) : ''}</span></div></div>`).join('')}
 </div>`).join('');
 }
 </script>

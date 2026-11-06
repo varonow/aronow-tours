@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Tennis &amp; Massages</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=17">
+<link rel="stylesheet" href="css/style.css?v=18">
 </head>
 <body>
 <main>
@@ -43,11 +43,12 @@
 </div>
 </main>
 <script type="module">
-import { start, db, esc, dayLabel, islandToday, FOOTER } from './js/app.js?v=17';
+import { start, db, esc, dayLabel, islandToday, FOOTER } from './js/app.js?v=18';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('signups.html');
 if (ctx) {
 const $ = id => document.getElementById(id);
+const whoHtml = w => String(w).split(' & ').map(n => `<span class="nm">${esc(n)}</span>`).join(' &amp; ');
 const fmt = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`; };
 const today = islandToday();
 
@@ -58,7 +59,7 @@ function render(kind, rows) {
   return days.map(d => `<div class="day${d === today ? ' today' : ''}">
     <h3>${esc(dayLabel(d))}${d === today ? ' <span class="kind">Today</span>' : ''}</h3>
     ${list.filter(r => r.day === d).map(r => `<div class="slot"><div class="slot-time">${fmt(r.start_time)}</div>
-      <div class="slot-who">${esc(r.who)}${r.detail ? `<span class="slot-note">${esc(r.detail)}</span>` : ''}</div></div>`).join('')}
+      <div class="slot-who">${whoHtml(r.who)}${r.detail ? `<span class="slot-note">${esc(r.detail)}</span>` : ''}</div></div>`).join('')}
   </div>`).join('');
 }
 
