@@ -13,26 +13,48 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Itinerary</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=16">
+<link rel="stylesheet" href="css/style.css?v=17">
 </head>
 <body>
 <main>
 <header class="page-head "><div class="wrap"><div class="eyebrow">Day by day</div><h1>The Itinerary</h1></div></header>
 <figure class="photo"><img src="images/pool-aerial.jpg" alt="Emara West and its pool from the air" style="object-position:center 55%" loading="lazy"><figcaption>Emara West</figcaption></figure>
+<section class="band band-peach"><div class="wrap narrow">
+  <h2 class="sec-title">Your lessons &amp; massages</h2>
+  <p class="muted" id="mineFor"></p>
+  <div id="mine"><p class="loading">Loading…</p></div>
+  <p style="margin-top:20px"><a href="signups.html">See everyone’s tennis and massage times</a> in case you would like to trade.</p>
+</div></section>
 <section class="band band-white"><div class="wrap narrow" style="text-align:center">
   <p style="font-size:64px;line-height:1">🗓️</p>
   <h2 class="sec-title" style="margin-top:10px">To be announced</h2>
   <div class="rule"></div>
   <p class="lede">The week is still being planned. The full day-by-day itinerary will appear here as soon as it is ready.</p>
-  <p style="margin-top:18px">In the meantime, you can see <a href="flights.html">your flights</a>, <a href="rooms.html">your room</a> and <a href="menus.html">the menus</a>, and <a href="signups.html">who is booked for tennis and massages</a>.</p>
+  <p style="margin-top:18px">In the meantime, you can see <a href="flights.html">your flights</a>, <a href="rooms.html">your room</a> and <a href="menus.html">the menus</a>.</p>
 </div></section>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=16';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=17';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('itinerary.html');
 if (ctx) {
-
+const $ = id => document.getElementById(id);
+const fmt = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`; };
+const WHAT = { tennis: '\u{1F3BE} Tennis with Reinaldo', massage: '\u{1F486}\u200D\u2640\uFE0F Massage with Thai Bliss' };
+const family = [ctx.me, ...ctx.kids].filter(Boolean);
+const ids = new Set(family.map(p => p.id));
+if (ctx.kids.length) $('mineFor').textContent = 'Yours and your children’s.';
+const { data, error } = await db.from('turks_bookings').select('*').order('day').order('start_time');
+const rows = (data || []).filter(r => (r.people || []).some(id => ids.has(id)));
+const today = islandToday();
+if (error) $('mine').innerHTML = '<p class="err">Could not load your bookings. Please try again.</p>';
+else if (!ctx.me) $('mine').innerHTML = '<p>Nothing is linked to your sign-in yet.</p>';
+else if (!rows.length) $('mine').innerHTML = '<p>Nothing booked for you yet.</p>';
+else $('mine').innerHTML = [...new Set(rows.map(r => r.day))].map(d => `<div class="day${d === today ? ' today' : ''}">
+  <h3>${esc(dayLabel(d))}${d === today ? ' <span class="kind">Today</span>' : ''}</h3>
+  ${rows.filter(r => r.day === d).map(r => `<div class="slot"><div class="slot-time">${fmt(r.start_time)}</div>
+    <div class="slot-who">${WHAT[r.kind]}<span class="slot-note">${esc(r.who)}${r.detail ? ' · ' + esc(r.detail) : ''}</span></div></div>`).join('')}
+</div>`).join('');
 }
 </script>
 </body>
