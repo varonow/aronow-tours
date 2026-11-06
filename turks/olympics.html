@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- pwa-head -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0F6E8C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Thanks & Caicos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Thanks &amp; Caicos — Olympics</title>
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css?v=19">
+</head>
+<body>
+<main>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Coral vs Turquoise</div><h1>The Olympics</h1></div></header>
+<div class="tabs oly-tabs" id="tabs"></div>
+
+<div class="panel" id="p-score" hidden>
+  <section class="band band-white"><div class="wrap narrow">
+    <div class="oly-board" id="board"><p class="loading">Loading…</p></div>
+    <p class="oly-lead" id="lead"></p>
+    <p class="muted oly-sub" id="awarded"></p>
+  </div></section>
+  <section class="band band-aqua"><div class="wrap narrow">
+    <h2 class="sec-title">Day by day</h2>
+    <div class="rule"></div>
+    <div id="byday"></div>
+  </div></section>
+  <section class="band band-peach"><div class="wrap narrow">
+    <h2 class="sec-title">Latest results</h2>
+    <div class="rule"></div>
+    <div id="latest"></div>
+  </div></section>
+</div>
+
+<div class="panel" id="p-sched" hidden>
+  <div class="mtabs"><div class="mtabs-in"><div class="mdays oly-days" id="schedDays"></div></div></div>
+  <section class="band band-white"><div class="wrap narrow">
+    <div class="eyebrow" id="schedEyebrow"></div>
+    <h2 class="sec-title" id="schedTitle"></h2>
+    <div class="rule"></div>
+    <div id="sched"></div>
+  </div></section>
+</div>
+
+<div class="panel" id="p-teams" hidden>
+  <section class="band band-white"><div class="wrap narrow" id="teams"></div></section>
+</div>
+
+<div class="panel" id="p-judge" hidden>
+  <section class="band band-white"><div class="wrap narrow" id="judge"></div></section>
+</div>
+</main>
+<script type="module">
+import { start, db, esc, names, islandToday, FOOTER } from './js/app.js?v=19';
+document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
+const ctx = await start('olympics.html');
+if (ctx) {
+const $ = id => document.getElementById(id);
+const DAYS = [
+  { key: 'Opening Night', iso: '2026-11-22', wd: 'Sun', num: 22, label: 'Sunday, Nov 22' },
+  { key: 'Day 1', iso: '2026-11-23', wd: 'Mon', num: 23, label: 'Monday, Nov 23' },
+  { key: 'Day 2', iso: '2026-11-24', wd: 'Tue', num: 24, label: 'Tuesday, Nov 24' },
+  { key: 'Day 3', iso: '2026-11-25', wd: 'Wed', num: 25, label: 'Wednesday, Nov 25' },
+  { key: 'Day 4', iso: '2026-11-26', wd: 'Thu', num: 26, label: 'Thursday, Nov 26' },
+  { key: 'Day 5', iso: '2026-11-27', wd: 'Fri', num: 27, label: 'Friday, Nov 27' },
+  { key: 'Day 6', iso: '2026-11-28', wd: 'Sat', num: 28, label: 'Saturday, Nov 28' },
+];
+const DIVS = [['adult', 'Adults'], ['teen', 'Teens'], ['kid', 'Kids'], ['toddler', 'Toddlers']];
+const TEAM = { coral: 'Coral', turquoise: 'Turquoise' };
+const fmtT = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`; };
+const num = n => { const v = Number(n) || 0; return v % 1 ? v.toFixed(1) : String(v); };
+const today = islandToday();
+const rulesHtml = r => {
+  const t = String(r || ''); const i = t.indexOf('Legs:');
+  if (i < 0) return esc(t);
+  const [legs, ...rest] = t.slice(i + 5).split(/\.\s+(?=First team)/);
+  return esc(t.slice(0, i)) + '<ol class="oly-legs">' + legs.split('→').map(x => `<li>${esc(x.trim().replace(/^\(\d+\)\s*/, ''))}</li>`).join('') + '</ol>' + esc(rest.join('. '));
+};
+const startDay = (DAYS.find(d => d.iso === today) || DAYS[0]).key;
+
+let events = [], results = {}, state = {}, teams = [];
+let tab = 'score', schedDay = startDay, judgeDay = startDay;
+let judge = null; // { id, name, pin }
+let openEvent = null, pending = null, msg = '', split = null; // split = { c, t } while the split boxes are open
+
+function resultText(e, r) {
+  if (e.points == null) return '<span class="muted">Not scored</span>';
+  if (!r) return `<span class="muted">${e.points} points · not scored yet</span>`;
+  if (r.winner === 'coral') return `<span class="oly-won coral">🏆 Coral won · +${num(r.coral)}</span>`;
+  if (r.winner === 'turquoise') return `<span class="oly-won turquoise">🏆 Turquoise won · +${num(r.turquoise)}</span>`;
+  if (r.winner === 'tie') return `<span class="oly-won tie">Tie · ${num(r.coral)} each</span>`;
+  return `<span class="oly-won tie">Coral ${num(r.coral)} · Turquoise ${num(r.turquoise)}</span>`;
+}
+function dayTabs(active, attr) {
+  return DAYS.map(d => `<button class="mtab${d.key === active ? ' on' : ''}" ${attr}="${d.key}" aria-label="${d.key}, ${d.label}">${d.wd}<b>${d.num}</b></button>`).join('');
+}
+const dayTitle = d => d.key === 'Opening Night' ? 'Opening Night' : d.key;
+
+// ---------- Scoreboard ----------
+function renderScore() {
+  const tot = { coral: 0, turquoise: 0 };
+  Object.values(results).forEach(r => { tot.coral += Number(r.coral); tot.turquoise += Number(r.turquoise); });
+  $('board').innerHTML = ['coral', 'turquoise'].map(t => `<div class="oly-side ${t}"><div class="oly-team">${TEAM[t]}</div><div class="oly-pts">${num(tot[t])}</div></div>`).join('');
+  const diff = tot.coral - tot.turquoise;
+  $('lead').textContent = !Object.keys(results).length ? 'The games begin on Opening Night.' : diff === 0 ? 'All tied up' : `${diff > 0 ? 'Coral' : 'Turquoise'} leads by ${num(Math.abs(diff))}`;
+  const scoredEvents = events.filter(e => e.points != null);
+  const awarded = scoredEvents.filter(e => results[e.id]).reduce((s, e) => s + e.points, 0);
+  $('awarded').textContent = `${Object.keys(results).length} of ${scoredEvents.length} events scored · ${num(awarded)} of 1,000 points handed out`;
+  let rc = 0, rt = 0;
+  $('byday').innerHTML = `<div class="oly-table"><div class="oly-row head"><span>Day</span><span>Coral</span><span>Turq.</span><span>Leader</span></div>` + DAYS.map(d => {
+    const evs = events.filter(e => e.day_key === d.key && results[e.id]);
+    if (!evs.length) return `<div class="oly-row"><span>${dayTitle(d)}<small>${d.wd} ${d.num}</small></span><span>–</span><span>–</span><span class="muted">–</span></div>`;
+    const c = evs.reduce((s, e) => s + Number(results[e.id].coral), 0), t = evs.reduce((s, e) => s + Number(results[e.id].turquoise), 0);
+    rc += c; rt += t;
+    const lead = rc > rt ? '<b class="coral">Coral</b>' : rt > rc ? '<b class="turquoise">Turquoise</b>' : 'Tied';
+    return `<div class="oly-row"><span>${dayTitle(d)}<small>${d.wd} ${d.num}</small></span><span>${num(c)}</span><span>${num(t)}</span><span>${lead}</span></div>`;
+  }).join('') + `</div><p class="muted oly-sub">Leader is the running total after that day.</p>`;
+  const latest = Object.values(results).sort((a, b) => b.scored_at.localeCompare(a.scored_at)).slice(0, 6);
+  const byId = Object.fromEntries(events.map(e => [e.id, e]));
+  $('latest').innerHTML = latest.length ? latest.map(r => { const e = byId[r.event_id]; const d = DAYS.find(x => x.key === e.day_key);
+    return `<div class="slot"><div class="slot-time">${d.wd} ${d.num}</div><div class="slot-who">${esc(e.title)}<span class="slot-note">${resultText(e, r)}</span></div></div>`; }).join('')
+    : '<p class="muted">No results yet.</p>';
+}
+
+// ---------- Schedule ----------
+function renderSched() {
+  const d = DAYS.find(x => x.key === schedDay);
+  $('schedDays').innerHTML = dayTabs(schedDay, 'data-sd');
+  $('schedEyebrow').textContent = d.label;
+  $('schedTitle').textContent = d.key === 'Opening Night' ? 'Opening Night' : d.key;
+  $('sched').innerHTML = events.filter(e => e.day_key === schedDay).map(e => `<div class="oly-ev">
+    <div class="oly-ev-time">${fmtT(e.start_time)}</div>
+    <div class="oly-ev-body"><h3>${esc(e.title)}</h3>
+      <p class="oly-ev-meta">📍 ${esc(e.location)} &nbsp;·&nbsp; 👥 ${esc(e.division)}</p>
+      <div class="oly-ev-rules">${rulesHtml(e.rules)}</div>
+      <p class="oly-ev-res">${resultText(e, results[e.id])}</p></div></div>`).join('');
+}
+
+// ---------- Teams ----------
+function renderTeams() {
+  const el = $('teams');
+  if (!state.sees_teams) {
+    el.innerHTML = `<div style="text-align:center"><p style="font-size:64px;line-height:1">🤫</p>
+      <h2 class="sec-title" style="margin-top:10px">The teams are a secret</h2><div class="rule"></div>
+      <p class="lede">They will be revealed at the Opening Ceremony on the beach, Sunday, Nov 22 at 6:00pm.</p></div>`;
+    return;
+  }
+  const by = t => teams.filter(x => x.team === t);
+  const nm = id => (ctx.byId[id] || { name: id }).name;
+  el.innerHTML = (state.revealed ? '' : `<div class="note">🔒 Only you and Mac can see the teams until they are revealed at the Opening Ceremony.</div>`) +
+    `<div class="grid2">` + ['coral', 'turquoise'].map(t => `<div class="oly-roster ${t}"><h2>Team ${TEAM[t]}</h2>
+      ${DIVS.map(([k, l]) => { const ps = by(t).filter(x => x.division === k); return ps.length ? `<div class="oly-div">${l}</div>${ps.map(p => `<p>${esc(nm(p.person_id))}</p>`).join('')}` : ''; }).join('')}
+      </div>`).join('') + `</div>
+    <p class="oly-officials"><b>Judges:</b> ${esc(names(['henry', 'joyce-f', 'debbie'].map(nm)))} &nbsp;·&nbsp; <b>Official:</b> ${esc(nm('mac'))}</p>`;
+}
+
+// ---------- Judges ----------
+let pinFor = null, pinVal = '', pinErr = '';
+function renderJudge() {
+  const el = $('judge');
+  if (!judge && !pinFor) {
+    el.innerHTML = `<h2 class="sec-title">Who is judging?</h2><div class="rule"></div>
+      <div class="oly-judges">${(state.scorers || []).map(s => `<button class="btn ghost" data-j="${s.id}">${esc(s.name)}</button>`).join('')}</div>`;
+    return;
+  }
+  if (!judge) {
+    const s = state.scorers.find(x => x.id === pinFor);
+    el.innerHTML = `<h2 class="sec-title">Hi ${esc(s.name)}</h2><p class="lede">Type your 4-digit PIN.</p>
+      <div class="oly-dots">${[0, 1, 2, 3].map(i => `<span class="${i < pinVal.length ? 'on' : ''}"></span>`).join('')}</div>
+      <p class="err oly-pin-err">${esc(pinErr)}</p>
+      <div class="oly-pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button data-k="${n}">${n}</button>`).join('')}<button data-k="back" aria-label="Delete">⌫</button><button data-k="0">0</button><button data-k="cancel">Back</button></div>`;
+    return;
+  }
+  const d = DAYS.find(x => x.key === judgeDay);
+  const evs = events.filter(e => e.day_key === judgeDay && e.points != null);
+  const reveal = ['victoria', 'mac'].includes(judge.id) ? `<div class="note oly-reveal">${state.revealed
+      ? `✅ The teams are revealed. <button class="btn ghost small" data-reveal="off">Hide the teams again</button>`
+      : `🔒 The teams are hidden. At the Opening Ceremony, tap <button class="btn small" data-reveal="on">Reveal the teams</button>`}</div>` : '';
+  el.innerHTML = `<div class="oly-judging"><span>Judging: <b>${esc(judge.name)}</b></span><button class="btn ghost small" id="lock">Done · lock</button></div>
+    ${reveal}
+    <div class="mdays oly-days" style="margin:18px 0 8px">${dayTabs(judgeDay, 'data-jd')}</div>
+    <h2 class="sec-title" style="margin-top:14px">${dayTitle(d)} <span class="oly-small">${d.label}</span></h2>
+    <p class="muted" style="margin-bottom:10px">Tap an event to score it.</p>
+    ${evs.length ? evs.map(e => judgeEvent(e)).join('') : '<p class="muted">No scored events on this day.</p>'}`;
+}
+function judgeEvent(e) {
+  const r = results[e.id], open = openEvent === e.id;
+  let body = '';
+  if (open) {
+    const half = num(e.points / 2);
+    if (pending) {
+      const what = pending.w === 'coral' ? `Coral wins, ${e.points} points` : pending.w === 'turquoise' ? `Turquoise wins, ${e.points} points` : pending.w === 'tie' ? `A tie, ${half} points each` : `Coral ${num(pending.c)} · Turquoise ${num(pending.t)}`;
+      body = `<div class="oly-confirm"><p><b>${what}?</b></p><button class="btn" data-save="1">Save score</button> <button class="btn ghost" data-cancel="1">Cancel</button></div>`;
+    } else {
+      body = `<div class="oly-ev-rules">${rulesHtml(e.rules)}</div>
+        <div class="oly-win"><button class="oly-wbtn coral" data-w="coral">Coral won</button><button class="oly-wbtn turquoise" data-w="turquoise">Turquoise won</button></div>
+        <div class="oly-win"><button class="btn ghost" data-w="tie">Tie · ${half} each</button><button class="btn ghost" data-w="split">Other split…</button></div>
+        <div class="oly-split" id="split"${split ? '' : ' hidden'}><label>Coral <input type="number" inputmode="decimal" min="0" max="${e.points}" step="0.5" id="sc" value="${split ? esc(split.c) : ''}"></label>
+          <label>Turquoise <input type="number" inputmode="decimal" min="0" max="${e.points}" step="0.5" id="st" value="${split ? esc(split.t) : ''}"></label>
+          <button class="btn small" data-w="split-go">Next</button><p class="muted">Up to ${e.points} points in total.</p></div>
+        ${r ? `<p style="margin-top:14px"><button class="btn ghost small" data-clear="1">Clear this score</button></p>` : ''}`;
+    }
+    if (msg) body += `<p class="${msg.startsWith('✓') ? 'saved' : 'err'}" style="margin:10px 0 0">${esc(msg)}</p>`;
+  }
+  const who = r && r.scored_by ? ` · by ${esc((ctx.byId[r.scored_by] || {}).short || '')}` : '';
+  return `<div class="oly-jev${open ? ' open' : ''}"><button class="oly-jhead" data-ev="${e.id}"><span class="slot-time">${fmtT(e.start_time)}</span>
+    <span class="slot-who">${esc(e.title)}<span class="slot-note">${resultText(e, r)}${who}</span></span></button>${open ? `<div class="oly-jbody">${body}</div>` : ''}</div>`;
+}
+
+async function call(fn, args) {
+  const { data, error } = await db.rpc(fn, { p_scorer: judge.id, p_pin: judge.pin, ...args });
+  if (error) { msg = error.message.includes('PIN') ? 'Your PIN was not accepted. Tap Done · lock and sign in again.' : error.message; return null; }
+  return data ?? true;
+}
+
+$('judge').addEventListener('click', async e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.j) { pinFor = b.dataset.j; pinVal = ''; pinErr = ''; return renderJudge(); }
+  if (b.dataset.k) {
+    const k = b.dataset.k;
+    if (k === 'cancel') { pinFor = null; return renderJudge(); }
+    if (k === 'back') pinVal = pinVal.slice(0, -1); else if (pinVal.length < 4) pinVal += k;
+    pinErr = ''; renderJudge();
+    if (pinVal.length === 4) {
+      const { data } = await db.rpc('turks_oly_check_pin', { p_scorer: pinFor, p_pin: pinVal });
+      if (data === true) { judge = { id: pinFor, name: state.scorers.find(x => x.id === pinFor).name, pin: pinVal }; pinFor = null; }
+      else pinErr = 'That PIN did not work. Try again.';
+      pinVal = ''; renderJudge();
+    }
+    return;
+  }
+  if (b.id === 'lock') { judge = null; openEvent = null; pending = null; msg = ''; return renderJudge(); }
+  if (b.dataset.jd) { judgeDay = b.dataset.jd; openEvent = null; pending = null; split = null; msg = ''; return renderJudge(); }
+  if (b.dataset.reveal) {
+    b.disabled = true;
+    if (await call('turks_oly_set_reveal', { p_on: b.dataset.reveal === 'on' })) await load();
+    return renderJudge();
+  }
+  if (b.dataset.ev) { const id = Number(b.dataset.ev); openEvent = openEvent === id ? null : id; pending = null; split = null; msg = ''; return renderJudge(); }
+  const ev = events.find(x => x.id === openEvent);
+  if (b.dataset.w) {
+    const w = b.dataset.w;
+    if (w === 'split') { split = { c: '', t: '' }; $('split').hidden = false; $('sc').focus(); return; }
+    if (w === 'split-go') {
+      split = { c: $('sc').value, t: $('st').value };
+      const c = Number(split.c || 0), t = Number(split.t || 0);
+      if (!(c >= 0 && t >= 0) || c + t > ev.points) { msg = `Points must add up to ${ev.points} or less.`; return renderJudge(); }
+      if (c + t === 0) { msg = 'Type the points for at least one team.'; return renderJudge(); }
+      pending = { w: 'split', c, t }; split = null;
+    } else pending = { w };
+    msg = ''; return renderJudge();
+  }
+  if (b.dataset.cancel) { pending = null; split = null; return renderJudge(); }
+  if (b.dataset.save) {
+    b.disabled = true;
+    const ok = await call('turks_oly_score', { p_event: ev.id, p_winner: pending.w, p_coral: pending.c ?? null, p_turquoise: pending.t ?? null });
+    pending = null; if (ok) msg = '✓ Saved';
+    await load(); return;
+  }
+  if (b.dataset.clear) {
+    if (b.dataset.sure) { const ok = await call('turks_oly_clear', { p_event: ev.id }); if (ok) msg = '✓ Score cleared'; await load(); return; }
+    b.dataset.sure = '1'; b.textContent = 'Tap again to clear it'; return;
+  }
+});
+
+// ---------- tabs + loading ----------
+function renderTabs() {
+  const T = [['score', '🏆', 'Scoreboard'], ['sched', '🗓️', 'Schedule'], ['teams', '🏳️', 'Teams']];
+  if (state.is_scorer) T.push(['judge', '⚖️', 'Judges']);
+  $('tabs').style.gridTemplateColumns = `repeat(${T.length},1fr)`;
+  $('tabs').innerHTML = T.map(([k, i, l]) => `<button class="tab${k === tab ? ' on' : ''}" data-t="${k}"><span class="oly-ti">${i}</span>${l}</button>`).join('');
+}
+function render() {
+  renderTabs();
+  document.querySelectorAll('.panel').forEach(p => p.hidden = p.id !== 'p-' + tab);
+  if (tab === 'score') renderScore();
+  if (tab === 'sched') renderSched();
+  if (tab === 'teams') renderTeams();
+  if (tab === 'judge') renderJudge();
+}
+$('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; tab = b.dataset.t; history.replaceState(null, '', '#' + tab); render(); window.scrollTo({ top: 0 }); });
+$('schedDays').addEventListener('click', e => { const b = e.target.closest('[data-sd]'); if (b) { schedDay = b.dataset.sd; renderSched(); } });
+
+async function load() {
+  const [st, ev, rs] = await Promise.all([db.rpc('turks_oly_state'), events.length ? null : db.from('turks_oly_events').select('*').order('id'), db.from('turks_oly_results').select('*')]);
+  state = st.data || {};
+  if (ev) events = ev.data || [];
+  results = Object.fromEntries((rs.data || []).map(r => [r.event_id, r]));
+  teams = state.sees_teams ? ((await db.from('turks_oly_teams').select('*')).data || []) : [];
+  if (tab === 'judge' && !state.is_scorer) tab = 'score';
+  render();
+}
+const h = location.hash.slice(1); if (['score', 'sched', 'teams', 'judge'].includes(h)) tab = h;
+await load();
+setInterval(() => { if (document.visibilityState === 'visible' && !(tab === 'judge' && (pending || pinFor || split))) load(); }, 15000);
+}
+</script>
+</body>
+</html>

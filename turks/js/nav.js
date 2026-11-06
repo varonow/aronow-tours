@@ -1,9 +1,10 @@
-import { getCurrentUser, signOut } from './supabase.js?v=18';
+import { getCurrentUser, signOut } from './supabase.js?v=19';
 
 export const NAV_ITEMS = [
   { label: 'Home',        desc: 'Countdown and your trip',        href: 'index.html',     icon: '\u{1F3E0}' },
   { label: 'Estate map',  desc: 'Find your way around Emara',     href: 'map.html',       icon: '\u{1F5FA}️' },
   { label: 'Itinerary',   desc: 'Day by day',                     href: 'itinerary.html', icon: '\u{1F5D3}️' },
+  { label: 'Olympics',    desc: 'Coral vs Turquoise, live score', href: 'olympics.html', icon: '\u{1F3C5}' },
   { label: 'Rooms',       desc: 'Who is staying where',           href: 'rooms.html',     icon: '\u{1F6CF}️' },
   { label: 'Flights',     desc: 'Your flights and airport rides', href: 'flights.html',   icon: '✈️' },
   { label: 'Menus',       desc: 'Breakfast, lunch and dinner',    href: 'menus.html',     icon: '\u{1F37D}️' },

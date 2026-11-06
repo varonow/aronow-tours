@@ -284,3 +284,70 @@ details.more ul{margin:4px 0 16px}
 .slot-who{font-weight:600;font-size:21px}
 .slot-note{display:block;font-weight:500;font-style:italic;font-size:18px}
 .nm{white-space:nowrap}
+/* olympics */
+:root{--c-team:#E4573F;--c-ink:#A8321D;--c-pale:#FDE5DF;--t-team:#17AFAF;--t-ink:#0A6B6D;--t-pale:#D6F3F2}
+.tabs.oly-tabs .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:16px;line-height:1.1;min-height:70px;padding:4px 2px}
+.oly-ti{font-size:24px;line-height:1}
+.oly-days{grid-template-columns:repeat(7,1fr)}
+.oly-board{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.oly-side{padding:22px 10px 18px;text-align:center;border:3px solid}
+.oly-side.coral{background:var(--c-pale);border-color:var(--c-team);color:var(--c-ink)}
+.oly-side.turquoise{background:var(--t-pale);border-color:var(--t-team);color:var(--t-ink)}
+.oly-team{font-family:Jost,sans-serif;font-weight:600;font-size:18px;letter-spacing:.14em;text-transform:uppercase}
+.oly-pts{font-family:"DM Serif Display",serif;font-size:clamp(4rem,18vw,6.5rem);line-height:1}
+.oly-lead{text-align:center;font-family:"DM Serif Display",serif;font-size:30px;color:var(--ink);margin-top:18px}
+.oly-sub{text-align:center;font-size:17px;margin-top:6px}
+.oly-table{border-top:3px solid var(--coral)}
+.oly-row{display:grid;grid-template-columns:1.5fr .8fr .8fr 1.3fr;gap:8px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center;font-size:20px}
+.oly-row.head{font-family:Jost,sans-serif;font-weight:600;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--coral-ink)}
+.oly-row small{display:block;font-family:Jost,sans-serif;font-size:14px;color:var(--teal)}
+b.coral,.oly-won.coral{color:var(--c-ink)}
+b.turquoise,.oly-won.turquoise{color:var(--t-ink)}
+.oly-won{font-family:Jost,sans-serif;font-weight:600;font-style:normal}
+.oly-won.tie{color:var(--ink)}
+.oly-ev{display:flex;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.oly-ev:first-child{border-top:0}
+.oly-ev-time{flex:0 0 84px;font-family:Jost,sans-serif;font-weight:600;font-size:19px;color:var(--coral-ink);padding-top:4px}
+.oly-ev-body h3{font-size:26px;color:var(--ink)}
+.oly-ev-meta{font-family:Jost,sans-serif;font-size:17px;color:var(--teal);margin-top:4px}
+.oly-ev-rules{font-size:18px;margin-top:6px}
+.oly-ev-res{margin-top:8px;font-size:18px}
+.oly-roster{border:3px solid;padding:20px 22px}
+.oly-roster.coral{border-color:var(--c-team);background:var(--c-pale)}
+.oly-roster.turquoise{border-color:var(--t-team);background:var(--t-pale)}
+.oly-roster h2{font-size:34px;margin-bottom:6px}
+.oly-roster.coral h2{color:var(--c-ink)}
+.oly-roster.turquoise h2{color:var(--t-ink)}
+.oly-div{font-family:Jost,sans-serif;font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin:14px 0 4px;border-top:1px solid rgba(11,60,85,.2);padding-top:10px}
+.oly-roster p{font-size:21px;font-weight:600}
+.oly-officials{margin-top:22px;text-align:center}
+.oly-judges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.oly-judges .btn{min-height:80px;font-size:24px;justify-content:center;text-align:center}
+.oly-dots{display:flex;gap:16px;justify-content:center;margin:20px 0 6px}
+.oly-dots span{width:22px;height:22px;border:3px solid var(--teal);border-radius:50%}
+.oly-dots span.on{background:var(--teal)}
+.oly-pin-err{text-align:center;min-height:30px}
+.oly-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:360px;margin:0 auto}
+.oly-pad button{min-height:76px;font-family:Jost,sans-serif;font-weight:600;font-size:30px;border:2px solid var(--teal);background:var(--white);color:var(--ink);cursor:pointer}
+.oly-pad button[data-k=cancel],.oly-pad button[data-k=back]{font-size:20px}
+.oly-judging{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:22px}
+.oly-reveal .btn{margin-top:10px}
+.oly-small{font-family:Jost,sans-serif;font-size:17px;color:var(--teal);margin-left:6px}
+.oly-jev{border-top:1px solid var(--line)}
+.oly-jev.open{background:var(--aqua);border:2px solid var(--teal);margin:6px 0}
+.oly-jhead{display:flex;gap:16px;width:100%;text-align:left;background:none;border:0;padding:16px 8px;cursor:pointer;font:inherit;color:inherit;align-items:baseline}
+.oly-jbody{padding:0 14px 18px}
+.oly-win{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.oly-win .btn{justify-content:center;text-align:center}
+.oly-wbtn{min-height:84px;border:0;font-family:Jost,sans-serif;font-weight:600;font-size:24px;color:#fff;cursor:pointer}
+.oly-wbtn.coral{background:var(--c-ink)}
+.oly-wbtn.turquoise{background:var(--t-ink)}
+.oly-split{margin-top:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:end}
+.oly-split label{font-family:Jost,sans-serif;font-weight:600;font-size:18px;display:flex;flex-direction:column;gap:4px}
+.oly-split input{width:120px;min-height:56px;font-size:22px;border:2px solid var(--teal);padding:8px}
+.oly-split p{width:100%}
+.oly-confirm{background:var(--white);border-left:6px solid var(--coral);padding:16px 18px;margin-top:10px}
+.oly-confirm .btn{margin-top:10px}
+.oly-legs{margin:8px 0 8px 24px;font-size:18px}
+.oly-legs li{margin:3px 0}
+@media(max-width:600px){.oly-ev{flex-direction:column;gap:2px}.oly-ev-time{flex:none;padding-top:0}}
