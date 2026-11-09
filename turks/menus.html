@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Menus</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=19">
+<link rel="stylesheet" href="css/style.css?v=20">
 </head>
 <body>
 <main>
@@ -33,7 +33,7 @@
 </div></section>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=19';
+import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=20';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('menus.html');
 if (ctx) {
@@ -125,7 +125,8 @@ document.addEventListener('click', e => {
   const go = e.target.closest('[data-go]'); if (go) { e.preventDefault(); show(go.dataset.go); document.querySelector('.mtabs').scrollIntoView({ block: 'start' }); return; }
   const b = e.target.closest('.mtab'); if (b) show(b.dataset.t);
 });
-show(today >= '2026-11-22' && today <= '2026-11-29' ? today : '2026-11-22');
+const hash = location.hash.slice(1);
+show(hash === 'b' || DAYS.some(d => d.iso === hash) ? hash : (today >= '2026-11-22' && today <= '2026-11-29' ? today : '2026-11-22'));
 }
 </script>
 </body>

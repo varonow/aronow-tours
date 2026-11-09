@@ -13,49 +13,98 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Itinerary</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=19">
+<link rel="stylesheet" href="css/style.css?v=20">
 </head>
 <body>
 <main>
 <header class="page-head "><div class="wrap"><div class="eyebrow">Day by day</div><h1>The Itinerary</h1></div></header>
 <figure class="photo"><img src="images/pool-aerial.jpg" alt="Emara West and its pool from the air" style="object-position:center 55%" loading="lazy"><figcaption>Emara West</figcaption></figure>
-<section class="band band-peach"><div class="wrap narrow">
-  <h2 class="sec-title">Your lessons &amp; massages</h2>
-  <p class="muted" id="mineFor"></p>
-  <div id="mine"><p class="loading">Loading…</p></div>
-  <p style="margin-top:20px"><a href="signups.html">See everyone’s tennis and massage times</a> in case you would like to trade.</p>
-</div></section>
-<section class="band band-white"><div class="wrap narrow" style="text-align:center">
-  <p style="font-size:64px;line-height:1">🗓️</p>
-  <h2 class="sec-title" style="margin-top:10px">To be announced</h2>
+<div class="mtabs"><div class="mtabs-in"><div class="mdays" id="days"></div></div></div>
+<section class="band band-white"><div class="wrap narrow">
+  <div class="eyebrow" id="dayEyebrow"></div>
+  <h2 class="sec-title" id="dayTitle"></h2>
+  <p class="it-intro" id="dayIntro"></p>
+  <p class="it-key">🍽️ Meals &nbsp;·&nbsp; 🏅 Olympics &nbsp;·&nbsp; <span class="it-key-mine">⭐ Just for your family</span></p>
   <div class="rule"></div>
-  <p class="lede">The week is still being planned. The full day-by-day itinerary will appear here as soon as it is ready.</p>
-  <p style="margin-top:18px">In the meantime, you can see <a href="flights.html">your flights</a>, <a href="rooms.html">your room</a> and <a href="menus.html">the menus</a>.</p>
+  <div id="day"><p class="loading">Loading…</p></div>
+</div></section>
+<section class="band band-aqua"><div class="wrap narrow" style="text-align:center">
+  <p>Your <a href="flights.html">flights</a> and <a href="rooms.html">room</a> have their own pages. Everyone’s lessons and massages are on <a href="signups.html">Tennis &amp; massages</a>.</p>
 </div></section>
 </main>
 <script type="module">
-import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js/app.js?v=19';
+import { start, db, esc, DAYS, islandToday, FOOTER } from './js/app.js?v=20';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('itinerary.html');
 if (ctx) {
 const $ = id => document.getElementById(id);
-const whoHtml = w => String(w).split(' & ').map(n => `<span class="nm">${esc(n)}</span>`).join(' &amp; ');
 const fmt = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')}${h < 12 ? 'am' : 'pm'}`; };
-const WHAT = { tennis: '\u{1F3BE} Tennis with Reinaldo', massage: '\u{1F486}\u200D\u2640\uFE0F Massage with Thai Bliss' };
+const whoHtml = w => String(w).split(' & ').map(n => `<span class="nm">${esc(n)}</span>`).join(' &amp; ');
+
+// Dinner names come from the Menus page.
+const DINNER = { '2026-11-22': 'Welcome dinner', '2026-11-23': 'Barbecue night', '2026-11-24': 'Hibachi night', '2026-11-25': 'Light and fresh night',
+  '2026-11-26': 'Thanksgiving dinner', '2026-11-27': 'Shabbat dinner', '2026-11-28': 'Italian pizza night' };
+const DAYNOTE = {
+  '2026-11-22': ['Arrival day', 'Welcome to Emara. Your flight and airport ride are on the <a href="flights.html">Flights</a> page. The Olympics open tonight on the beach.'],
+  '2026-11-23': ['Olympics · Day 1', ''],
+  '2026-11-24': ['Olympics · Day 2', ''],
+  '2026-11-25': ['Olympics · Day 3 · Court day', 'No tennis lessons today. The court is for the Olympics.'],
+  '2026-11-26': ['Thanksgiving · Olympics Day 4', 'The thankful messages open at 6:00pm.'],
+  '2026-11-27': ['Olympics · Day 5', ''],
+  '2026-11-28': ['Olympics · Day 6 · The finale', 'The Apache relay and the tug-of-war finale, then the closing ceremony.'],
+  '2026-11-29': ['Departure day', 'Safe travels home. Your flight is on the <a href="flights.html">Flights</a> page.'],
+};
+function meals(iso) {
+  const m = [], menu = `menus.html#${iso}`;
+  const add = (t, title, sub) => m.push({ t, kind: 'meal', title, sub, href: menu });
+  if (iso !== '2026-11-22') add('07:30', 'Breakfast', 'Until 10:30am');
+  if (iso === '2026-11-29') { add('12:00', 'Packed lunch for the flights', ''); return m; }
+  add('12:00', 'Kids’ lunch', 'With the nannies');
+  add('13:00', 'Adults’ lunch', 'Until about 2:30pm');
+  add('17:30', 'Kids’ dinner', 'With the nannies');
+  add('19:30', iso === '2026-11-26' ? 'Thanksgiving dinner' : 'Adults’ dinner', iso === '2026-11-26' ? '' : DINNER[iso]);
+  return m;
+}
+
 const family = [ctx.me, ...ctx.kids].filter(Boolean);
 const ids = new Set(family.map(p => p.id));
-if (ctx.kids.length) $('mineFor').textContent = 'Yours and your children’s.';
-const { data, error } = await db.from('turks_bookings').select('*').order('day').order('start_time');
-const rows = (data || []).filter(r => (r.people || []).some(id => ids.has(id)));
+const [ev, bk] = await Promise.all([
+  db.from('turks_oly_events').select('id,day,start_time,title,category,location,division').order('id'),
+  db.from('turks_bookings').select('*').order('day').order('start_time'),
+]);
+const events = ev.data || [];
+const mine = (bk.data || []).filter(r => (r.people || []).some(id => ids.has(id)));
+const WHAT = { tennis: '🎾 Tennis with Reinaldo', massage: '💆‍♀️ Massage with Thai Bliss' };
+
+function items(iso) {
+  const list = meals(iso);
+  events.filter(e => e.day === iso).forEach(e => {
+    const icon = e.category === 'Ceremony' ? '🎉' : e.category === 'Thanksgiving' ? '🦃' : '🏅';
+    list.push({ t: e.start_time, kind: 'oly', title: `${icon} ${e.title}`, sub: `${e.division} · ${e.location}`,
+      href: e.category === 'Thanksgiving' ? 'thankful.html' : `olympics.html#sched-${iso}` });
+  });
+  mine.filter(r => r.day === iso).forEach(r => list.push({ t: r.start_time, kind: 'mine', title: `⭐ ${WHAT[r.kind]}`, html: whoHtml(r.who) + (r.detail ? ' · ' + esc(r.detail) : '') }));
+  const rank = { mine: 0, oly: 1, meal: 2 };
+  return list.sort((a, b) => a.t.localeCompare(b.t) || rank[a.kind] - rank[b.kind]);
+}
+
 const today = islandToday();
-if (error) $('mine').innerHTML = '<p class="err">Could not load your bookings. Please try again.</p>';
-else if (!ctx.me) $('mine').innerHTML = '<p>Nothing is linked to your sign-in yet.</p>';
-else if (!rows.length) $('mine').innerHTML = '<p>Nothing booked for you yet.</p>';
-else $('mine').innerHTML = [...new Set(rows.map(r => r.day))].map(d => `<div class="day${d === today ? ' today' : ''}">
-  <h3>${esc(dayLabel(d))}${d === today ? ' <span class="kind">Today</span>' : ''}</h3>
-  ${rows.filter(r => r.day === d).map(r => `<div class="slot"><div class="slot-time">${fmt(r.start_time)}</div>
-    <div class="slot-who">${WHAT[r.kind]}<span class="slot-note">${whoHtml(r.who)}${r.detail ? ' · ' + esc(r.detail) : ''}</span></div></div>`).join('')}
-</div>`).join('');
+let cur = DAYS.some(d => d.iso === today) ? today : DAYS[0].iso;
+const h = location.hash.slice(1); if (DAYS.some(d => d.iso === h)) cur = h;
+
+function render() {
+  $('days').innerHTML = DAYS.map(d => { const [wd, , num] = d.short.split(' '); return `<button class="mtab${d.iso === cur ? ' on' : ''}" data-d="${d.iso}" aria-label="${d.label}">${wd}<b>${num}</b></button>`; }).join('');
+  const d = DAYS.find(x => x.iso === cur), note = DAYNOTE[cur] || ['', ''];
+  $('dayEyebrow').textContent = (cur === today ? 'Today · ' : '') + note[0];
+  $('dayTitle').textContent = d.label;
+  $('dayIntro').innerHTML = note[1];
+  $('dayIntro').hidden = !note[1];
+  if (ev.error || bk.error) { $('day').innerHTML = '<p class="err">Could not load the day. Please refresh.</p>'; return; }
+  $('day').innerHTML = items(cur).map(i => `<div class="slot it-${i.kind}"><div class="slot-time">${fmt(i.t)}</div>
+    <div class="slot-who">${i.href ? `<a href="${i.href}">${esc(i.title)}</a>` : esc(i.title)}${i.html ? `<span class="slot-note">${i.html}</span>` : i.sub ? `<span class="slot-note">${esc(i.sub)}</span>` : ''}</div></div>`).join('');
+}
+$('days').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (!b) return; cur = b.dataset.d; history.replaceState(null, '', '#' + cur); render(); });
+render();
 }
 </script>
 </body>

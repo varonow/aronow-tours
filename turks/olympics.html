@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Olympics</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=19">
+<link rel="stylesheet" href="css/style.css?v=20">
 </head>
 <body>
 <main>
@@ -57,7 +57,7 @@
 </div>
 </main>
 <script type="module">
-import { start, db, esc, names, islandToday, FOOTER } from './js/app.js?v=19';
+import { start, db, esc, names, islandToday, FOOTER } from './js/app.js?v=20';
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('olympics.html');
 if (ctx) {
@@ -297,6 +297,7 @@ async function load() {
   render();
 }
 const h = location.hash.slice(1); if (['score', 'sched', 'teams', 'judge'].includes(h)) tab = h;
+if (h.startsWith('sched-')) { const d = DAYS.find(x => x.iso === h.slice(6)); if (d) { tab = 'sched'; schedDay = d.key; } }
 await load();
 setInterval(() => { if (document.visibilityState === 'visible' && !(tab === 'judge' && (pending || pinFor || split))) load(); }, 15000);
 }

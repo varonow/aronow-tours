@@ -351,3 +351,14 @@ b.turquoise,.oly-won.turquoise{color:var(--t-ink)}
 .oly-legs{margin:8px 0 8px 24px;font-size:18px}
 .oly-legs li{margin:3px 0}
 @media(max-width:600px){.oly-ev{flex-direction:column;gap:2px}.oly-ev-time{flex:none;padding-top:0}}
+
+/* itinerary */
+.it-intro{font-size:20px;margin-top:6px}
+.it-key{font-family:Jost,sans-serif;font-size:16px;color:var(--teal);margin-top:12px}
+.it-key-mine{color:var(--coral-ink);font-weight:600}
+.slot.it-meal .slot-who{font-weight:500}
+.slot.it-meal .slot-who a{color:var(--ink)}
+.slot.it-mine{background:var(--peach);border-left:5px solid var(--coral);padding-left:12px;padding-right:12px;margin:4px 0}
+.slot.it-mine .slot-time{color:var(--coral-ink)}
+.slot-who a{text-decoration:none;border-bottom:1px solid var(--line)}
+@media(max-width:600px){.slot.it-mine{padding-left:8px}.slot-time{flex-basis:82px}}
