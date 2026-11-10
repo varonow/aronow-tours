@@ -107,7 +107,7 @@ function dayView(iso) {
   }
   if (d) {
     const k = split(d[1], 'Dinner');
-    html += `<section class="band band-peach"><div class="wrap narrow"><div class="eyebrow">Around 7:30pm${k.type ? SEP + esc(k.type) : ''}</div><h2 class="sec-title">${esc(k.name)}</h2>
+    html += `<section class="band band-peach"><div class="wrap narrow"><div class="eyebrow">Around ${iso === '2026-11-26' ? '6:30pm' : '7:30pm'}${k.type ? SEP + esc(k.type) : ''}</div><h2 class="sec-title">${esc(k.name)}</h2>
       ${rows(d[2])}${more('Also on the table at every dinner', D.every) + more('For the kids, around 5:30pm with the nannies', D.kids)}</div></section>`;
   } else {
     html += `<section class="band band-peach"><div class="wrap narrow"><h2 class="sec-title">Dinner</h2><p>We are on our way home. No dinner at the villa tonight.</p></div></section>`;

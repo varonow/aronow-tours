@@ -157,7 +157,7 @@ function renderTeams() {
     `<div class="grid2">` + ['coral', 'turquoise'].map(t => `<div class="oly-roster ${t}"><h2>Team ${TEAM[t]}</h2>
       ${DIVS.map(([k, l]) => { const ps = by(t).filter(x => x.division === k); return ps.length ? `<div class="oly-div">${l}</div>${ps.map(p => `<p>${esc(nm(p.person_id))}</p>`).join('')}` : ''; }).join('')}
       </div>`).join('') + `</div>
-    <p class="oly-officials"><b>Judges:</b> ${esc(names(['henry', 'joyce-f', 'debbie'].map(nm)))} &nbsp;·&nbsp; <b>Official:</b> ${esc(nm('mac'))}</p>`;
+    <p class="oly-officials"><b>Judges:</b> ${esc(names(['henry', 'joyce-f'].map(nm)))} &nbsp;·&nbsp; <b>Official:</b> ${esc(nm('mac'))}</p>`;
 }
 
 // ---------- Judges ----------

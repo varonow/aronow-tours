@@ -49,7 +49,7 @@ const DAYNOTE = {
   '2026-11-23': ['Olympics · Day 1', ''],
   '2026-11-24': ['Olympics · Day 2', ''],
   '2026-11-25': ['Olympics · Day 3 · Court day', 'No tennis lessons today. The court is for the Olympics.'],
-  '2026-11-26': ['Thanksgiving · Olympics Day 4', 'The thankful messages open at 6:00pm.'],
+  '2026-11-26': ['Thanksgiving · Olympics Day 4', 'Thanksgiving dinner is at 6:30pm. We read the thankful messages together at the table.'],
   '2026-11-27': ['Olympics · Day 5', ''],
   '2026-11-28': ['Olympics · Day 6 · The finale', 'The Apache relay and the tug-of-war finale, then the closing ceremony.'],
   '2026-11-29': ['Departure day', 'Safe travels home. Your flight is on the <a href="flights.html">Flights</a> page.'],
@@ -62,7 +62,8 @@ function meals(iso) {
   add('12:00', 'Kids’ lunch', 'With the nannies');
   add('13:00', 'Adults’ lunch', 'Until about 2:30pm');
   add('17:30', 'Kids’ dinner', 'With the nannies');
-  add('19:30', iso === '2026-11-26' ? 'Thanksgiving dinner' : 'Adults’ dinner', iso === '2026-11-26' ? '' : DINNER[iso]);
+  if (iso === '2026-11-26') add('18:30', '🦃 Thanksgiving dinner', 'We read the thankful messages at the table.');
+  else add('19:30', 'Adults’ dinner', DINNER[iso]);
   return m;
 }
 
@@ -78,7 +79,7 @@ const WHAT = { tennis: '🎾 Tennis with Reinaldo', massage: '💆‍♀️ Mass
 
 function items(iso) {
   const list = meals(iso);
-  events.filter(e => e.day === iso).forEach(e => {
+  events.filter(e => e.day === iso && e.category !== 'Thanksgiving').forEach(e => {
     const icon = e.category === 'Ceremony' ? '🎉' : e.category === 'Thanksgiving' ? '🦃' : '🏅';
     list.push({ t: e.start_time, kind: 'oly', title: `${icon} ${e.title}`, sub: `${e.division} · ${e.location}`,
       href: e.category === 'Thanksgiving' ? 'thankful.html' : `olympics.html#sched-${iso}` });
