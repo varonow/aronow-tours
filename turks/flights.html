@@ -22,6 +22,27 @@
   <div class="eyebrow">Getting there</div><h2 class="sec-title">Arriving</h2>
   <div id="arrive"><p class="loading">Loading your flights…</p></div>
 </div></section>
+<section class="band band-white" id="car-band" hidden><div class="wrap narrow">
+  <div class="eyebrow">Getting around</div><h2 class="sec-title">Your rental car</h2>
+  <div class="card">
+    <div class="meta">Sunday, Nov 22 &ndash; Friday, Nov 27</div>
+    <h3>&#x1F699; Toyota Land Cruiser</h3>
+    <p>Grace Bay Car Rentals. 4 doors, seats 7, fits 4 suitcases.</p>
+    <div class="times"><div class="t"><b>1:00 pm</b><span>Sun Nov 22 &middot; dropped at Emara East</span></div><div class="arrow"></div><div class="t"><b>2:00 pm</b><span>Fri Nov 27 &middot; collected from Emara East</span></div></div>
+    <dl class="kv">
+      <dt>Reservation</dt><dd><span class="conf">228310</span><br>Under Marshall Aronow</dd>
+      <dt>Driver</dt><dd>Marshall. Bring his driver&rsquo;s license.</dd>
+      <dt>Cost</dt><dd>$1,736.33 for 6 days, all taxes and fees included. Nothing paid yet. The balance is due to Grace Bay.</dd>
+      <dt>Insurance</dt><dd>Zero-deductible damage waiver included</dd>
+      <dt>Includes</dt><dd>Unlimited mileage, plus delivery to the villa and pickup from it</dd>
+      <dt>Contact</dt><dd>649-941-8500 or 649-339-8500 (9:00 am &ndash; 5:30 pm)<br><a href="mailto:booking@gracebaycarrentals.com">booking@gracebaycarrentals.com</a></dd>
+    </dl>
+    <ul class="dots" style="margin-top:14px">
+      <li>Cars drive on the <b>left</b> in Turks and Caicos, and roundabouts go clockwise.</li>
+      <li>Delivery and pickup at the villa were requested by email on Nov 12. Grace Bay still needs to confirm them.</li>
+    </ul>
+  </div>
+</div></section>
 <section class="band band-aqua"><div class="wrap narrow">
   <div class="eyebrow">Sunday, November 29</div><h2 class="sec-title">Going home</h2>
   <div id="depart"></div>
@@ -44,6 +65,9 @@ import { start, db, esc, names, DAYS, dayLabel, islandToday, FOOTER } from './js
 document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('flights.html');
 if (ctx) {
+// Rental car: only Victoria and Marshall see it.
+const CAR_EMAILS = ['varonow@gmail.com', 'maronow@mettel.net'];
+if (CAR_EMAILS.includes(String(ctx.user && ctx.user.email || '').toLowerCase())) document.getElementById('car-band').hidden = false;
 const { data: allRows } = await db.from('turks_travel').select('*').order('day').order('dep_time');
 let showAll = false;
 const fam = ctx.me ? ctx.me.family : null;
