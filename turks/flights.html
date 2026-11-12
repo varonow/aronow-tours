@@ -66,7 +66,7 @@ document.querySelector('main').insertAdjacentHTML('afterend', FOOTER);
 const ctx = await start('flights.html');
 if (ctx) {
 // Rental car: only Victoria and Marshall see it.
-const CAR_EMAILS = ['varonow@gmail.com', 'maronow@mettel.net'];
+const CAR_EMAILS = ['varonow@gmail.com', 'marshallaronow@gmail.com'];
 if (CAR_EMAILS.includes(String(ctx.user && ctx.user.email || '').toLowerCase())) document.getElementById('car-band').hidden = false;
 const { data: allRows } = await db.from('turks_travel').select('*').order('day').order('dep_time');
 let showAll = false;
