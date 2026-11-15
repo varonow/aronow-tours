@@ -77,8 +77,11 @@ pickRows();
 function cards(leg) {
   const g = {};
   (rows || []).filter(r => r.leg === leg).forEach(r => {
-    const k = (showAll ? [r.day, r.carrier, r.flight, r.to_place] : [r.day, r.carrier, r.flight, r.to_place, r.confirmation || '']).join('|');
+    // In "Everyone's flights" the jet home is one card: everyone flies to Teterboro, Victoria and Marshall get off at Belmar.
+    const jetAll = showAll && r.carrier === 'Private jet';
+    const k = (showAll ? (jetAll ? [r.day, r.carrier, r.flight] : [r.day, r.carrier, r.flight, r.to_place]) : [r.day, r.carrier, r.flight, r.to_place, r.confirmation || '']).join('|');
     const x = (g[k] = g[k] || { r, ppl: [], codes: {}, notes: {} });
+    if (jetAll && r.to_place === 'Teterboro') x.r = r;
     const who = ctx.byId[r.person_id];
     x.ppl.push(who);
     (x.codes[r.confirmation || ''] = x.codes[r.confirmation || ''] || []).push(who);
@@ -91,7 +94,7 @@ function cards(leg) {
   return list.map(({ r, ppl, codes, notes }) => {
     const bySort = a => a.slice().sort((x, y) => x.sort - y.sort);
     const codeList = Object.entries(codes).sort((a, b) => bySort(a[1])[0].sort - bySort(b[1])[0].sort);
-    const noteList = Object.entries(notes);
+    const noteList = showAll && r.carrier === 'Private jet' ? (r.note ? [[r.note, ppl]] : []) : Object.entries(notes);
     ppl.sort((a, b) => a.sort - b.sort);
     const jet = r.carrier === 'Private jet';
     return `<div class="card">
