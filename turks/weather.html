@@ -17,7 +17,7 @@
 </head>
 <body>
 <main>
-<header class="page-head "><div class="wrap"><div class="eyebrow">Live forecast</div><h1>The Weather</h1><p class="sub">Turtle Tail, Providenciales. Updated every time you open this page.</p></div></header>
+<header class="page-head "><div class="wrap"><div class="eyebrow">Live forecast</div><h1>The Weather</h1><p class="sub">Turtle Tail, Providenciales. AccuWeather forecast, refreshed through the day.</p></div></header>
 <figure class="photo"><img src="images/firepit-sunset.jpg" alt="Sunset over the water from a firepit lounge" style="object-position:center" loading="lazy"><figcaption>Sunset from Emara West</figcaption></figure>
 <div id="wx"><section class="band band-white"><p class="loading">Checking the skies…</p></section></div>
 </main>
@@ -37,20 +37,23 @@ const TRIP = [
   ['2026-11-28', 'Sat Nov 28', 'Shabbat · pizza night after Havdalah'],
   ['2026-11-29', 'Sun Nov 29', 'Going home'],
 ];
+// Forecast: AccuWeather, through the hub's shared "weather" edge function (key kept server-side, cached).
+// The water (sea temperature and waves) still comes from Open-Meteo's free marine model.
 const F = c => Math.round(c * 9 / 5 + 32);
-const icon = c => c === 0 ? '☀️' : c <= 2 ? '⛅' : c <= 3 ? '☁️' : c <= 48 ? '\u{1F32B}️' : c <= 67 ? '\u{1F327}️' : c <= 82 ? '\u{1F326}️' : '⛈️';
-const desc = c => c === 0 ? 'Clear skies' : c <= 2 ? 'Partly cloudy' : c <= 3 ? 'Overcast' : c <= 48 ? 'Foggy' : c <= 57 ? 'Light drizzle' : c <= 67 ? 'Rain' : c <= 82 ? 'Passing showers' : 'Thunderstorms';
+const R = n => n == null ? '—' : Math.round(n);
+const icon = n => n <= 2 ? '☀️' : n <= 4 ? '\u{1F324}️' : n <= 6 ? '⛅' : n <= 8 ? '☁️' : n === 11 ? '\u{1F32B}️' : n === 12 || n === 18 ? '\u{1F327}️' : n <= 14 ? '\u{1F326}️' : n <= 17 ? '⛈️' : n <= 29 ? '❄️' : n === 30 ? '\u{1F975}' : n === 32 ? '\u{1F4A8}' : n <= 34 ? '\u{1F319}' : n <= 38 ? '☁️' : n <= 40 ? '\u{1F326}️' : n <= 42 ? '⛈️' : n <= 44 ? '❄️' : '\u{1F324}️';
 const sea = h => h < 0.5 ? 'Calm, easy water' : h < 1 ? 'A light swell' : h < 1.5 ? 'A moderate swell' : 'Rough today';
 const wx = document.getElementById('wx');
 try {
-  const [fc, marine] = await Promise.all([
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LNG}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunset&current=temperature_2m,weathercode,windspeed_10m&windspeed_unit=mph&timezone=${encodeURIComponent(TZ)}&forecast_days=16`).then(r => r.json()),
+  const [aw, marine] = await Promise.all([
+    db.functions.invoke('weather', { body: { lat: LAT, lng: LNG } }).then(r => { if (r.error || !r.data || r.data.error) throw new Error('weather'); return r.data; }),
     fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${LAT}&longitude=${LNG}&daily=wave_height_max&hourly=sea_surface_temperature&timezone=${encodeURIComponent(TZ)}&forecast_days=3`).then(r => r.json()).catch(() => null),
   ]);
-  const d = fc.daily, c = fc.current;
-  const row = (label, sub, i) => i < 0
+  const c = aw.current, days = aw.daily || [];
+  const byDate = Object.fromEntries(days.map(d => [d.date, d]));
+  const row = (label, sub, d) => !d
     ? `<div class="wx-row far"><div><div class="d">${label}</div><div class="a">${sub}</div></div><div class="c">Too far out</div></div>`
-    : `<div class="wx-row"><div><div class="d">${label}</div><div class="a">${sub}</div></div><div class="c" style="font-size:28px">${icon(d.weathercode[i])}</div><div class="c"><b>${F(d.temperature_2m_max[i])}°</b></div><div class="c">${F(d.temperature_2m_min[i])}°</div><div class="c">${d.precipitation_probability_max[i] ?? '—'}%</div></div>`;
+    : `<div class="wx-row"><div><div class="d">${label}</div><div class="a">${sub}</div></div><div class="c" style="font-size:28px" title="${esc(d.phrase)}">${icon(d.icon)}</div><div class="c"><b>${R(d.hiF)}°</b></div><div class="c">${R(d.loF)}°</div><div class="c">${d.rain ?? '—'}%</div></div>`;
   const headRow = `<div class="wx-row head"><div>Day</div><div class="c">Sky</div><div class="c">High</div><div class="c">Low</div><div class="c">Rain</div></div>`;
   let seaHtml = '';
   if (marine && marine.daily) {
@@ -59,19 +62,22 @@ try {
     seaHtml = `<section class="band band-aqua"><div class="wrap narrow"><h2 class="sec-title" style="text-align:center">The water today</h2>
       <div class="wx-two"><div><b>${st != null ? F(st) + '°F' : '—'}</b>Sea temperature</div><div><b>${wv != null ? (wv * 3.281).toFixed(1) + ' ft' : '—'}</b>${wv != null ? sea(wv) : 'Wave height'}</div></div></div></section>`;
   }
-  const week = d.time.slice(0, 7).map((t, i) => row(new Date(t + 'T12:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }), desc(d.weathercode[i]), i)).join('');
+  const today = days[0];
+  const week = days.slice(0, 7).map(d => row(new Date(d.date + 'T12:00').toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }), esc(d.phrase), d)).join('');
+  const credit = `<p class="muted" style="margin-top:14px;text-align:center">Forecast by <a href="${esc(aw.link || 'https://www.accuweather.com')}" target="_blank" rel="noopener">AccuWeather</a></p>`;
   wx.innerHTML = `<section class="band band-white"><div class="wrap narrow wx-now">
-      <div class="label">Right now at Emara</div><div class="ic">${icon(c.weathercode)}</div>
-      <div class="deg">${F(c.temperature_2m)}°</div>
-      <p class="lede">${desc(c.weathercode)} &middot; wind ${Math.round(c.windspeed_10m)} mph</p>
-      <p>Today: high ${F(d.temperature_2m_max[0])}°, low ${F(d.temperature_2m_min[0])}°, ${d.precipitation_probability_max[0] ?? 0}% chance of rain</p></div></section>
+      <div class="label">Right now at Emara</div><div class="ic">${icon(c.icon)}</div>
+      <div class="deg">${R(c.tempF)}°</div>
+      <p class="lede">${esc(c.text || '')}${c.windMph != null ? ` &middot; wind ${R(c.windMph)} mph` : ''}${c.feelsF != null ? ` &middot; feels like ${R(c.feelsF)}°` : ''}</p>
+      ${today ? `<p>Today: high ${R(today.hiF)}°, low ${R(today.loF)}°, ${today.rain ?? 0}% chance of rain${c.uvText ? ` &middot; UV ${esc(c.uvText.toLowerCase())}` : ''}</p>` : ''}
+      ${aw.headline ? `<p class="muted">${esc(aw.headline)}</p>` : ''}</div></section>
     ${seaHtml}
     <section class="band band-peach"><div class="wrap narrow"><div class="eyebrow">November 22–29</div><h2 class="sec-title">Our week</h2>
-      ${headRow}${TRIP.map(t => row(t[1], t[2], d.time.indexOf(t[0]))).join('')}
-      <p class="muted" style="margin-top:14px">Forecasts reach about two weeks ahead, so our days fill in as the trip gets close. Late November here is usually in the low 80s by day and the mid 70s at night, with warm water and the odd passing shower.</p></div></section>
-    <section class="band band-white"><div class="wrap narrow"><h2 class="sec-title">The next seven days</h2>${headRow}${week}</div></section>`;
+      ${headRow}${TRIP.map(t => row(t[1], t[2], byDate[t[0]])).join('')}
+      <p class="muted" style="margin-top:14px">Days too far out fill in as the trip gets close. Late November here is usually in the low 80s by day and the mid 70s at night, with warm water and the odd passing shower.</p></div></section>
+    <section class="band band-white"><div class="wrap narrow"><h2 class="sec-title">The next seven days</h2>${headRow}${week}${credit}</div></section>`;
 } catch (e) {
-  wx.innerHTML = `<section class="band band-white"><div class="wrap narrow" style="text-align:center"><p style="font-size:54px">\u{1F324}️</p><p class="lede">The live forecast is not available right now. Please check back soon.</p><p>Late November on Providenciales is usually in the low 80s by day and the mid 70s at night.</p></div></section>`;
+  wx.innerHTML = `<section class="band band-white"><div class="wrap narrow" style="text-align:center"><p style="font-size:54px">\u{1F324}️</p><p class="lede">The live forecast is not available right now. Please check back soon.</p><p>Late November on Providenciales is usually in the low 80s by day and the mid 70s at night.</p><p><a href="https://www.accuweather.com/en/tc/the-bight-settlements/321407/daily-weather-forecast/321407" target="_blank" rel="noopener">See the forecast on AccuWeather</a></p></div></section>`;
 }
 }
 </script>
