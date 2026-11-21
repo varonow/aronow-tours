@@ -1,0 +1,109 @@
+/* Thanks & Caicos — the menus, shared by menus.html (family, signed in)
+   and kitchen.html (the chef's page, no sign-in). Edit the menu here only. */
+
+export const DAYS = [
+  { iso: '2026-11-22', label: 'Sunday, Nov 22',    short: 'Sun Nov 22' },
+  { iso: '2026-11-23', label: 'Monday, Nov 23',    short: 'Mon Nov 23' },
+  { iso: '2026-11-24', label: 'Tuesday, Nov 24',   short: 'Tue Nov 24' },
+  { iso: '2026-11-25', label: 'Wednesday, Nov 25', short: 'Wed Nov 25' },
+  { iso: '2026-11-26', label: 'Thursday, Nov 26',  short: 'Thu Nov 26' },
+  { iso: '2026-11-27', label: 'Friday, Nov 27',    short: 'Fri Nov 27' },
+  { iso: '2026-11-28', label: 'Saturday, Nov 28',  short: 'Sat Nov 28' },
+  { iso: '2026-11-29', label: 'Sunday, Nov 29',    short: 'Sun Nov 29' },
+];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const dayLabel = iso => (DAYS.find(d => d.iso === iso) || {}).label || iso;
+const islandToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date());
+
+export function mountMenus() {
+const today = islandToday();
+const B = {
+  when: 'Served daily 7:30 to 10:30am · Dairy',
+  kids: 'Early kids’ breakfast from 7:00am.',
+  blocks: [
+    ['Every morning', ['Eggs to order: scrambled, fried, omelets, and egg whites', 'Pancakes, French toast, or waffles, a different one each day, with berries, maple syrup, and powdered sugar', 'Bagels and cream cheeses: plain, everything, sesame, and whole wheat bagels, with plain, scallion, and vegetable cream cheese, plus lox, sliced tomato, and red onion', 'Fresh bread and pastries: challah rolls, croissants, muffins, danish, and gluten-free bread and muffins', 'Spreads: butter, labneh with za’atar and olive oil, hummus, jams, and honey', 'Middle Eastern board: sliced tomatoes, cucumbers, olives, feta, Syrian white cheese, avocado, and red onion', 'Yogurt bar: Greek yogurt, granola, berries, honey, and chia', 'Cereals: a selection for adults and kids, with regular and gluten-free options', 'Fresh fruit platter, kept out all day']],
+    ['Drinks', ['Fresh-squeezed juices: orange and grapefruit, plus whatever else the chef can make fresh, such as watermelon, pineapple, mango, carrot, or green juice', 'Cranberry juice', 'Iced green tea, unsweetened, every day', 'Unsweetened lemonade, available all day, every day', 'Whole, skim, almond, and soy milk, all unsweetened', 'Iced and hot coffee and tea']],
+    ['For the little ones', ['Early kids’ breakfast from 7:00am', 'Mini pancakes, cut fruit, plain scrambled eggs, toast fingers, yogurt pouches, Cheerios, and whole milk']],
+  ],
+  foot: 'Everything gluten-free is labeled. Unsweetened lemonade and iced green tea are by the pool all day.',
+};
+const L = {
+  when: 'Served daily around 1:00pm · Kids eat around 12:00pm with the nannies',
+  every: ['A tofu dish (listed under each day)', 'Egg salad and hard boiled eggs', 'Tuna salad', 'Big vegetable salad: mixed greens, cucumber, tomato, peppers, carrots, radish, red onion, and avocado, with a choice of dressings', 'Breads: assorted fresh breads and rolls with butter and labneh. On Saturday, a meat lunch, the bread comes with olive oil instead.', 'Fruit: a large platter of whatever is freshest, plus whole bananas and apples for the kids to grab', 'Drinks: unsweetened lemonade and iced green tea', 'Gluten-free: at least one protein and one carb labeled gluten-free, plus gluten-free bread'],
+  days: [
+    ['2026-11-22', 'Dairy', [['Tofu', 'sesame-ginger glazed tofu'], ['Proteins', 'grilled salmon · grilled halloumi'], ['Vegetables', 'grilled zucchini, eggplant, and peppers · string beans with toasted almonds · roasted butternut squash'], ['Carbs', 'penne alla vodka · roasted potatoes']]],
+    ['2026-11-23', 'Dairy', [['Tofu', 'crispy tofu with sweet chili sauce'], ['Proteins', 'grilled branzino · spinach and feta frittata'], ['Vegetables', 'roasted cauliflower · sautéed mushrooms · glazed carrots'], ['Carbs', 'eggplant pizzas · lemon rice']]],
+    ['2026-11-24', 'Dairy', [['Tofu', 'teriyaki tofu with scallions'], ['Proteins', 'seared tuna steaks · baked cod'], ['Vegetables', 'roasted broccoli · sugar snap peas · corn on the cob'], ['Carbs', 'baked ziti · sweet potato fries']]],
+    ['2026-11-25', 'Dairy', [['Tofu', 'tofu and vegetable stir-fry'], ['Proteins', 'grilled mahi-mahi · grilled halloumi'], ['Vegetables', 'roasted asparagus · sautéed spinach · roasted peppers'], ['Carbs', 'vegetable lasagna · couscous']]],
+    ['2026-11-26', 'Dairy', [['Tofu', 'lemon-herb baked tofu'], ['Proteins', 'grilled salmon · grilled grouper'], ['Vegetables', 'roasted Brussels sprouts · steamed broccolini · roasted sweet potatoes'], ['Carbs', 'margherita pizza · quinoa']]],
+    ['2026-11-27', 'Dairy', [['Tofu', 'miso-glazed tofu'], ['Proteins', 'whole grilled red snapper · spinach and cheese frittata'], ['Vegetables', 'sautéed zucchini · honey-roasted carrots · roasted cauliflower'], ['Carbs', 'pasta primavera · rice']]],
+    ['2026-11-28', 'Meat · Shabbat lunch', [['Tofu', 'grilled tofu'], ['Proteins', 'grilled chicken cutlets · sliced London broil'], ['Vegetables', 'string beans with toasted almonds · roasted mixed vegetables · sautéed mushrooms'], ['Carbs', 'rice · roasted potatoes']]],
+    ['2026-11-29', 'Departure day', [['To go', 'a packed lunch for the flights']]],
+  ],
+  kidsTitle: 'For the kids, around 12:00pm with the nannies',
+  kids: ['Dairy days: mac and cheese, cheese pizza, fish sticks, grilled cheese, buttered pasta, fries, and corn', 'Every day: a soft-cooked vegetable, either broccoli, cauliflower, or soft carrots, rotating daily', 'Saturday: chicken nuggets, plain rice, corn, and fries'],
+};
+const D = {
+  when: 'Served around 7:30pm · Kids eat around 5:30pm with the nannies',
+  every: ['A tofu dish, chef’s choice', 'Big vegetable salad with a choice of dressings', 'Light plate: plain grilled chicken breast or fish, steamed vegetables, and brown rice or quinoa, with sauces and dressings on the side', 'Breads: challah and rolls with olive oil, and butter on Saturday', 'Drinks: unsweetened lemonade, iced green tea, and water, plus the bartender’s bar', 'Gluten-free: at least one protein and one carb labeled gluten-free, plus gluten-free bread', 'Dessert: fresh fruit platter, sorbet, and parve cookies or cake'],
+  days: [
+    ['2026-11-22', 'Welcome dinner · Meat', [['Proteins', 'lemon-herb roast chicken · braised short ribs'], ['Vegetables', 'roasted broccoli · glazed carrots · string beans with toasted almonds'], ['Carbs', 'roasted potatoes · rice']]],
+    ['2026-11-23', 'Barbecue night · Meat', [['Proteins', 'barbecue chicken · grilled steak skewers · burgers and hot dogs'], ['Vegetables', 'corn on the cob · grilled zucchini, peppers, and onions · baked beans'], ['Carbs', 'sweet potato fries · baked potato wedges']]],
+    ['2026-11-24', 'Hibachi night · Meat', [['Proteins', 'hibachi chicken · teriyaki steak'], ['Vegetables', 'hibachi vegetables (zucchini, onions, and mushrooms) · stir-fried broccoli · edamame'], ['Carbs', 'fried rice · lo mein noodles']]],
+    ['2026-11-25', 'Light and fresh night · Meat', [['Proteins', 'herb-grilled chicken breast · grilled salmon (on its own platter)'], ['Vegetables', 'roasted asparagus · steamed broccoli · roasted Brussels sprouts'], ['Carbs', 'quinoa · brown rice']]],
+    ['2026-11-26', 'Thanksgiving dinner · Meat', [['Soup', 'butternut squash soup'], ['Proteins', 'roast turkey with gravy · braised brisket'], ['Vegetables', 'roasted green beans · honey-glazed carrots · roasted Brussels sprouts'], ['Carbs', 'stuffing · mashed potatoes · sweet potato casserole, all parve'], ['Extras', 'cranberry sauce and cornbread'], ['Dessert', 'parve pumpkin pie and apple pie']]],
+    ['2026-11-27', 'Shabbat dinner · Meat', [['First course', 'salmon, served on separate plates before the meat'], ['Soup', 'chicken soup'], ['Proteins', 'roast chicken · sliced roast beef'], ['Vegetables', 'string beans with toasted almonds · roasted cauliflower · sautéed zucchini'], ['Carbs', 'rice · roasted potatoes']]],
+    ['2026-11-28', 'Italian pizza night · Dairy, after Havdalah', [['Pizzas', 'margherita · vegetable · mushroom · a white pizza'], ['Pastas', 'fettuccine alfredo · penne arrabbiata · eggplant parmesan'], ['Fish', 'grilled branzino'], ['Vegetables', 'roasted broccoli with garlic · sautéed spinach · roasted peppers'], ['Extras', 'garlic knots'], ['Dessert', 'gelato and tiramisu']]],
+  ],
+  kidsTitle: 'For the kids, around 5:30pm with the nannies',
+  kids: ['Sunday through Friday: a rotation of chicken nuggets, mini meatballs, schnitzel strips, hot dogs, and mini burgers, with plain rice, pasta with olive oil, or fries', 'Saturday: cheese pizza and buttered pasta', 'Every night: soft-cooked vegetables (broccoli, cauliflower, soft carrots)'],
+};
+const ul = a => `<ul class="dots">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+const rows = r => `<dl class="dishes">${r.map(x => `<dt>${esc(x[0])}</dt><dd>${esc(x[1])}</dd>`).join('')}</dl>`;
+const more = (title, list) => `<details class="more"><summary>${esc(title)}</summary>${ul(list)}</details>`;
+const SEP = ' · ';
+// "Welcome dinner · Meat" -> name "Welcome dinner", type "Meat"
+function split(kind, fallback) {
+  const parts = kind.split(SEP);
+  const type = parts.find(x => /^(Dairy|Meat)/.test(x)) || '';
+  const name = parts.filter(x => x !== type).join(SEP) || fallback;
+  return { name, type };
+}
+function breakfastView() {
+  return `<section class="band band-white"><div class="wrap narrow"><div class="eyebrow">Every day</div><h2 class="sec-title">Breakfast</h2><p class="sec-sub"><b>${esc(B.when)}</b></p>
+      <div class="label">${B.blocks[0][0]}</div>${ul(B.blocks[0][1])}</div></section>
+    <section class="band band-aqua"><div class="wrap narrow"><h2 class="sec-title">${B.blocks[1][0]}</h2>${ul(B.blocks[1][1])}</div></section>
+    <section class="band band-peach"><div class="wrap narrow"><h2 class="sec-title">${B.blocks[2][0]}</h2>${ul(B.blocks[2][1])}<p style="margin-top:16px">${esc(B.foot)}</p></div></section>`;
+}
+function dayView(iso) {
+  const l = L.days.find(d => d[0] === iso), d = D.days.find(x => x[0] === iso);
+  let html = `<section class="band band-white" style="padding-bottom:26px"><div class="wrap narrow"><div class="eyebrow">${iso === today ? 'Today' : 'The menu for'}</div><h2 class="sec-title">${esc(dayLabel(iso))}</h2>
+    <p>Breakfast is the same every day, 7:30 to 10:30am. <a href="#" data-go="b">See breakfast</a></p></div></section>`;
+  if (l) {
+    const k = split(l[1], 'Lunch'), packed = iso === '2026-11-29';
+    html += `<section class="band band-aqua"><div class="wrap narrow"><div class="eyebrow">${packed ? 'Departure day' : 'Around 1:00pm' + (k.type ? SEP + esc(k.type) : '')}</div><h2 class="sec-title">${packed ? 'Lunch' : esc(k.name === 'Lunch' ? 'Lunch' : k.name)}</h2>
+      ${rows(l[2])}${packed ? '' : more('Also on the table at every lunch', L.every) + more('For the kids, around 12:00pm with the nannies', L.kids)}</div></section>`;
+  }
+  if (d) {
+    const k = split(d[1], 'Dinner');
+    html += `<section class="band band-peach"><div class="wrap narrow"><div class="eyebrow">Around ${iso === '2026-11-26' ? '6:30pm' : '7:30pm'}${k.type ? SEP + esc(k.type) : ''}</div><h2 class="sec-title">${esc(k.name)}</h2>
+      ${rows(d[2])}${more('Also on the table at every dinner', D.every) + more('For the kids, around 5:30pm with the nannies', D.kids)}</div></section>`;
+  } else {
+    html += `<section class="band band-peach"><div class="wrap narrow"><h2 class="sec-title">Dinner</h2><p>We are on our way home. No dinner at the villa tonight.</p></div></section>`;
+  }
+  return html;
+}
+const tabs = document.getElementById('tabs');
+tabs.innerHTML = `<button class="mtab wide" data-t="b">\u{1F95E} Breakfast, every day</button><div class="mdays">` +
+  DAYS.map(d => { const [wd, , num] = d.short.split(' '); return `<button class="mtab" data-t="${d.iso}" aria-label="${d.label}">${wd}<b>${num}</b></button>`; }).join('') + `</div>`;
+function show(t) {
+  document.querySelectorAll('.mtab').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  document.getElementById('menu').innerHTML = t === 'b' ? breakfastView() : dayView(t);
+}
+document.addEventListener('click', e => {
+  const go = e.target.closest('[data-go]'); if (go) { e.preventDefault(); show(go.dataset.go); document.querySelector('.mtabs').scrollIntoView({ block: 'start' }); return; }
+  const b = e.target.closest('.mtab'); if (b) show(b.dataset.t);
+});
+const hash = location.hash.slice(1);
+show(hash === 'b' || DAYS.some(d => d.iso === hash) ? hash : (today >= '2026-11-22' && today <= '2026-11-29' ? today : '2026-11-22'));
+}
