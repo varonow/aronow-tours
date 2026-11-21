@@ -320,3 +320,18 @@ footer a:hover{color:var(--gold-2)}
 .drawer-header{padding-top:calc(22px + env(safe-area-inset-top, 0px))}
 
 a.drawer-hub{text-decoration:none;color:rgba(255,255,255,.8);margin-bottom:6px}
+/* ---------- Boats page ---------- */
+.b-gallery{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:-8px 0 6px;padding:4px 2px 10px;scrollbar-width:thin}
+.b-shot{flex:0 0 auto;width:min(72%,300px);aspect-ratio:3/2;border:none;padding:0;border-radius:10px;overflow:hidden;cursor:zoom-in;scroll-snap-align:start;box-shadow:var(--shadow);background:var(--sand)}
+.b-shot img{width:100%;height:100%;object-fit:cover;display:block}
+.b-swipe{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:20px}
+.b-tip{background:var(--paper);border-left:4px solid var(--gold);border-radius:10px;box-shadow:var(--shadow);padding:16px 20px;font-size:15px;line-height:1.6}
+.b-credit{font-size:11px;letter-spacing:1px;color:var(--muted);margin-top:10px}
+.b-lightbox{position:fixed;inset:0;background:rgba(8,16,28,.92);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.b-lightbox.open{display:flex}
+.b-lightbox img{max-width:100%;max-height:100%;border-radius:8px}
+.b-lb-x{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:18px;color:#fff;font-size:26px}
+.hotel-tabs .hotel-tab{min-width:104px}
+.b-tabs{justify-content:flex-start}
+.b-tabs .hotel-tab:first-child{margin-left:auto}
+.b-tabs .hotel-tab:last-child{margin-right:auto}

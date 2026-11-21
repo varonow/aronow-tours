@@ -5,6 +5,7 @@ export const NAV_ITEMS = [
   { label: 'Flights', desc: 'All four flights', href: 'index.html#flights', icon: '\u2708\uFE0F' },
   { label: 'Itinerary', desc: 'Day by day, all three cities', href: 'itinerary.html', icon: '\u{1F5D3}\uFE0F' },
   { label: 'Hotels', desc: 'Where we stay each night', href: 'hotels.html', icon: '\u{1F3E8}' },
+  { label: 'Boats', desc: 'The long-tail and our four yachts', href: 'boats.html', icon: '\u26F5' },
   { label: 'What to Wear', desc: 'Cold Seoul to tropical Phuket', href: 'wear.html', icon: '\u{1F9E5}' },
   { label: 'Things to Know', desc: 'Money \u00b7 manners \u00b7 jet lag', href: 'know.html', icon: '\u{1F4A1}' },
   { label: 'Weather', desc: 'Live forecast, all three stops', href: 'weather.html', icon: '\u{1F324}\uFE0F' },
