@@ -83,7 +83,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .strip h3 span{font-size:24px;letter-spacing:0}
 .strip .big{font-family:"DM Serif Display",serif;font-size:28px;line-height:1.2;color:var(--ink)}
 .strip .sm{font-size:19px;margin-top:4px}
-@media(min-width:900px){.strip{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.strip{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1200px){.strip{grid-template-columns:repeat(4,1fr)}}
 
 /* ---------- menu cards on home ---------- */
 .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}

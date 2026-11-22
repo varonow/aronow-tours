@@ -13,7 +13,7 @@
 <meta name="robots" content="noindex">
 <title>Thanks &amp; Caicos — Home</title>
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css?v=20">
+<link rel="stylesheet" href="css/style.css?v=21">
 </head>
 <body>
 <main>
@@ -92,7 +92,10 @@ const roomHtml = me
   ? `<a href="rooms.html"><h3><span>\u{1F6CF}️</span>Your room</h3><p class="big">${esc(me.rooms.join(' · '))} &middot; Emara ${esc(me.house)}</p><p class="sm">${kidRooms.length ? 'Your children: ' + esc(kidRooms.join(', ')) : 'See who is staying where'}</p></a>`
   : `<a href="rooms.html"><h3><span>\u{1F6CF}️</span>Rooms</h3><p class="big">Who is where</p></a>`;
 const thanksHtml = `<a href="thankful.html"><h3><span>\u{1F983}</span>Thanksgiving</h3><p class="big">Thursday, Nov 26</p><p class="sm">${ctx.unsealed ? 'The thankful messages are open. Read them all.' : 'Write your thankful message before dinner'}</p></a>`;
-document.getElementById('strip').innerHTML = flightHtml + roomHtml + thanksHtml;
+const { data: wifiRow } = await db.from('turks_settings').select('value').eq('key', 'wifi').maybeSingle();
+const wifi = wifiRow && wifiRow.value;
+const wifiHtml = wifi ? `<div><h3><span>\u{1F4F6}</span>Wi-Fi</h3><p class="big">${esc(wifi.network)}</p><p class="sm">Password: <b>${esc(wifi.password)}</b></p></div>` : '';
+document.getElementById('strip').innerHTML = wifiHtml + flightHtml + roomHtml + thanksHtml;
 
 // Countdown to this person's own landing time (island time = New York time).
 function landing(a) {
